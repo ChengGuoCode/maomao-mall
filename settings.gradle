@@ -1,0 +1,12 @@
+rootProject.name = 'maomao-mall'
+include 'core-user'
+include 'support-common'
+include 'core-order'
+include 'gdng-model'
+include 'core-merchant'
+include 'core-goods'
+include 'service-app'
+include 'service-mmp'
+include 'core-edi'
+include 'inner-api'
+

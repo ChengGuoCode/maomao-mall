@@ -1,0 +1,11 @@
+server:
+  port: 9111 #服务端口
+
+spring:
+  application:
+    name: service-mmp #服务名称
+  #redis配置
+  redis:
+    host: 192.168.124.128
+    port: 6379
+    database: 0
