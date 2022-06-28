@@ -9,9 +9,6 @@ import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -21,9 +18,6 @@ import lombok.experimental.Accessors;
  * @author gc
  * @since 2022-06-26
  */
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @TableName("mao_store")
 @ApiModel(value="StorePO对象", description="店铺表")
 public class StorePO implements Serializable {
@@ -164,6 +158,219 @@ public class StorePO implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public String getStoreCode() {
+        return storeCode;
+    }
+
+    public void setStoreCode(String storeCode) {
+        this.storeCode = storeCode;
+    }
+
+    public Long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getStoreType() {
+        return storeType;
+    }
+
+    public void setStoreType(Integer storeType) {
+        this.storeType = storeType;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getStoreDesc() {
+        return storeDesc;
+    }
+
+    public void setStoreDesc(String storeDesc) {
+        this.storeDesc = storeDesc;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getBackImg() {
+        return backImg;
+    }
+
+    public void setBackImg(String backImg) {
+        this.backImg = backImg;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getRefuseReason() {
+        return refuseReason;
+    }
+
+    public void setRefuseReason(String refuseReason) {
+        this.refuseReason = refuseReason;
+    }
+
+    public String getAuditor() {
+        return auditor;
+    }
+
+    public void setAuditor(String auditor) {
+        this.auditor = auditor;
+    }
+
+    public Date getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(Date auditTime) {
+        this.auditTime = auditTime;
+    }
+
+    public String getReceiveAccountId() {
+        return receiveAccountId;
+    }
+
+    public void setReceiveAccountId(String receiveAccountId) {
+        this.receiveAccountId = receiveAccountId;
+    }
+
+    public Integer getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Integer delivery) {
+        this.delivery = delivery;
+    }
+
+    public Long getFavoriteNum() {
+        return favoriteNum;
+    }
+
+    public void setFavoriteNum(Long favoriteNum) {
+        this.favoriteNum = favoriteNum;
+    }
+
+    public String getOpenStartTime() {
+        return openStartTime;
+    }
+
+    public void setOpenStartTime(String openStartTime) {
+        this.openStartTime = openStartTime;
+    }
+
+    public String getOpenEndTime() {
+        return openEndTime;
+    }
+
+    public void setOpenEndTime(String openEndTime) {
+        this.openEndTime = openEndTime;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdator() {
+        return updator;
+    }
+
+    public void setUpdator(String updator) {
+        this.updator = updator;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 }

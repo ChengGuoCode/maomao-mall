@@ -9,9 +9,6 @@ import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -21,9 +18,6 @@ import lombok.experimental.Accessors;
  * @author gc
  * @since 2022-06-26
  */
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @TableName("mao_order")
 @ApiModel(value="OrderPO对象", description="订单表")
 public class OrderPO implements Serializable {
@@ -105,6 +99,123 @@ public class OrderPO implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public Integer getOptimistic() {
+        return optimistic;
+    }
+
+    public void setOptimistic(Integer optimistic) {
+        this.optimistic = optimistic;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Long getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(Long orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public Long getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Long payment) {
+        this.payment = payment;
+    }
+
+    public Integer getPayWay() {
+        return payWay;
+    }
+
+    public void setPayWay(Integer payWay) {
+        this.payWay = payWay;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
+    }
+
+    public String getPayOrderNo() {
+        return payOrderNo;
+    }
+
+    public void setPayOrderNo(String payOrderNo) {
+        this.payOrderNo = payOrderNo;
+    }
+
+    public String getPayerUid() {
+        return payerUid;
+    }
+
+    public void setPayerUid(String payerUid) {
+        this.payerUid = payerUid;
+    }
+
+    public Integer getOrderSource() {
+        return orderSource;
+    }
+
+    public void setOrderSource(Integer orderSource) {
+        this.orderSource = orderSource;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdator() {
+        return updator;
+    }
+
+    public void setUpdator(String updator) {
+        this.updator = updator;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 }

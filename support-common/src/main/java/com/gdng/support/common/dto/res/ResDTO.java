@@ -1,8 +1,5 @@
 package com.gdng.support.common.dto.res;
 
-import lombok.Data;
-
-@Data
 public class ResDTO<T> {
 
     private int code;
@@ -52,5 +49,29 @@ public class ResDTO<T> {
         resDTO.setCode(anEnum.getCode());
         resDTO.setMsg(String.format(anEnum.getMsg(), errMsg));
         return resDTO;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 }
