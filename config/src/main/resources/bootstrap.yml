@@ -1,0 +1,18 @@
+server:
+  port: 9201
+spring:
+  application:
+    name: config-server
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        service-name: gdng-config-server-procedure
+        register: true
+        instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+        health-check-critical-timeout: 60s
+    config:
+      server:
+        git:
+          uri:

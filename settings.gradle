@@ -9,4 +9,5 @@ include 'service-app'
 include 'service-mmp'
 include 'core-edi'
 include 'inner-api'
+include 'config'
 
