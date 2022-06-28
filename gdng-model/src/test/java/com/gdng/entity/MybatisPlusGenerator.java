@@ -12,10 +12,11 @@ public class MybatisPlusGenerator {
 
     @Test
     public void generateTableRelative() {
-        generate(DatabaseEnum.GOODS);
+        /*generate(DatabaseEnum.GOODS);
         generate(DatabaseEnum.MERCHANT);
         generate(DatabaseEnum.ORDER);
-        generate(DatabaseEnum.USER);
+        generate(DatabaseEnum.USER);*/
+        generate(DatabaseEnum.TEST);
     }
 
     private void generate(DatabaseEnum database) {
@@ -57,10 +58,17 @@ public class MybatisPlusGenerator {
                     return (DbColumnType) super.processTypeConvert(globalConfig,fieldType);
             }
         });
+
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
+
+        /*dsc.setUrl("jdbc:mysql://192.168.124.128:3306/" + database.getDatabase() + "?serverTimezone=UTC&useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true");
         dsc.setUsername("root");
-        dsc.setPassword("#Aa19932909");
-        dsc.setUrl("jdbc:mysql://192.168.124.128:3306/" + database.getDatabase() + "?serverTimezone=UTC&useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true");
+        dsc.setPassword("#Aa19932909");*/
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/" + database.getDatabase() + "?serverTimezone=UTC&useSSL=false" +
+                "&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true");
+        dsc.setUsername("root");
+        dsc.setPassword("a19932909");
+
         mpg.setDataSource(dsc);
 
         //策略配置
@@ -104,6 +112,10 @@ public class MybatisPlusGenerator {
                         "mao_permission"
                 );
                 break;
+            case TEST:
+                strategy.setInclude(
+                        "xxl_job_group"
+                );
         }
 
         /*strategy.setSuperServiceClass("");
@@ -115,7 +127,8 @@ public class MybatisPlusGenerator {
         strategy.setEntitySerialVersionUID(true);*/
 
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix("mao_");
+//        strategy.setTablePrefix("mao_");
+        strategy.setTablePrefix("xxl_job_");
         strategy.setEntityLombokModel(true);
         strategy.setEntityTableFieldAnnotationEnable(true);
 
@@ -146,7 +159,9 @@ public class MybatisPlusGenerator {
         GOODS("maomao_mall_goods", "com.gdng.entity.goods"),
         MERCHANT("maomao_mall_merchant", "com.gdng.entity.merchant"),
         ORDER("maomao_mall_order", "com.gdng.entity.order"),
-        USER("maomao_mall_user", "com.gdng.entity.user");
+        USER("maomao_mall_user", "com.gdng.entity.user"),
+        TEST("xxl_job", "com.gdng.entity.test"),
+        ;
 
         private final String database;
         private final String parentPath;

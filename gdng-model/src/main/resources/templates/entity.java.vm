@@ -8,11 +8,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.baomidou.mybatisplus.annotation.*;
 #end
-#if(${entityLombokModel})
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-#end
 
 /**
  * <p>
@@ -22,15 +17,6 @@ import lombok.experimental.Accessors;
  * @author ${author}
  * @since ${date}
  */
-#if(${entityLombokModel})
-@Data
-@Accessors(chain = true)
-#if(${superEntityClass})
-@EqualsAndHashCode(callSuper = true)
-#else
-@EqualsAndHashCode(callSuper = false)
-#end
-#end
 #if(${table.convert})
 @TableName("${table.name}")
 #end
@@ -112,33 +98,28 @@ private ${field.propertyType} ${field.propertyName};
 #end
 ## ----------  END 字段循环遍历  ----------
 
-#if(!${entityLombokModel})
-    #foreach($field in ${table.fields})
-        #if(${field.propertyType.equals("boolean")})
-            #set($getprefix="is")
-        #else
-            #set($getprefix="get")
-        #end
+#foreach($field in ${table.fields})
+    #if(${field.propertyType.equals("boolean")})
+        #set($getprefix="is")
+    #else
+        #set($getprefix="get")
+    #end
 
     public ${field.propertyType} ${getprefix}${field.capitalName}() {
-        return
-        } ${field.propertyName};
+        return ${field.propertyName};
     }
 
-        #if(${chainModel})
+    #if(${chainModel})
     public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-        #else
+    #else
     public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-        #end
-        this.${field.propertyName} = ${field.propertyName};
-        #if(${chainModel})
-        return this;
-        #end
-    }
     #end
-## --foreach end---
+        this.${field.propertyName} = ${field.propertyName};
+    #if(${chainModel})
+        return this;
+    #end
+    }
 #end
-## --end of #if(!${entityLombokModel})--
 
 #if(${entityColumnConstant})
     #foreach($field in ${table.fields})
@@ -157,18 +138,5 @@ private ${field.propertyType} ${field.propertyName};
     }
 
 #end
-#if(!${entityLombokModel})
-    @Override
-    public String toString() {
-        return "${entity}{" +
-    #foreach($field in ${table.fields})
-        #if($!{foreach.index}==0)
-                "${field.propertyName}=" + ${field.propertyName} +
-        #else
-                ", ${field.propertyName}=" + ${field.propertyName} +
-        #end
-    #end
-        "}";
-    }
-#end
+
 }
