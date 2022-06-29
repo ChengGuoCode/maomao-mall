@@ -34,6 +34,7 @@ subprojects {
 
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-consul-discovery', version: "${spring_cloud_version}"
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-client', version: "${spring_cloud_version}"
+        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: "${spring_cloud_version}"
 
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.29'
         implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.2'
