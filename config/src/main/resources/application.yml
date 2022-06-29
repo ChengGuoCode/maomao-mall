@@ -12,7 +12,12 @@ spring:
         register: true
         instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
         health-check-critical-timeout: 60s
+        heartbeat:
+          enabled: true
     config:
       server:
         git:
-          uri:
+          uri: http://gitlab.myutopa.com/guocheng/maomao-mall-config.git
+          username: guocheng
+          password: guoc@2021
+          default-label: dev
