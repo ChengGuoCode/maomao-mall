@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.logout().addLogoutHandler(new GdngLogoutHandler()).permitAll();
 
-        http.authorizeRequests().antMatchers("/core/user/login").anonymous().antMatchers("/**").authenticated();
+        http.authorizeRequests().antMatchers("/core/user/login", "/core/user/addOrUpdate").anonymous().antMatchers("/**").authenticated();
         http.addFilterBefore(new JwtAuthenticationTokenFilter(securityStrategyName), UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().accessDeniedHandler(new CoreAccessDeniedHandler()).authenticationEntryPoint(new CoreAuthenticationEntryPoint());
 

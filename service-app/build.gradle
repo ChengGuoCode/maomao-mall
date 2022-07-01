@@ -2,11 +2,16 @@ plugins {
     id 'java'
 }
 
-group 'com.gdng'
+group 'com.gdng.service.app'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+def env = System.getProperty("env") ?: "dev"
+apply from: "profile-${env}.gradle"
 
-dependencies {
-    implementation project(':support-common')
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources/$env"]
+        }
+    }
 }

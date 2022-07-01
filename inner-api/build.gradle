@@ -2,7 +2,9 @@ plugins {
     id 'java'
 }
 
-group 'com.gdng'
+group 'com.gdng.inner.api'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+dependencies {
+    implementation project(':support-common')
+}
