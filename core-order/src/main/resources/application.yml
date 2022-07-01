@@ -6,13 +6,13 @@ spring:
     name: core-order #服务名称
   #数据源配置
   datasource:
-    url: jdbc:mysql://192.168.124.128:3306/maomao_mall_order
+    url: jdbc:mysql://127.0.0.1:3306/maomao_mall_order
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 'a19932909'
   #redis配置
   redis:
-    host: 192.168.124.128
+    host: 127.0.0.1
     port: 6379
     database: 0
   cloud:

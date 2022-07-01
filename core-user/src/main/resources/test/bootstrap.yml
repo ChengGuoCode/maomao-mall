@@ -1,0 +1,36 @@
+server:
+  port: 9001 #服务端口
+spring:
+  profiles:
+    active: test
+  application:
+    name: core-user #服务名称
+  cloud:
+    config:
+      name: application
+      profile: core-user
+      label: ${spring.profiles.active}
+      discovery:
+        enabled: true
+        service-id: gdng-config-server-procedure
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-attempts: 6
+        max-interval: 2000
+        multiplier: 1.1
+      username: g_2022_gdng
+      password: pamqlzzz2022
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        service-name: gdng-core-user-procedure
+        register: true
+        instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+        health-check-critical-timeout: 60s
+        heartbeat:
+          enabled: true
+
+
+

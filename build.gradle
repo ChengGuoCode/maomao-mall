@@ -7,9 +7,17 @@ allprojects {
     //配置仓库
     repositories{
         maven {
+            credentials {
+                url "http://localhost:8081/nexus/content/groups/maven-public/"
+                username "admin"
+                password "admin123"
+                allowInsecureProtocol = true
+            }
+        }
+        /*maven {
             url "https://maven.aliyun.com/repository/public/"
         }
-        mavenCentral()
+        mavenCentral()*/
     }
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
