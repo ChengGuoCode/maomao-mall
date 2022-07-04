@@ -2,7 +2,5 @@ plugins {
     id 'java'
 }
 
-group 'com.gdng'
+group 'com.gdng.support.common'
 version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8

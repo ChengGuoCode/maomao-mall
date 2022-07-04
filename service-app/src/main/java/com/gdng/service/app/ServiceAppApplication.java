@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @EnableFeignClients(basePackages = "com.gdng.inner.api.**")
+@ComponentScans(value = {@ComponentScan(value = {"com.gdng.support.common"})})
 public class ServiceAppApplication {
 
     public static void main(String[] args) {

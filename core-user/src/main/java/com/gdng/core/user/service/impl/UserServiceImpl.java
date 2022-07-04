@@ -3,6 +3,7 @@ package com.gdng.core.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.gdng.core.user.controller.UserController;
 import com.gdng.core.user.dao.service.*;
 import com.gdng.core.user.service.UserService;
 import com.gdng.entity.user.po.RolePO;
@@ -15,6 +16,8 @@ import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.security.SecurityStrategyUtil;
 import com.gdng.support.common.security.asyCrypt.AsyCryptAlgEnum;
 import com.gdng.support.common.security.asyCrypt.AsyCryptUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Value("${auth.token.expireTime}")
     private Long expireTime;
@@ -96,6 +101,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void addOrUpdate(UserDTO userDTO) {
+        log.info("新增用户，用户名：{}，密码：{}", userDTO.getUsername(), userDTO.getPassword());
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
