@@ -2,11 +2,8 @@ package com.gdng.support.common.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.gdng.support.common.dto.UserDTO;
-import com.gdng.support.common.util.JacksonUtil;
+import com.gdng.support.common.spring.SpringContextHolder;
 import org.apache.ibatis.reflection.MetaObject;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -32,8 +29,7 @@ public class CoreUserMetaObjectHandler implements MetaObjectHandler {
     }
 
     private String getUid() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (authentication == null || authentication instanceof AnonymousAuthenticationToken) ? "system" :
-                JacksonUtil.jsonToBean(authentication.getPrincipal().toString(), UserDTO.class).getId();
+        UserDTO user = SpringContextHolder.getUser();
+        return user == null ? "system" : user.getId();
     }
 }

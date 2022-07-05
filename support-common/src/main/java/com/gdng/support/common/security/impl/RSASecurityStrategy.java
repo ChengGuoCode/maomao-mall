@@ -56,7 +56,7 @@ public class RSASecurityStrategy implements ISecurityStrategy {
                 return ResDTO.buildFailResult(GlobalResponseEnum.PARAM_ERR, "版本号参数有误");
             }
         }
-        Long timestamp = Long.valueOf(timestampStr);
+        long timestamp = Long.parseLong(timestampStr);
         if (new Date().getTime() - timestamp > FIVE_MIN_EXP) {
             return ResDTO.buildFailResult(GlobalResponseEnum.REQUEST_EXP);
         }
@@ -116,8 +116,8 @@ public class RSASecurityStrategy implements ISecurityStrategy {
     }
 
     private boolean checkVer(String local, String remote) throws NumberFormatException {
-        Double localV = Double.valueOf(local);
-        Double remoteV = Double.valueOf(remote);
+        double localV = Double.parseDouble(local);
+        double remoteV = Double.parseDouble(remote);
         return localV <= remoteV;
     }
 }

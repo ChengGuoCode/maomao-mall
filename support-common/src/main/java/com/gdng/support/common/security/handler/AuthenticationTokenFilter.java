@@ -1,4 +1,4 @@
-package com.gdng.core.user.security;
+package com.gdng.support.common.security.handler;
 
 import com.gdng.support.common.cache.redis.user.UserRedisCache;
 import com.gdng.support.common.constant.HttpConstant;
@@ -8,6 +8,7 @@ import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.security.ISecurityStrategy;
 import com.gdng.support.common.security.SecurityStrategyEnum;
 import com.gdng.support.common.security.SecurityStrategyFactory;
+import com.gdng.support.common.spring.SpringContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -19,11 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
     private final ISecurityStrategy securityStrategy;
 
-    public JwtAuthenticationTokenFilter(String securityStrategyName) {
+    public AuthenticationTokenFilter(String securityStrategyName) {
         SecurityStrategyEnum strategyByName = SecurityStrategyEnum.getStrategyByName(securityStrategyName);
         this.securityStrategy = SecurityStrategyFactory.getInstance(strategyByName);
     }
@@ -45,6 +46,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userInfo, null, userInfo.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
+        SpringContextHolder.setUser(userInfo);
         filterChain.doFilter(request, response);
     }
 

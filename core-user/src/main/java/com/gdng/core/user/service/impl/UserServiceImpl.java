@@ -3,7 +3,6 @@ package com.gdng.core.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.gdng.core.user.controller.UserController;
 import com.gdng.core.user.dao.service.*;
 import com.gdng.core.user.service.UserService;
 import com.gdng.entity.user.po.RolePO;
@@ -16,16 +15,10 @@ import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.security.SecurityStrategyUtil;
 import com.gdng.support.common.security.asyCrypt.AsyCryptAlgEnum;
 import com.gdng.support.common.security.asyCrypt.AsyCryptUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,9 +29,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
-
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+public class UserServiceImpl implements UserService {
 
     @Value("${auth.token.expireTime}")
     private Long expireTime;
@@ -101,7 +92,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void addOrUpdate(UserDTO userDTO) {
-        log.info("新增用户，用户名：{}，密码：{}", userDTO.getUsername(), userDTO.getPassword());
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
@@ -110,18 +100,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserPO userPO = new UserPO();
         userPO.setUsername(username);
         userPO.setPassword(passwordEncoder.encode(password));
-        userDaoService.saveOrUpdate(userPO);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserPO userPO = userDaoService.getOne(new QueryWrapper<UserPO>().eq("username", username));
-        if (userPO == null) {
-            throw new GdngException(GlobalResponseEnum.USER_NONEXIST);
+        UserPO user = userDaoService.getOne(new QueryWrapper<UserPO>().eq("username", username));
+        if (user != null) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "用户名已存在");
         }
-        String uid = userPO.getId();
-        List<GrantedAuthority> authorities = getAuthorities(uid);
-        return new User(username, userPO.getPassword(), authorities);
+        userDaoService.saveOrUpdate(userPO);
     }
 
     private List<GrantedAuthority> getAuthorities(String uid) {

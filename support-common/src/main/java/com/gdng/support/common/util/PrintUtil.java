@@ -1,9 +1,8 @@
-package com.gdng.core.user.util;
+package com.gdng.support.common.util;
 
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.ResDTO;
 import com.gdng.support.common.exception.GdngException;
-import com.gdng.support.common.util.JacksonUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
