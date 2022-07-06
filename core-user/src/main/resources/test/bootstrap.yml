@@ -22,7 +22,7 @@ spring:
       username: g_2022_gdng
       password: pamqlzzz2022
     consul:
-      host: 127.0.0.1
+      host: 192.168.124.128
       port: 8500
       discovery:
         service-name: gdng-core-user-procedure
