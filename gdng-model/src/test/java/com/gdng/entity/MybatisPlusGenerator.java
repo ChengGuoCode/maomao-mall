@@ -12,11 +12,10 @@ public class MybatisPlusGenerator {
 
     @Test
     public void generateTableRelative() {
-        /*generate(DatabaseEnum.GOODS);
-        generate(DatabaseEnum.MERCHANT);
-        generate(DatabaseEnum.ORDER);
-        generate(DatabaseEnum.USER);*/
-        generate(DatabaseEnum.TEST);
+        generate(DatabaseEnum.GOODS);
+//        generate(DatabaseEnum.MERCHANT);
+//        generate(DatabaseEnum.ORDER);
+//        generate(DatabaseEnum.USER);
     }
 
     private void generate(DatabaseEnum database) {
@@ -73,8 +72,6 @@ public class MybatisPlusGenerator {
 
         //策略配置
         StrategyConfig strategy = new StrategyConfig();
-        //此处可以修改您的表前缀
-        strategy.setTablePrefix();
         //表名生成策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
@@ -83,11 +80,12 @@ public class MybatisPlusGenerator {
         switch (database) {
             case GOODS:
                 strategy.setInclude(
-                        "mao_product",
-                        "mao_product_sku",
-                        "mao_category",
-                        "mao_store_product",
-                        "mao_store_product_sku"
+//                        "mao_product",
+//                        "mao_product_sku",
+//                        "mao_category",
+//                        "mao_store_product",
+//                        "mao_store_product_sku",
+                        "mao_carousel"
                 );
                 break;
             case MERCHANT:
@@ -128,7 +126,7 @@ public class MybatisPlusGenerator {
 
         strategy.setControllerMappingHyphenStyle(true);
 //        strategy.setTablePrefix("mao_");
-        strategy.setTablePrefix("xxl_job_");
+        strategy.setTablePrefix("mao_");
         strategy.setEntityLombokModel(true);
         strategy.setEntityTableFieldAnnotationEnable(true);
 

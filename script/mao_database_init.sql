@@ -278,3 +278,15 @@ CREATE TABLE maomao_mall_goods.`mao_store_product_sku`
     `update_time`      datetime    NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8 COMMENT = '店铺商品规格表';
+CREATE TABLE maomao_mall_goods.`mao_carousel`
+(
+    `id`           BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `productName`  VARCHAR(256) NOT NULL COMMENT '商品名称',
+    `productImg`   VARCHAR(256) NOT NULL COMMENT '商品主图',
+    `product_code` VARCHAR(64)  NOT NULL COMMENT '商品编码',
+    `creator`      VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time`  datetime     NOT NULL COMMENT '创建时间',
+    `updator`      VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time`  datetime     NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '首页轮播图';

@@ -33,12 +33,11 @@ subprojects {
         spring_cloud_version = '3.1.0'
     }
 
+    configurations { all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging' }
+
     dependencies {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${spring_boot_version}"
-        implementation ('org.springframework.boot:spring-boot-starter-logging:' + "${spring_boot_version}") {
-            exclude group: '*', module: '*'
-        }
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${spring_boot_version}"
