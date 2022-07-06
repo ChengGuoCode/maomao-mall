@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-06-26
+ * @since 2022-07-06
  */
 @TableName("mao_order_cart")
 @ApiModel(value="OrderCartPO对象", description="订单购物车表")
@@ -60,9 +60,9 @@ public class OrderCartPO implements Serializable {
     private Long productId;
 
 
-    @ApiModelProperty(value = "skuID")
-    @TableField("sku_id")
-    private Long skuId;
+    @ApiModelProperty(value = "sku编码")
+    @TableField("sku_code")
+    private String skuCode;
 
 
     @ApiModelProperty(value = "数量")
@@ -88,6 +88,8 @@ public class OrderCartPO implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+
+
 
     public Long getId() {
         return id;
@@ -145,12 +147,12 @@ public class OrderCartPO implements Serializable {
         this.productId = productId;
     }
 
-    public Long getSkuId() {
-        return skuId;
+    public String getSkuCode() {
+        return skuCode;
     }
 
-    public void setSkuId(Long skuId) {
-        this.skuId = skuId;
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
     }
 
     public Integer getNum() {
@@ -192,4 +194,6 @@ public class OrderCartPO implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+
 }

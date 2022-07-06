@@ -8,8 +8,26 @@ package com.gdng.inner.api.goods.dto;
  */
 public class CarouselResDTO {
 
+    private Integer no;
+    private String productName;
     private String productImg;
     private String productCode;
+
+    public Integer getNo() {
+        return no;
+    }
+
+    public void setNo(Integer no) {
+        this.no = no;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public String getProductImg() {
         return productImg;

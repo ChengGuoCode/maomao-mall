@@ -1,12 +1,17 @@
 package com.gdng.service.app.controller;
 
 import com.gdng.inner.api.order.dto.CartReqDTO;
+import com.gdng.inner.api.order.dto.CartResDTO;
+import com.gdng.inner.api.order.invoke.CartRemote;
 import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.ResDTO;
 import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.spring.SpringContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -18,33 +23,40 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/service/app/cart")
 public class CartController {
 
-    @PostMapping("/addProduct")
-    public ResDTO<?> addProduct(@RequestBody CartReqDTO reqDTO) {
-        UserDTO user = SpringContextHolder.getUser();
-        if (user == null) {
-            throw new GdngException(GlobalResponseEnum.NO_LOGIN);
-        }
-        reqDTO.setUid(user.getId());
-        return ResDTO.buildSuccessResult();
+    private final CartRemote cartRemote;
+
+    @Autowired
+    public CartController(CartRemote cartRemote) {
+        this.cartRemote = cartRemote;
     }
 
-    @PostMapping("/reduceProduct")
-    public ResDTO<?> reduceProduct(@RequestBody CartReqDTO reqDTO) {
+    @PostMapping("/addOrUpdateProduct")
+    public ResDTO<?> addOrUpdateProduct(@RequestBody CartReqDTO reqDTO) {
         UserDTO user = SpringContextHolder.getUser();
         if (user == null) {
             throw new GdngException(GlobalResponseEnum.NO_LOGIN);
         }
         reqDTO.setUid(user.getId());
-        return ResDTO.buildSuccessResult();
+        return cartRemote.addOrUpdateProduct(reqDTO);
+    }
+
+    @PostMapping("/removeProduct")
+    public ResDTO<?> removeProduct(@RequestBody CartReqDTO reqDTO) {
+        UserDTO user = SpringContextHolder.getUser();
+        if (user == null) {
+            throw new GdngException(GlobalResponseEnum.NO_LOGIN);
+        }
+        reqDTO.setUid(user.getId());
+        return cartRemote.removeProduct(reqDTO);
     }
 
     @GetMapping("/getCartList")
-    public ResDTO<?> getCartList() {
+    public ResDTO<List<CartResDTO>> getCartList() {
         UserDTO user = SpringContextHolder.getUser();
         if (user == null) {
             throw new GdngException(GlobalResponseEnum.NO_LOGIN);
         }
-        return ResDTO.buildSuccessResult();
+        return cartRemote.getCartList(user.getId());
     }
 
 }

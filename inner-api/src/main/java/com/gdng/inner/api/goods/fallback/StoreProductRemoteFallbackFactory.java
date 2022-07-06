@@ -1,11 +1,15 @@
 package com.gdng.inner.api.goods.fallback;
 
-import com.gdng.inner.api.goods.dto.GoodsReqDTO;
+import com.gdng.inner.api.goods.dto.CarouselResDTO;
+import com.gdng.inner.api.goods.dto.StoreProductReqDTO;
+import com.gdng.inner.api.goods.dto.StoreProductResDTO;
 import com.gdng.inner.api.goods.invoke.StoreProductRemote;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -19,12 +23,12 @@ public class StoreProductRemoteFallbackFactory implements FallbackFactory<StoreP
     public StoreProductRemote create(Throwable cause) {
         return new StoreProductRemote() {
             @Override
-            public ResDTO<?> getCarousel() {
+            public ResDTO<List<CarouselResDTO>> getCarousel() {
                 return ResDTO.buildBusyResult();
             }
 
             @Override
-            public ResDTO<PageResDTO<?>> getGoodsList(GoodsReqDTO reqDTO) {
+            public ResDTO<PageResDTO<StoreProductResDTO>> getGoodsList(StoreProductReqDTO reqDTO) {
                 return ResDTO.buildBusyResult();
             }
         };

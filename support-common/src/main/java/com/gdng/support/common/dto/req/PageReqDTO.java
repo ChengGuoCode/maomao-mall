@@ -8,22 +8,22 @@ package com.gdng.support.common.dto.req;
  */
 public class PageReqDTO {
 
-    private int pageNo = 1;
-    private int pageSize = 20;
+    private long pageNo = 1;
+    private long pageSize = 20;
 
-    public int getPageNo() {
+    public long getPageNo() {
         return pageNo;
     }
 
-    public void setPageNo(int pageNo) {
+    public void setPageNo(long pageNo) {
         this.pageNo = pageNo;
     }
 
-    public int getPageSize() {
+    public long getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(long pageSize) {
         this.pageSize = pageSize;
     }
 }

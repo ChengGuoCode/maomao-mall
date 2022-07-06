@@ -12,9 +12,9 @@ public class MybatisPlusGenerator {
 
     @Test
     public void generateTableRelative() {
-        generate(DatabaseEnum.GOODS);
+//        generate(DatabaseEnum.GOODS);
 //        generate(DatabaseEnum.MERCHANT);
-//        generate(DatabaseEnum.ORDER);
+        generate(DatabaseEnum.ORDER);
 //        generate(DatabaseEnum.USER);
     }
 
@@ -96,8 +96,8 @@ public class MybatisPlusGenerator {
                 break;
             case ORDER:
                 strategy.setInclude(
-                        "mao_order",
-                        "mao_order_detail",
+//                        "mao_order",
+//                        "mao_order_detail",
                         "mao_order_cart"
                 );
                 break;

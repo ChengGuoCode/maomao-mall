@@ -1,4 +1,7 @@
 package com.gdng.core.goods.dao.service;
 
-public interface StoreProductDaoService {
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.gdng.entity.goods.po.StoreProductPO;
+
+public interface StoreProductDaoService extends IService<StoreProductPO> {
 }

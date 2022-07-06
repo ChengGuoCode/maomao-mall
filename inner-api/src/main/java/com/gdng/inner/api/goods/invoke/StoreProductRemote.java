@@ -1,6 +1,8 @@
 package com.gdng.inner.api.goods.invoke;
 
-import com.gdng.inner.api.goods.dto.GoodsReqDTO;
+import com.gdng.inner.api.goods.dto.CarouselResDTO;
+import com.gdng.inner.api.goods.dto.StoreProductReqDTO;
+import com.gdng.inner.api.goods.dto.StoreProductResDTO;
 import com.gdng.inner.api.goods.fallback.StoreProductRemoteFallbackFactory;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
@@ -9,6 +11,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -22,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface StoreProductRemote {
 
     @GetMapping("/getCarousel")
-    ResDTO<?> getCarousel();
+    ResDTO<List<CarouselResDTO>> getCarousel();
 
     @PostMapping("/getGoodsList")
-    ResDTO<PageResDTO<?>> getGoodsList(@RequestBody GoodsReqDTO reqDTO);
+    ResDTO<PageResDTO<StoreProductResDTO>> getGoodsList(@RequestBody StoreProductReqDTO reqDTO);
 
 }

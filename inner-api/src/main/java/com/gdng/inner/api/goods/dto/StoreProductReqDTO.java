@@ -8,7 +8,7 @@ import com.gdng.support.common.dto.req.PageReqDTO;
  * @Description:
  * @Version: 1.0.0
  */
-public class GoodsReqDTO extends PageReqDTO {
+public class StoreProductReqDTO extends PageReqDTO {
 
     private String productName;
     private Long categoryId;

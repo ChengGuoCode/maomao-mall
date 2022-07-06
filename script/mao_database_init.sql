@@ -112,7 +112,7 @@ CREATE TABLE maomao_mall_order.`mao_order_cart`
     `store_id`    BIGINT       NOT NULL COMMENT '店铺ID',
     `store_name`  VARCHAR(256) NOT NULL COMMENT '店铺名称',
     `product_id`  BIGINT       NOT NULL COMMENT '商品ID',
-    `sku_id`      BIGINT       NOT NULL COMMENT 'skuID',
+    `sku_code`    VARCHAR(64)  NOT NULL COMMENT 'sku编码',
     `num`         INT          NOT NULL COMMENT '数量',
     `creator`     VARCHAR(64)  NOT NULL COMMENT '创建人',
     `create_time` datetime     NOT NULL COMMENT '创建时间',
@@ -281,8 +281,8 @@ CREATE TABLE maomao_mall_goods.`mao_store_product_sku`
 CREATE TABLE maomao_mall_goods.`mao_carousel`
 (
     `id`           BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `productName`  VARCHAR(256) NOT NULL COMMENT '商品名称',
-    `productImg`   VARCHAR(256) NOT NULL COMMENT '商品主图',
+    `product_name` VARCHAR(256) NOT NULL COMMENT '商品名称',
+    `product_img`  VARCHAR(256) NOT NULL COMMENT '商品主图',
     `product_code` VARCHAR(64)  NOT NULL COMMENT '商品编码',
     `creator`      VARCHAR(64)  NOT NULL COMMENT '创建人',
     `create_time`  datetime     NOT NULL COMMENT '创建时间',

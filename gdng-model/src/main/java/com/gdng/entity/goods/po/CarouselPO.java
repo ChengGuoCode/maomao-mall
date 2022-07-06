@@ -30,13 +30,13 @@ public class CarouselPO implements Serializable {
 
 
     @ApiModelProperty(value = "商品名称")
-    @TableField("productName")
-    private String productname;
+    @TableField("product_name")
+    private String productName;
 
 
     @ApiModelProperty(value = "商品主图")
-    @TableField("productImg")
-    private String productimg;
+    @TableField("product_img")
+    private String productImg;
 
 
     @ApiModelProperty(value = "商品编码")
@@ -73,20 +73,20 @@ public class CarouselPO implements Serializable {
         this.id = id;
     }
 
-    public String getProductname() {
-        return productname;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProductname(String productname) {
-        this.productname = productname;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public String getProductimg() {
-        return productimg;
+    public String getProductImg() {
+        return productImg;
     }
 
-    public void setProductimg(String productimg) {
-        this.productimg = productimg;
+    public void setProductImg(String productImg) {
+        this.productImg = productImg;
     }
 
     public String getProductCode() {

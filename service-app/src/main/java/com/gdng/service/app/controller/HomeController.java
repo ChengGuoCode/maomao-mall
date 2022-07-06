@@ -1,12 +1,17 @@
 package com.gdng.service.app.controller;
 
-import com.gdng.inner.api.goods.dto.GoodsReqDTO;
+import com.gdng.inner.api.goods.dto.CarouselResDTO;
+import com.gdng.inner.api.goods.dto.CategoryResDTO;
+import com.gdng.inner.api.goods.dto.StoreProductReqDTO;
+import com.gdng.inner.api.goods.dto.StoreProductResDTO;
 import com.gdng.inner.api.goods.invoke.CategoryRemote;
 import com.gdng.inner.api.goods.invoke.StoreProductRemote;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -28,17 +33,17 @@ public class HomeController {
     }
 
     @GetMapping("/getCarousel")
-    public ResDTO<?> getCarousel() {
+    public ResDTO<List<CarouselResDTO>> getCarousel() {
         return storeProductRemote.getCarousel();
     }
 
     @GetMapping("/getTab")
-    public ResDTO<?> getTab() {
+    public ResDTO<List<CategoryResDTO>> getTab() {
         return categoryRemote.getTab();
     }
 
     @PostMapping("/getGoodsList")
-    public ResDTO<PageResDTO<?>> getGoodsList(@RequestBody GoodsReqDTO reqDTO) {
+    public ResDTO<PageResDTO<StoreProductResDTO>> getGoodsList(@RequestBody StoreProductReqDTO reqDTO) {
         return storeProductRemote.getGoodsList(reqDTO);
     }
 

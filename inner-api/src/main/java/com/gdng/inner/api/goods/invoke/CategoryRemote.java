@@ -1,10 +1,13 @@
 package com.gdng.inner.api.goods.invoke;
 
+import com.gdng.inner.api.goods.dto.CategoryResDTO;
 import com.gdng.inner.api.goods.fallback.CategoryRemoteFallbackFactory;
 import com.gdng.support.common.dto.res.ResDTO;
 import com.gdng.support.common.spring.feign.FeignConf;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -18,6 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface CategoryRemote {
 
     @GetMapping("/getTab")
-    ResDTO<?> getTab();
+    ResDTO<List<CategoryResDTO>> getTab();
 
 }

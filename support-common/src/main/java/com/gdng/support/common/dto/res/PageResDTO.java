@@ -1,5 +1,7 @@
 package com.gdng.support.common.dto.res;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import java.util.List;
 
 /**
@@ -10,24 +12,32 @@ import java.util.List;
  */
 public class PageResDTO<T> {
 
-    private int pageNo;
-    private int pageSize;
+    private long pageNo;
+    private long pageSize;
     private long total;
     private List<T> records;
 
-    public int getPageNo() {
+    public static PageResDTO buildEmptyPage(Page page) {
+        PageResDTO<?> pageResDTO = new PageResDTO<>();
+        pageResDTO.setPageNo(page.getCurrent());
+        pageResDTO.setPageSize(page.getSize());
+        pageResDTO.setTotal(page.getTotal());
+        return pageResDTO;
+    }
+
+    public long getPageNo() {
         return pageNo;
     }
 
-    public void setPageNo(int pageNo) {
+    public void setPageNo(long pageNo) {
         this.pageNo = pageNo;
     }
 
-    public int getPageSize() {
+    public long getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(long pageSize) {
         this.pageSize = pageSize;
     }
 

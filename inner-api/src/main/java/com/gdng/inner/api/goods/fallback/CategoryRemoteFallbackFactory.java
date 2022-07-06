@@ -1,9 +1,12 @@
 package com.gdng.inner.api.goods.fallback;
 
+import com.gdng.inner.api.goods.dto.CategoryResDTO;
 import com.gdng.inner.api.goods.invoke.CategoryRemote;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -17,7 +20,7 @@ public class CategoryRemoteFallbackFactory implements FallbackFactory<CategoryRe
     public CategoryRemote create(Throwable cause) {
         return new CategoryRemote() {
             @Override
-            public ResDTO<?> getTab() {
+            public ResDTO<List<CategoryResDTO>> getTab() {
                 return ResDTO.buildBusyResult();
             }
         };
