@@ -6,6 +6,6 @@ spring:
     name: service-mmp #服务名称
   #redis配置
   redis:
-    host: 192.168.124.128
+    host: 127.0.0.1
     port: 6379
     database: 0

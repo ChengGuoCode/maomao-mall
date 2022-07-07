@@ -1,6 +1,7 @@
 package com.gdng.service.app.controller;
 
 import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
+import com.gdng.inner.api.order.dto.OrderCreateResDTO;
 import com.gdng.inner.api.order.dto.OrderPayReqDTO;
 import com.gdng.inner.api.order.dto.OrderRefundReqDTO;
 import com.gdng.inner.api.order.invoke.OrderRemote;
@@ -31,7 +32,7 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public ResDTO<?> create(@RequestBody List<OrderCreateReqDTO> reqDTOList) {
+    public ResDTO<OrderCreateResDTO> create(@RequestBody List<OrderCreateReqDTO> reqDTOList) {
         return orderRemote.create(reqDTOList);
     }
 

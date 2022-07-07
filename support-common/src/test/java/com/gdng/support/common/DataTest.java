@@ -16,4 +16,11 @@ public class DataTest {
         System.out.println(System.currentTimeMillis());
     }
 
+    private String testPrefix;
+
+    @Test
+    public void testInit() {
+        System.out.println(testPrefix + "abc");
+    }
+
 }

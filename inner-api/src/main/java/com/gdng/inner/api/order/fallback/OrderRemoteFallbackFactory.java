@@ -1,6 +1,7 @@
 package com.gdng.inner.api.order.fallback;
 
 import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
+import com.gdng.inner.api.order.dto.OrderCreateResDTO;
 import com.gdng.inner.api.order.dto.OrderPayReqDTO;
 import com.gdng.inner.api.order.dto.OrderRefundReqDTO;
 import com.gdng.inner.api.order.invoke.OrderRemote;
@@ -23,7 +24,7 @@ public class OrderRemoteFallbackFactory implements FallbackFactory<OrderRemote> 
     public OrderRemote create(Throwable cause) {
         return new OrderRemote() {
             @Override
-            public ResDTO<?> create(List<OrderCreateReqDTO> reqDTOList) {
+            public ResDTO<OrderCreateResDTO> create(List<OrderCreateReqDTO> reqDTOList) {
                 return ResDTO.buildBusyResult();
             }
 

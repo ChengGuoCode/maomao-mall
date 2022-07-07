@@ -8,7 +8,7 @@ allprojects {
     repositories{
         maven {
             credentials {
-                url "http://192.168.124.128:8081/nexus/content/groups/maven-public/"
+                url "http://127.0.0.1:8081/nexus/content/groups/maven-public/"
                 username "admin"
                 password "admin123"
                 allowInsecureProtocol = true

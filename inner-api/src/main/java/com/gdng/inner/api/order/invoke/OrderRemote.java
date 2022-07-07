@@ -1,6 +1,7 @@
 package com.gdng.inner.api.order.invoke;
 
 import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
+import com.gdng.inner.api.order.dto.OrderCreateResDTO;
 import com.gdng.inner.api.order.dto.OrderPayReqDTO;
 import com.gdng.inner.api.order.dto.OrderRefundReqDTO;
 import com.gdng.inner.api.order.fallback.OrderRemoteFallbackFactory;
@@ -24,7 +25,7 @@ import java.util.List;
 public interface OrderRemote {
 
     @PostMapping("/create")
-    ResDTO<?> create(@RequestBody List<OrderCreateReqDTO> reqDTOList);
+    ResDTO<OrderCreateResDTO> create(@RequestBody List<OrderCreateReqDTO> reqDTOList);
 
     @PostMapping("/pay")
     ResDTO<?> pay(@RequestBody OrderPayReqDTO reqDTO);
