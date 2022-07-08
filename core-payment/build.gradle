@@ -4,3 +4,9 @@ plugins {
 
 group 'com.gdng'
 version '1.0-SNAPSHOT'
+
+dependencies {
+    implementation project(':gdng-model')
+    implementation project(':inner-api')
+    implementation project(':support-common')
+}

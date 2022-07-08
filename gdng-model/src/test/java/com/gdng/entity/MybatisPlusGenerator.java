@@ -115,6 +115,7 @@ public class MybatisPlusGenerator {
                 strategy.setInclude(
                         "mao_account",
                         "mao_order_pay",
+                        "mao_order_pay_detail",
                         "mao_order_refund"
                 );
         }

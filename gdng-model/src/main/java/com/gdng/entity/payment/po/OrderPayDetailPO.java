@@ -12,15 +12,15 @@ import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * <p>
- * 订单支付表
+ * 订单支付明细表
  * </p>
  *
  * @author gc
  * @since 2022-07-08
  */
-@TableName("mao_order_pay")
-@ApiModel(value="OrderPayPO对象", description="订单支付表")
-public class OrderPayPO implements Serializable {
+@TableName("mao_order_pay_detail")
+@ApiModel(value="OrderPayDetailPO对象", description="订单支付明细表")
+public class OrderPayDetailPO implements Serializable {
 
     private static final long serialVersionUID=1L;
 
@@ -58,6 +58,41 @@ public class OrderPayPO implements Serializable {
     @ApiModelProperty(value = "付款账户")
     @TableField("pay_acc")
     private Long payAcc;
+
+
+    @ApiModelProperty(value = "收款账户")
+    @TableField("beneficiary")
+    private Long beneficiary;
+
+
+    @ApiModelProperty(value = "商家ID")
+    @TableField("business_id")
+    private Long businessId;
+
+
+    @ApiModelProperty(value = "店铺ID")
+    @TableField("store_id")
+    private Long storeId;
+
+
+    @ApiModelProperty(value = "商品ID")
+    @TableField("product_id")
+    private Long productId;
+
+
+    @ApiModelProperty(value = "sku编码")
+    @TableField("sku_code")
+    private String skuCode;
+
+
+    @ApiModelProperty(value = "商品sku价格")
+    @TableField("price")
+    private Long price;
+
+
+    @ApiModelProperty(value = "数量")
+    @TableField("num")
+    private Integer num;
 
 
     @ApiModelProperty(value = "创建人")
@@ -135,6 +170,62 @@ public class OrderPayPO implements Serializable {
 
     public void setPayAcc(Long payAcc) {
         this.payAcc = payAcc;
+    }
+
+    public Long getBeneficiary() {
+        return beneficiary;
+    }
+
+    public void setBeneficiary(Long beneficiary) {
+        this.beneficiary = beneficiary;
+    }
+
+    public Long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getSkuCode() {
+        return skuCode;
+    }
+
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 
     public String getCreator() {

@@ -1,11 +1,11 @@
 package com.gdng.service.app.controller;
 
-import com.gdng.inner.api.order.dto.*;
+import com.gdng.inner.api.order.dto.OrderCloseReqDTO;
+import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
+import com.gdng.inner.api.order.dto.OrderCreateResDTO;
+import com.gdng.inner.api.order.dto.OrderRefundReqDTO;
 import com.gdng.inner.api.order.invoke.OrderRemote;
-import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.ResDTO;
-import com.gdng.support.common.spring.SpringContextHolder;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,17 +34,8 @@ public class OrderController {
         return orderRemote.create(reqDTO);
     }
 
-    @PostMapping("/pay")
-    public ResDTO<OrderPayResDTO> pay(@RequestBody OrderPayReqDTO reqDTO) {
-        if (StringUtils.isBlank(reqDTO.getPayerUid())) {
-            UserDTO user = SpringContextHolder.getUser();
-            reqDTO.setPayerUid(user.getId());
-        }
-        return orderRemote.pay(reqDTO);
-    }
-
     @PostMapping("/close")
-    public ResDTO<?> close(@RequestBody OrderPayReqDTO reqDTO) {
+    public ResDTO<?> close(@RequestBody OrderCloseReqDTO reqDTO) {
         return orderRemote.close(reqDTO);
     }
 

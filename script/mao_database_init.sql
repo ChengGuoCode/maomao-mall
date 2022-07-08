@@ -311,20 +311,41 @@ CREATE TABLE maomao_mall_payment.`mao_account`
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '支付账户表';
 CREATE TABLE maomao_mall_payment.`mao_order_pay`
 (
-    `id`            BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `optimistic`    INT          NOT NULL DEFAULT '0' COMMENT '乐观锁',
-    `pay_no`        VARCHAR(128) NOT NULL COMMENT '支付单号',
-    `order_no`      VARCHAR(128) NOT NULL COMMENT '订单编号',
-    `payment`       BIGINT       NOT NULL COMMENT '支付金额',
-    `pay_way`       TINYINT ( 1 ) NOT NULL COMMENT '支付方式 0-余额',
-    `pay_acc`       BIGINT                DEFAULT NULL COMMENT '付款账户',
-    `recipient_acc` BIGINT       NOT NULL COMMENT '收款账户',
-    `creator`       VARCHAR(64)  NOT NULL COMMENT '创建人',
-    `create_time`   datetime     NOT NULL COMMENT '创建时间',
-    `updator`       VARCHAR(64)  NOT NULL COMMENT '更新人',
-    `update_time`   datetime     NOT NULL COMMENT '更新时间',
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `optimistic`  INT          NOT NULL DEFAULT '0' COMMENT '乐观锁',
+    `pay_no`      VARCHAR(128) NOT NULL COMMENT '支付单号',
+    `order_no`    VARCHAR(128) NOT NULL COMMENT '订单编号',
+    `payment`     BIGINT       NOT NULL COMMENT '支付金额',
+    `pay_way`     TINYINT ( 1 ) NOT NULL COMMENT '支付方式 0-余额',
+    `pay_acc`     BIGINT                DEFAULT NULL COMMENT '付款账户',
+    `creator`     VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time` datetime     NOT NULL COMMENT '创建时间',
+    `updator`     VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time` datetime     NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '订单支付表';
+CREATE TABLE maomao_mall_payment.`mao_order_pay_detail`
+(
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `optimistic`  INT          NOT NULL DEFAULT '0' COMMENT '乐观锁',
+    `pay_no`      VARCHAR(128) NOT NULL COMMENT '支付单号',
+    `order_no`    VARCHAR(128) NOT NULL COMMENT '订单编号',
+    `payment`     BIGINT       NOT NULL COMMENT '支付金额',
+    `pay_way`     TINYINT ( 1 ) NOT NULL COMMENT '支付方式 0-余额',
+    `pay_acc`     BIGINT                DEFAULT NULL COMMENT '付款账户',
+    `beneficiary` BIGINT       NOT NULL COMMENT '收款账户',
+    `business_id` BIGINT       NOT NULL COMMENT '商家ID',
+    `store_id`    BIGINT       NOT NULL COMMENT '店铺ID',
+    `product_id`  BIGINT       NOT NULL COMMENT '商品ID',
+    `sku_code`    VARCHAR(64)  NOT NULL COMMENT 'sku编码',
+    `price`       BIGINT       NOT NULL COMMENT '商品sku价格',
+    `num`         INT          NOT NULL COMMENT '数量',
+    `creator`     VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time` datetime     NOT NULL COMMENT '创建时间',
+    `updator`     VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time` datetime     NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '订单支付明细表';
 CREATE TABLE maomao_mall_payment.`mao_order_refund`
 (
     `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
