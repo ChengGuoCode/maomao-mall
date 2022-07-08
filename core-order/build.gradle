@@ -5,10 +5,8 @@ plugins {
 group 'com.gdng'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
-
 dependencies {
-    implementation project(':support-common')
     implementation project(':gdng-model')
     implementation project(':inner-api')
+    implementation project(':support-common')
 }

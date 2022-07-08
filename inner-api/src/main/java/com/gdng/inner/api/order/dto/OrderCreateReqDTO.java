@@ -1,59 +1,31 @@
 package com.gdng.inner.api.order.dto;
 
+import java.util.List;
+
+/**
+ * @Auther: guocheng
+ * @CreateDate: 2022/7/8 14:03
+ * @Description:
+ * @Version: 1.0.0
+ */
 public class OrderCreateReqDTO {
 
-    private Long businessId;
-    private Long storeId;
-    private Long productId;
-    private String skuCode;
-    private Long price;
-    private Integer num;
+    private Integer orderSource;
+    private List<OrderItemDTO> orderItemList;
 
-    public Long getBusinessId() {
-        return businessId;
+    public Integer getOrderSource() {
+        return orderSource;
     }
 
-    public void setBusinessId(Long businessId) {
-        this.businessId = businessId;
+    public void setOrderSource(Integer orderSource) {
+        this.orderSource = orderSource;
     }
 
-    public Long getStoreId() {
-        return storeId;
+    public List<OrderItemDTO> getOrderItemList() {
+        return orderItemList;
     }
 
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getSkuCode() {
-        return skuCode;
-    }
-
-    public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setOrderItemList(List<OrderItemDTO> orderItemList) {
+        this.orderItemList = orderItemList;
     }
 }

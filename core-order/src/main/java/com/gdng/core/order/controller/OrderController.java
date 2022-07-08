@@ -1,10 +1,7 @@
 package com.gdng.core.order.controller;
 
 import com.gdng.core.order.service.OrderService;
-import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
-import com.gdng.inner.api.order.dto.OrderCreateResDTO;
-import com.gdng.inner.api.order.dto.OrderPayReqDTO;
-import com.gdng.inner.api.order.dto.OrderRefundReqDTO;
+import com.gdng.inner.api.order.dto.*;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("core/order")
@@ -28,13 +24,13 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public ResDTO<OrderCreateResDTO> create(@RequestBody @Valid @NotEmpty(message = "购物车商品信息不能为空") List<OrderCreateReqDTO> reqDTOList) {
-        return ResDTO.buildSuccessResult(orderService.create(reqDTOList));
+    public ResDTO<OrderCreateResDTO> create(@RequestBody @Valid @NotNull(message = "购物车订单信息不能为空") OrderCreateReqDTO reqDTO) {
+        return ResDTO.buildSuccessResult(orderService.create(reqDTO));
     }
 
     @PostMapping("/pay")
-    public ResDTO<?> pay(@RequestBody OrderPayReqDTO reqDTO) {
-        return ResDTO.buildSuccessResult();
+    public ResDTO<OrderPayResDTO> pay(@RequestBody @Valid @NotNull(message = "支付订单信息不能为空") OrderPayReqDTO reqDTO) {
+        return ResDTO.buildSuccessResult(orderService.pay(reqDTO));
     }
 
     @PostMapping("/close")

@@ -2,15 +2,24 @@ package com.gdng.inner.api.order.dto;
 
 public class OrderPayReqDTO {
 
-    private String uid;
+    private Integer payWay;
+    private String payerUid;
     private String orderNo;
 
-    public String getUid() {
-        return uid;
+    public Integer getPayWay() {
+        return payWay;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setPayWay(Integer payWay) {
+        this.payWay = payWay;
+    }
+
+    public String getPayerUid() {
+        return payerUid;
+    }
+
+    public void setPayerUid(String payerUid) {
+        this.payerUid = payerUid;
     }
 
     public String getOrderNo() {

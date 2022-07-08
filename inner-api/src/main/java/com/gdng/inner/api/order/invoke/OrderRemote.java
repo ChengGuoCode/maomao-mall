@@ -1,17 +1,12 @@
 package com.gdng.inner.api.order.invoke;
 
-import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
-import com.gdng.inner.api.order.dto.OrderCreateResDTO;
-import com.gdng.inner.api.order.dto.OrderPayReqDTO;
-import com.gdng.inner.api.order.dto.OrderRefundReqDTO;
+import com.gdng.inner.api.order.dto.*;
 import com.gdng.inner.api.order.fallback.OrderRemoteFallbackFactory;
 import com.gdng.support.common.dto.res.ResDTO;
 import com.gdng.support.common.spring.feign.FeignConf;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -25,10 +20,10 @@ import java.util.List;
 public interface OrderRemote {
 
     @PostMapping("/create")
-    ResDTO<OrderCreateResDTO> create(@RequestBody List<OrderCreateReqDTO> reqDTOList);
+    ResDTO<OrderCreateResDTO> create(@RequestBody OrderCreateReqDTO reqDTO);
 
     @PostMapping("/pay")
-    ResDTO<?> pay(@RequestBody OrderPayReqDTO reqDTO);
+    ResDTO<OrderPayResDTO> pay(@RequestBody OrderPayReqDTO reqDTO);
 
     @PostMapping("/close")
     ResDTO<?> close(@RequestBody OrderPayReqDTO reqDTO);

@@ -5,8 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 public class RedisCache {
 
-    private String keyPrefix;
-    private static RedisTemplate<String, Object> redisTemplate;
+    private final String keyPrefix;
+    private static volatile RedisTemplate<String, Object> redisTemplate;
 
     public RedisCache(String keyPrefix) {
         this.keyPrefix = keyPrefix;
@@ -28,6 +28,7 @@ public class RedisCache {
         getRedisTemplate().opsForHash().put(keyPrefix + key, hashKey, hashVal);
     }
 
+    @SuppressWarnings("unchecked")
     private RedisTemplate<String, Object> getRedisTemplate() {
         if (redisTemplate == null) {
             synchronized (RedisCache.class) {

@@ -1,15 +1,10 @@
 package com.gdng.inner.api.order.fallback;
 
-import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
-import com.gdng.inner.api.order.dto.OrderCreateResDTO;
-import com.gdng.inner.api.order.dto.OrderPayReqDTO;
-import com.gdng.inner.api.order.dto.OrderRefundReqDTO;
+import com.gdng.inner.api.order.dto.*;
 import com.gdng.inner.api.order.invoke.OrderRemote;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -24,12 +19,12 @@ public class OrderRemoteFallbackFactory implements FallbackFactory<OrderRemote> 
     public OrderRemote create(Throwable cause) {
         return new OrderRemote() {
             @Override
-            public ResDTO<OrderCreateResDTO> create(List<OrderCreateReqDTO> reqDTOList) {
+            public ResDTO<OrderCreateResDTO> create(OrderCreateReqDTO reqDTO) {
                 return ResDTO.buildBusyResult();
             }
 
             @Override
-            public ResDTO<?> pay(OrderPayReqDTO reqDTO) {
+            public ResDTO<OrderPayResDTO> pay(OrderPayReqDTO reqDTO) {
                 return ResDTO.buildBusyResult();
             }
 

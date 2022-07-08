@@ -35,11 +35,6 @@ public class OrderDetailPO implements Serializable {
     private Integer optimistic;
 
 
-    @ApiModelProperty(value = "订单ID")
-    @TableField("order_id")
-    private Long orderId;
-
-
     @ApiModelProperty(value = "订单编号")
     @TableField("order_no")
     private String orderNo;
@@ -65,9 +60,9 @@ public class OrderDetailPO implements Serializable {
     private String productName;
 
 
-    @ApiModelProperty(value = "skuID")
-    @TableField("sku_id")
-    private Long skuId;
+    @ApiModelProperty(value = "sku编码")
+    @TableField("sku_code")
+    private String skuCode;
 
 
     @ApiModelProperty(value = "商品类型")
@@ -88,11 +83,6 @@ public class OrderDetailPO implements Serializable {
     @ApiModelProperty(value = "支付金额")
     @TableField("payment")
     private Long payment;
-
-
-    @ApiModelProperty(value = "付款方UID")
-    @TableField("payer_uid")
-    private String payerUid;
 
 
     @ApiModelProperty(value = "收款方ID")
@@ -135,14 +125,6 @@ public class OrderDetailPO implements Serializable {
         this.optimistic = optimistic;
     }
 
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
     public String getOrderNo() {
         return orderNo;
     }
@@ -183,12 +165,12 @@ public class OrderDetailPO implements Serializable {
         this.productName = productName;
     }
 
-    public Long getSkuId() {
-        return skuId;
+    public String getSkuCode() {
+        return skuCode;
     }
 
-    public void setSkuId(Long skuId) {
-        this.skuId = skuId;
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
     }
 
     public Integer getProductType() {
@@ -221,14 +203,6 @@ public class OrderDetailPO implements Serializable {
 
     public void setPayment(Long payment) {
         this.payment = payment;
-    }
-
-    public String getPayerUid() {
-        return payerUid;
-    }
-
-    public void setPayerUid(String payerUid) {
-        this.payerUid = payerUid;
     }
 
     public String getRecipientId() {
