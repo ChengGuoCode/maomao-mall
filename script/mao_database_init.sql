@@ -288,3 +288,52 @@ CREATE TABLE maomao_mall_goods.`mao_carousel`
     `update_time`  datetime     NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '首页轮播图';
+
+/* 支付表 payment */
+CREATE
+DATABASE maomao_mall_payment;
+CREATE TABLE maomao_mall_payment.`mao_account`
+(
+    `id`            BIGINT      NOT NULL AUTO_INCREMENT COMMENT '账户ID',
+    `optimistic`    INT         NOT NULL DEFAULT '0' COMMENT '乐观锁',
+    `type`          TINYINT ( 1 ) NOT NULL COMMENT '账户类型 0-个人，1-平台，2-商家，3-店铺',
+    `corelation_id` VARCHAR(64) NOT NULL COMMENT '类型关联ID',
+    `balance`       BIGINT      NOT NULL DEFAULT '0' COMMENT '账户余额',
+    `proceeds`      BIGINT      NOT NULL DEFAULT '0' COMMENT '收款金额',
+    `pay_pass`      VARCHAR(32) NOT NULL DEFAULT '123456' COMMENT '支付密码',
+    `withdrawal`    BIGINT      NOT NULL DEFAULT '0' COMMENT '提现金额',
+    `acc_status`    TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '账户状态 0-正常，1-可支付不可提现，2-可提现不可支付，3-冻结',
+    `creator`       VARCHAR(64) NOT NULL COMMENT '创建人',
+    `create_time`   datetime    NOT NULL COMMENT '创建时间',
+    `updator`       VARCHAR(64) NOT NULL COMMENT '更新人',
+    `update_time`   datetime    NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '支付账户表';
+CREATE TABLE maomao_mall_payment.`mao_order_pay`
+(
+    `id`            BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `optimistic`    INT          NOT NULL DEFAULT '0' COMMENT '乐观锁',
+    `pay_no`        VARCHAR(128) NOT NULL COMMENT '支付单号',
+    `order_no`      VARCHAR(128) NOT NULL COMMENT '订单编号',
+    `payment`       BIGINT       NOT NULL COMMENT '支付金额',
+    `pay_way`       TINYINT ( 1 ) NOT NULL COMMENT '支付方式 0-余额',
+    `pay_acc`       BIGINT                DEFAULT NULL COMMENT '付款账户',
+    `recipient_acc` BIGINT       NOT NULL COMMENT '收款账户',
+    `creator`       VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time`   datetime     NOT NULL COMMENT '创建时间',
+    `updator`       VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time`   datetime     NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '订单支付表';
+CREATE TABLE maomao_mall_payment.`mao_order_refund`
+(
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `optimistic`  INT          NOT NULL DEFAULT '0' COMMENT '乐观锁',
+    `refund_no`   VARCHAR(128) NOT NULL COMMENT '退款单号',
+    `order_no`    VARCHAR(128) NOT NULL COMMENT '订单编号',
+    `creator`     VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time` datetime     NOT NULL COMMENT '创建时间',
+    `updator`     VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time` datetime     NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '订单退款表';

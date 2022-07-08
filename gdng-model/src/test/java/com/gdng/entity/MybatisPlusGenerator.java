@@ -14,8 +14,9 @@ public class MybatisPlusGenerator {
     public void generateTableRelative() {
 //        generate(DatabaseEnum.GOODS);
 //        generate(DatabaseEnum.MERCHANT);
-        generate(DatabaseEnum.ORDER);
+//        generate(DatabaseEnum.ORDER);
 //        generate(DatabaseEnum.USER);
+        generate(DatabaseEnum.PAYMENT);
     }
 
     private void generate(DatabaseEnum database) {
@@ -110,9 +111,11 @@ public class MybatisPlusGenerator {
                         "mao_permission"
                 );
                 break;
-            case TEST:
+            case PAYMENT:
                 strategy.setInclude(
-                        "xxl_job_group"
+                        "mao_account",
+                        "mao_order_pay",
+                        "mao_order_refund"
                 );
         }
 
@@ -158,7 +161,7 @@ public class MybatisPlusGenerator {
         MERCHANT("maomao_mall_merchant", "com.gdng.entity.merchant"),
         ORDER("maomao_mall_order", "com.gdng.entity.order"),
         USER("maomao_mall_user", "com.gdng.entity.user"),
-        TEST("xxl_job", "com.gdng.entity.test"),
+        PAYMENT("maomao_mall_payment", "com.gdng.entity.payment"),
         ;
 
         private final String database;
