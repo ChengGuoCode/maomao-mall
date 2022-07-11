@@ -1,6 +1,9 @@
 package com.gdng.inner.api.payment.fallback;
 
+import com.gdng.inner.api.payment.dto.OrderPayReqDTO;
+import com.gdng.inner.api.payment.dto.OrderPayResDTO;
 import com.gdng.inner.api.payment.invoke.PaymentRemote;
+import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +19,10 @@ public class PaymentRemoteFallbackFactory implements FallbackFactory<PaymentRemo
     @Override
     public PaymentRemote create(Throwable cause) {
         return new PaymentRemote() {
+            @Override
+            public ResDTO<OrderPayResDTO> pay(OrderPayReqDTO reqDTO) {
+                return ResDTO.buildBusyResult();
+            }
         };
     }
 }

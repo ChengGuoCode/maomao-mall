@@ -50,19 +50,9 @@ public class AccountPO implements Serializable {
     private Long balance;
 
 
-    @ApiModelProperty(value = "收款金额")
-    @TableField("proceeds")
-    private Long proceeds;
-
-
     @ApiModelProperty(value = "支付密码")
     @TableField("pay_pass")
     private String payPass;
-
-
-    @ApiModelProperty(value = "提现金额")
-    @TableField("withdrawal")
-    private Long withdrawal;
 
 
     @ApiModelProperty(value = "账户状态 0-正常，1-可支付不可提现，2-可提现不可支付，3-冻结")
@@ -131,28 +121,12 @@ public class AccountPO implements Serializable {
         this.balance = balance;
     }
 
-    public Long getProceeds() {
-        return proceeds;
-    }
-
-    public void setProceeds(Long proceeds) {
-        this.proceeds = proceeds;
-    }
-
     public String getPayPass() {
         return payPass;
     }
 
     public void setPayPass(String payPass) {
         this.payPass = payPass;
-    }
-
-    public Long getWithdrawal() {
-        return withdrawal;
-    }
-
-    public void setWithdrawal(Long withdrawal) {
-        this.withdrawal = withdrawal;
     }
 
     public Integer getAccStatus() {

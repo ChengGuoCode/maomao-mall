@@ -14,6 +14,7 @@ public class OrderPayReqDTO {
     private Long payment;
     private Integer payWay;
     private String payerUid;
+    private String pass;
     private List<OrderPayItemDTO> orderPayItemList;
 
     public String getOrderNo() {
@@ -46,6 +47,14 @@ public class OrderPayReqDTO {
 
     public void setPayerUid(String payerUid) {
         this.payerUid = payerUid;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 
     public List<OrderPayItemDTO> getOrderPayItemList() {

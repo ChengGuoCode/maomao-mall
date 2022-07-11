@@ -1,6 +1,7 @@
 package com.gdng.service.app.controller;
 
-import com.gdng.inner.api.order.dto.OrderCloseReqDTO;
+import com.gdng.inner.api.payment.dto.OrderPayReqDTO;
+import com.gdng.inner.api.payment.dto.OrderPayResDTO;
 import com.gdng.inner.api.payment.invoke.PaymentRemote;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class PaymentController {
     }
 
     @PostMapping("/pay")
-    public ResDTO<?> pay(@RequestBody OrderCloseReqDTO reqDTO) {
-        return null;
+    public ResDTO<OrderPayResDTO> pay(@RequestBody OrderPayReqDTO reqDTO) {
+        return paymentRemote.pay(reqDTO);
     }
 }

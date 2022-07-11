@@ -1,8 +1,13 @@
 package com.gdng.inner.api.payment.invoke;
 
+import com.gdng.inner.api.payment.dto.OrderPayReqDTO;
+import com.gdng.inner.api.payment.dto.OrderPayResDTO;
 import com.gdng.inner.api.payment.fallback.PaymentRemoteFallbackFactory;
+import com.gdng.support.common.dto.res.ResDTO;
 import com.gdng.support.common.spring.feign.FeignConf;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @Auther: guocheng
@@ -14,4 +19,8 @@ import org.springframework.cloud.openfeign.FeignClient;
         PaymentRemoteFallbackFactory.class,
         configuration = {FeignConf.class})
 public interface PaymentRemote {
+
+    @PostMapping("/pay")
+    ResDTO<OrderPayResDTO> pay(@RequestBody OrderPayReqDTO reqDTO);
+
 }
