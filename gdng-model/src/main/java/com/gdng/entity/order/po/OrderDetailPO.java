@@ -86,8 +86,8 @@ public class OrderDetailPO implements Serializable {
 
 
     @ApiModelProperty(value = "收款方ID")
-    @TableField("recipient_id")
-    private String recipientId;
+    @TableField("beneficiary")
+    private Long beneficiary;
 
 
     @ApiModelProperty(value = "创建人")
@@ -205,12 +205,12 @@ public class OrderDetailPO implements Serializable {
         this.payment = payment;
     }
 
-    public String getRecipientId() {
-        return recipientId;
+    public Long getBeneficiary() {
+        return beneficiary;
     }
 
-    public void setRecipientId(String recipientId) {
-        this.recipientId = recipientId;
+    public void setBeneficiary(Long beneficiary) {
+        this.beneficiary = beneficiary;
     }
 
     public String getCreator() {

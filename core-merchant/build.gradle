@@ -2,10 +2,5 @@ plugins {
     id 'java'
 }
 
-group 'com.gdng'
+group 'com.gdng.merchant'
 version '1.0-SNAPSHOT'
-
-dependencies {
-    implementation project(':support-common')
-    implementation project(':gdng-model')
-}

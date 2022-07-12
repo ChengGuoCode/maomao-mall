@@ -28,6 +28,17 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
+    def env = System.getProperty("env") ?: "dev"
+    apply from: "profile-${env}.gradle"
+
+    sourceSets {
+        main {
+            resources {
+                srcDirs = ["src/main/resources/$env"]
+            }
+        }
+    }
+
     ext {
         spring_boot_version = '2.6.6'
         spring_cloud_version = '3.1.0'
@@ -42,6 +53,7 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: "${spring_boot_version}"
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: "${spring_boot_version}"
 
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-consul-discovery', version: "${spring_cloud_version}"
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-client', version: "${spring_cloud_version}"

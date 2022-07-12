@@ -4,14 +4,3 @@ plugins {
 
 group 'com.gdng.service.app'
 version '1.0-SNAPSHOT'
-
-def env = System.getProperty("env") ?: "dev"
-apply from: "profile-${env}.gradle"
-
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/resources/$env"]
-        }
-    }
-}

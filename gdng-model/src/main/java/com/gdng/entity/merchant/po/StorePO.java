@@ -105,8 +105,8 @@ public class StorePO implements Serializable {
 
 
     @ApiModelProperty(value = "收款账号")
-    @TableField("receive_account_id")
-    private String receiveAccountId;
+    @TableField("beneficiary")
+    private Long beneficiary;
 
 
     @ApiModelProperty(value = "是否支持外送 0-不支持，1-支持")
@@ -286,12 +286,12 @@ public class StorePO implements Serializable {
         this.auditTime = auditTime;
     }
 
-    public String getReceiveAccountId() {
-        return receiveAccountId;
+    public Long getBeneficiary() {
+        return beneficiary;
     }
 
-    public void setReceiveAccountId(String receiveAccountId) {
-        this.receiveAccountId = receiveAccountId;
+    public void setBeneficiary(Long beneficiary) {
+        this.beneficiary = beneficiary;
     }
 
     public Integer getDelivery() {

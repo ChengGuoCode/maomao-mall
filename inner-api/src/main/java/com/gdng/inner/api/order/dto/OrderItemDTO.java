@@ -4,6 +4,7 @@ public class OrderItemDTO {
 
     private Long businessId;
     private Long storeId;
+    private Long beneficiary;
     private Long productId;
     private String productName;
     private String skuCode;
@@ -25,6 +26,14 @@ public class OrderItemDTO {
 
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
+    }
+
+    public Long getBeneficiary() {
+        return beneficiary;
+    }
+
+    public void setBeneficiary(Long beneficiary) {
+        this.beneficiary = beneficiary;
     }
 
     public Long getProductId() {

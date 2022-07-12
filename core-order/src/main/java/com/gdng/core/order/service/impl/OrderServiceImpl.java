@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static com.gdng.core.order.constant.RecipientTypeEnum.getStoreRecipientId;
-
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -59,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
             long originPrice = orderDTO.getPrice() * orderDTO.getGoodsNum();
             long actualPay = originPrice;
             orderDetailPO.setPayment(actualPay);
-            orderDetailPO.setRecipientId(getStoreRecipientId(orderDTO.getStoreId()));
+            orderDetailPO.setBeneficiary(orderDTO.getBeneficiary());
             orderPrice.addAndGet(originPrice);
             payment.addAndGet(actualPay);
             return orderDetailPO;

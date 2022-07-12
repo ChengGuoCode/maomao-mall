@@ -7,4 +7,14 @@ package com.gdng.inner.api.payment.dto;
  * @Version: 1.0.0
  */
 public class OrderPayResDTO {
+
+    private String payNo;
+
+    public String getPayNo() {
+        return payNo;
+    }
+
+    public void setPayNo(String payNo) {
+        this.payNo = payNo;
+    }
 }

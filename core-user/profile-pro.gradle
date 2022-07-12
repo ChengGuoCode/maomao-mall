@@ -1,4 +1,0 @@
-dependencies {
-    implementation project(':support-common')
-    implementation project(':gdng-model')
-}
