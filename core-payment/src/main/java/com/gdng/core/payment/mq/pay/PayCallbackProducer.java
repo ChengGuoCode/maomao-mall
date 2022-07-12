@@ -24,7 +24,7 @@ public class PayCallbackProducer {
         this.amqpTemplate = amqpTemplate;
     }
 
-    public void sendMsg(PayCallbackDTO payCallbackDTO){
+    public void sendMsg(PayCallbackDTO payCallbackDTO) {
         this.amqpTemplate.convertAndSend(PAY_CALLBACK_EXCHANGE, null, JacksonUtil.anyToJson(payCallbackDTO));
     }
 
