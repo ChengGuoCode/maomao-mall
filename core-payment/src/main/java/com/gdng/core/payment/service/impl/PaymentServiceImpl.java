@@ -71,22 +71,20 @@ public class PaymentServiceImpl implements PaymentService {
 
         OrderPayResDTO resDTO = new OrderPayResDTO();
         AccountPO accountPO = null;
-        switch (payWay) {
-            case BALANCE:
-                RedisLock redisLock = new RedisLock(INDIVIDUAL_ACCOUNT_LOCK);
-                boolean lock = redisLock.lock(payerUid);
-                if (!lock) {
-                    throw new GdngException(GlobalResponseEnum.SYSTEM_BUSY);
-                }
-                try {
-                    accountPO = accountDaoService.getOne(new QueryWrapper<AccountPO>().eq("type", AccountTypeEnum.INDIVIDUAL.getType()).eq("corelation_id", payerUid));
-                    checkPayerAccount(accountPO, pass, payment);
-                    accountPO.setBalance(accountPO.getBalance() - payment);
-                    accountDaoService.updateById(accountPO);
-                } finally {
-                    redisLock.unlock();
-                }
-                break;
+        if (payWay == PayWayEnum.BALANCE) {
+            RedisLock redisLock = new RedisLock(INDIVIDUAL_ACCOUNT_LOCK);
+            boolean lock = redisLock.lock(payerUid);
+            if (!lock) {
+                throw new GdngException(GlobalResponseEnum.SYSTEM_BUSY);
+            }
+            try {
+                accountPO = accountDaoService.getOne(new QueryWrapper<AccountPO>().eq("type", AccountTypeEnum.INDIVIDUAL.getType()).eq("corelation_id", payerUid));
+                checkPayerAccount(accountPO, pass, payment);
+                accountPO.setBalance(accountPO.getBalance() - payment);
+                accountDaoService.updateById(accountPO);
+            } finally {
+                redisLock.unlock();
+            }
         }
         String payNo = payNoGenerator.nextId();
         AccountPO finalAccountPO = accountPO;
@@ -118,6 +116,11 @@ public class PaymentServiceImpl implements PaymentService {
         payDetailDaoService.saveBatch(orderPayDetailPOList);
 
         PayCallbackDTO payCallbackDTO = new PayCallbackDTO();
+        payCallbackDTO.setOrderNo(orderNo);
+        payCallbackDTO.setPayWay(payWay.getCode());
+        payCallbackDTO.setPayTime(orderPayPO.getCreateTime());
+        payCallbackDTO.setPayOrderNo(payNo);
+        payCallbackDTO.setPayerUid(payerUid);
         payCallbackProducer.sendMsg(payCallbackDTO);
 
         resDTO.setPayNo(payNo);
