@@ -53,6 +53,7 @@ public class StoreProductServiceImpl implements StoreProductService {
         return carouselDTOList;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public PageResDTO<StoreProductResDTO> getGoodsList(StoreProductReqDTO reqDTO) {
         long pageNo = reqDTO.getPageNo();

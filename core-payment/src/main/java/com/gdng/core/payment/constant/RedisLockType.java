@@ -8,6 +8,6 @@ package com.gdng.core.payment.constant;
  */
 public class RedisLockType {
 
-    public static final String INDIVIDUAL_ACCOUNT_LOCK = "individual_account";
+    public static final String ACCOUNT_LOCK = "account";
 
 }

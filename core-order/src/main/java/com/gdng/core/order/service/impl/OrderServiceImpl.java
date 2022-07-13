@@ -1,6 +1,8 @@
 package com.gdng.core.order.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gdng.core.order.constant.OrderSourceEnum;
+import com.gdng.core.order.constant.OrderStatusEnum;
 import com.gdng.core.order.dao.service.OrderDaoService;
 import com.gdng.core.order.dao.service.OrderDetailDaoService;
 import com.gdng.core.order.service.OrderService;
@@ -9,15 +11,18 @@ import com.gdng.entity.order.po.OrderPO;
 import com.gdng.inner.api.order.dto.OrderCreateReqDTO;
 import com.gdng.inner.api.order.dto.OrderCreateResDTO;
 import com.gdng.inner.api.order.dto.OrderItemDTO;
+import com.gdng.inner.api.payment.dto.mq.PayCallbackDTO;
 import com.gdng.support.common.IdGenerator;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.util.GdngBeanUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -57,7 +62,6 @@ public class OrderServiceImpl implements OrderService {
             long originPrice = orderDTO.getPrice() * orderDTO.getGoodsNum();
             long actualPay = originPrice;
             orderDetailPO.setPayment(actualPay);
-            orderDetailPO.setBeneficiary(orderDTO.getBeneficiary());
             orderPrice.addAndGet(originPrice);
             payment.addAndGet(actualPay);
             return orderDetailPO;
@@ -75,4 +79,46 @@ public class OrderServiceImpl implements OrderService {
         orderCreateResDTO.setOrderNo(orderPO.getOrderNo());
         return orderCreateResDTO;
     }
+
+    @Override
+    public void payCallback(PayCallbackDTO payCallbackDTO) {
+        checkPayCallbackParam(payCallbackDTO);
+
+        String orderNo = payCallbackDTO.getOrderNo();
+        Integer payWay = payCallbackDTO.getPayWay();
+        Date payTime = payCallbackDTO.getPayTime();
+        String payOrderNo = payCallbackDTO.getPayOrderNo();
+        String payerUid = payCallbackDTO.getPayerUid();
+
+        OrderPO orderPO = orderDaoService.getOne(new QueryWrapper<OrderPO>().eq("order_no", orderNo));
+        if (orderPO == null) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "支付回调无效订单编号：" + orderNo);
+        }
+        orderPO.setPayWay(payWay);
+        orderPO.setPayTime(payTime);
+        orderPO.setPayOrderNo(payOrderNo);
+        orderPO.setPayerUid(payerUid);
+        orderPO.setStatus(OrderStatusEnum.PAID.getStatus());
+        orderDaoService.updateById(orderPO);
+    }
+
+    private void checkPayCallbackParam(PayCallbackDTO payCallbackDTO) {
+        if (StringUtils.isBlank(payCallbackDTO.getOrderNo())) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "支付回调订单编号不能为空");
+        }
+        if (payCallbackDTO.getPayWay() == null) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "支付回调支付方式不能为空");
+        }
+        if (payCallbackDTO.getPayTime() == null) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "支付回调支付时间不能为空");
+        }
+        if (StringUtils.isBlank(payCallbackDTO.getPayOrderNo())) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "支付回调支付单号不能为空");
+        }
+        if (StringUtils.isBlank(payCallbackDTO.getPayerUid())) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "支付回调付款人不能为空");
+        }
+    }
+
+
 }

@@ -23,6 +23,7 @@ public enum GlobalResponseEnum {
 
     SYSTEM_ERR(9001, "系统不舒服，请稍后重试"),
     SYSTEM_BUSY(9002, "系统繁忙"),
+    REMOTE_ERR(9003, "远程调用异常[%s]"),
     ;
 
     private final int code;

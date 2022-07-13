@@ -10,7 +10,6 @@ public class OrderPayItemDTO {
 
     private Long businessId;
     private Long storeId;
-    private Long beneficiary;
     private Long productId;
     private String skuCode;
     private Long price;
@@ -30,14 +29,6 @@ public class OrderPayItemDTO {
 
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
-    }
-
-    public Long getBeneficiary() {
-        return beneficiary;
-    }
-
-    public void setBeneficiary(Long beneficiary) {
-        this.beneficiary = beneficiary;
     }
 
     public Long getProductId() {

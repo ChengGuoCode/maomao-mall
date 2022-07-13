@@ -1,14 +1,11 @@
 package com.gdng.entity.order.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.baomidou.mybatisplus.annotation.*;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -83,11 +80,6 @@ public class OrderDetailPO implements Serializable {
     @ApiModelProperty(value = "支付金额")
     @TableField("payment")
     private Long payment;
-
-
-    @ApiModelProperty(value = "收款方ID")
-    @TableField("beneficiary")
-    private Long beneficiary;
 
 
     @ApiModelProperty(value = "创建人")
@@ -203,14 +195,6 @@ public class OrderDetailPO implements Serializable {
 
     public void setPayment(Long payment) {
         this.payment = payment;
-    }
-
-    public Long getBeneficiary() {
-        return beneficiary;
-    }
-
-    public void setBeneficiary(Long beneficiary) {
-        this.beneficiary = beneficiary;
     }
 
     public String getCreator() {

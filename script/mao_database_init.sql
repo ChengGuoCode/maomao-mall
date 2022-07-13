@@ -94,7 +94,6 @@ CREATE TABLE maomao_mall_order.`mao_order_detail`
     `price`        BIGINT       NOT NULL COMMENT '店铺商品sku价格',
     `goods_num`    INT          NOT NULL COMMENT '商品数量',
     `payment`      BIGINT       NOT NULL DEFAULT '0' COMMENT '支付金额',
-    `beneficiary`  BIGINT                DEFAULT NULL COMMENT '收款方ID',
     `creator`      VARCHAR(64)  NOT NULL COMMENT '创建人',
     `create_time`  datetime     NOT NULL COMMENT '创建时间',
     `updator`      VARCHAR(64)  NOT NULL COMMENT '更新人',

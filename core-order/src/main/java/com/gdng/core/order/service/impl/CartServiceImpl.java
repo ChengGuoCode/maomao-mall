@@ -10,6 +10,7 @@ import com.gdng.inner.api.order.dto.CartResDTO;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.util.GdngBeanUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addOrUpdateProduct(CartReqDTO reqDTO) {
+        checkCartParam(reqDTO);
         String uid = reqDTO.getUid();
         Long businessId = reqDTO.getBusinessId();
         Long storeId = reqDTO.getStoreId();
@@ -59,6 +61,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeProduct(CartReqDTO reqDTO) {
+        checkCartParam(reqDTO);
         String uid = reqDTO.getUid();
         Long businessId = reqDTO.getBusinessId();
         Long storeId = reqDTO.getStoreId();
@@ -80,5 +83,17 @@ public class CartServiceImpl implements CartService {
             }).collect(Collectors.toList()));
         }
         return cartResDTOList;
+    }
+
+    private void checkCartParam(CartReqDTO reqDTO) {
+        if (StringUtils.isBlank(reqDTO.getUid())) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "用户ID不能为空");
+        }
+        if (reqDTO.getBusinessId() == null || reqDTO.getStoreId() == null || reqDTO.getProductId() == null) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "商品信息不能为空");
+        }
+        if (StringUtils.isBlank(reqDTO.getSkuCode())) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "商品规格不能为空");
+        }
     }
 }

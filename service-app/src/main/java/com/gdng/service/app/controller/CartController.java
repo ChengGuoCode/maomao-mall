@@ -7,7 +7,10 @@ import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import com.gdng.support.common.spring.SpringContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -42,7 +45,7 @@ public class CartController {
         return cartRemote.removeProduct(reqDTO);
     }
 
-    @GetMapping("/getCartList")
+    @PostMapping("/getCartList")
     public ResDTO<List<CartResDTO>> getCartList() {
         UserDTO user = SpringContextHolder.getUser();
         return cartRemote.getCartList(user.getId());
