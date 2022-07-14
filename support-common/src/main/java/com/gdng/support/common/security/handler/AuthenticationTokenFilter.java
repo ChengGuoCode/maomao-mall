@@ -48,6 +48,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         }
         SpringContextHolder.setUser(userInfo);
         filterChain.doFilter(request, response);
+        SpringContextHolder.setUser(null);
     }
 
 }

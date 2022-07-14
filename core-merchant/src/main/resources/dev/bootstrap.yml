@@ -13,7 +13,7 @@ spring:
       label: ${spring.profiles.active}
       discovery:
         enabled: true
-        service-id: config-server
+        service-id: gdng-config-server-procedure
       fail-fast: true
       retry:
         initial-interval: 1000

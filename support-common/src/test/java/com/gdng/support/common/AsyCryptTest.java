@@ -8,7 +8,7 @@ public class AsyCryptTest {
 
     @Test
     public void testRSAEncrypt() {
-        System.out.println(AsyCryptUtil.encrypt("dc3414bce1e3488eb6c63c2167f34cde", "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIbXPbzTPpo5tIluWvkK6fEWns1QJg7LDWw9WcRbsUbzjfNoVPU8XU9uB4AryDNOYx5aR_BPJCYvJQkfWB-rtRECAwEAAQ", AsyCryptAlgEnum.RSA));
+        System.out.println(AsyCryptUtil.encrypt("74642cf99652488a9f432c95059d43e4", "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMNPaAsZIySaBHo6KxwHrwzyNxP_ogJt06c1-iiMaaSUwM1fAgvqZqONjwmgxpZvm5MLbink1HKkoEGUUJPj7HECAwEAAQ", AsyCryptAlgEnum.RSA));
     }
 
 }

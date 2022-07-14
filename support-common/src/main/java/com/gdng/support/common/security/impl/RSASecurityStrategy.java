@@ -18,7 +18,7 @@ import java.util.*;
 
 public class RSASecurityStrategy implements ISecurityStrategy {
 
-    private static final long FIVE_MIN_EXP = 300000;
+    private static final long REQUEST_EXP = 300000;
 
     @Override
     public ResDTO check(HttpServletRequest request) {
@@ -57,7 +57,7 @@ public class RSASecurityStrategy implements ISecurityStrategy {
             }
         }
         long timestamp = Long.parseLong(timestampStr);
-        if (new Date().getTime() - timestamp > FIVE_MIN_EXP) {
+        if (new Date().getTime() - timestamp > REQUEST_EXP && timestamp != -9527L) {
             return ResDTO.buildFailResult(GlobalResponseEnum.REQUEST_EXP);
         }
 

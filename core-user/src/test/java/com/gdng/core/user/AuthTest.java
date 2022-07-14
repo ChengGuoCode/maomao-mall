@@ -8,13 +8,11 @@ import com.gdng.support.common.security.asyCrypt.AsyCryptAlgEnum;
 import com.gdng.support.common.security.asyCrypt.AsyCryptUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,21 +20,15 @@ import java.util.Map;
 @SpringBootTest(classes = com.gdng.core.user.CoreUserApplication.class)
 public class AuthTest {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     private static final PasswordEncoder passwordEncoderX = new BCryptPasswordEncoder();
 
     @Test
     public void testPasswordEncoder() {
-        String text = "123";
-        String text1 = passwordEncoder.encode(text);
-        System.out.println(passwordEncoderX.matches("543", text1));
     }
 
     @Test
     public void testMakeSign() {
-        String header = "token=eyJwdWJsaWNLZXkiOiJNRnd3RFFZSktvWklodmNOQVFFQkJRQURTd0F3U0FKQkFJYlhQYnpUUHBvNXRJbHVXdmtLNmZFV25zMVFKZzdMRFd3OVdjUmJzVWJ6amZOb1ZQVThYVTl1QjRBcnlETk9ZeDVhUl9CUEpDWXZKUWtmV0ItcnRSRUNBd0VBQVEiLCJhbGciOiJSU0EifQ.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2NTUwMDY3MzI5MTUsImV4cCI6LTF9.eyJzaWduYXR1cmUiOiJDOXFJOUxwYUFGTnFBY2poVDFEdU1PeEdHV3AxbUZ5ODQ1TkxFaU1WbW9iNWg3TDN6X1Y2bXExYk1nM2JKZ1pZY3pCSFZVZUtnYS1qZUVWLWhsbGRRdyJ9&ver=0.5&timestamp=1655018036074&sign=256364F8A2C32BCADC272EFADE021940&sessionKey=WJTaPqmurcPezFl8AEyWrqwDpqTPFY3BfspypONO4xxDoxbfBfKNK2fWt8J538glae5mVx6zEniPYa3p5cW3iA&uid=5fc5ee60548876bd5acce4fbb1782155";
+        String header = "token=eyJwdWJsaWNLZXkiOiJNRnd3RFFZSktvWklodmNOQVFFQkJRQURTd0F3U0FKQkFNTlBhQXNaSXlTYUJIbzZLeHdIcnd6eU54UF9vZ0p0MDZjMS1paU1hYVNVd00xZkFndnFacU9OandtZ3hwWnZtNU1MYmluazFIS2tvRUdVVUpQajdIRUNBd0VBQVEiLCJhbGciOiJSU0EifQ.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2NTc3Njk0ODYwNzAsImV4cCI6LTF9.eyJzaWduYXR1cmUiOiJGVmRfbVRsekNwVDRKeWlXZWtsNEVaT2RsQ1AxQndtaFkwemIzMDZHTzl5bVBUTTJpVlh4bmoxTlY4LXJzRmFqemMzV1B5Q1VabXZCXzd4czRiUXVMUSJ9&ver=1.0&timestamp=-9527&sign=02B5E81921AA70C00F82996BEF6BB453&sessionKey=P0ogP7mQxrk_eXHMpIBsKIOiAIF0090zM7US6ZoYXoFCq50wX-2Y_v8YEA1xO6twTFRqMIyDyvzZ_vM_dVZqrQ&uid=1542773459684794370";
 
         Map<String, String> signMap = getSignMap(header);
         Claims claims = SecurityStrategyUtil.parseToken(signMap.get(HttpConstant.Uri.TOKEN));

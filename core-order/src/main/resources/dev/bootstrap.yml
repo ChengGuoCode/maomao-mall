@@ -20,8 +20,6 @@ spring:
         max-attempts: 6
         max-interval: 2000
         multiplier: 1.1
-      username: g_2022_gdng
-      password: pamqlzzz2022
     consul:
       host: 127.0.0.1
       port: 8500

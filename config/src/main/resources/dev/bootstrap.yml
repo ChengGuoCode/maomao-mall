@@ -3,10 +3,6 @@ server:
 spring:
   application:
     name: config-server
-  security:
-    user:
-      name: g_2022_gdng
-      password: pamqlzzz2022
   cloud:
     consul:
       host: 127.0.0.1
