@@ -47,7 +47,7 @@ subprojects {
     configurations { all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging' }
 
     dependencies {
-        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: "${spring_boot_version}"
+        /*implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${spring_boot_version}"
@@ -58,7 +58,6 @@ subprojects {
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-client', version: "${spring_cloud_version}"
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: "${spring_cloud_version}"
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: "${spring_cloud_version}"
-//        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-loadbalancer', version: "${spring_cloud_version}"
 
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.29'
         implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.2'
@@ -68,6 +67,6 @@ subprojects {
         implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 
         testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${spring_boot_version}"
-        testImplementation group: 'junit', name: 'junit', version: '4.12'
+        testImplementation group: 'junit', name: 'junit', version: '4.12'*/
     }
 }

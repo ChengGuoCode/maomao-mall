@@ -1,9 +1,9 @@
 package com.gdng.service.app;
 
-import com.gdng.support.common.security.handler.AuthenticationTokenFilter;
-import com.gdng.support.common.security.handler.GdngAccessDeniedHandler;
-import com.gdng.support.common.security.handler.GdngAuthenticationEntryPoint;
-import com.gdng.support.common.security.handler.GdngLogoutHandler;
+import com.gdng.support.security.filter.AuthenticationTokenFilter;
+import com.gdng.support.security.handler.GdngAccessDeniedHandler;
+import com.gdng.support.security.handler.GdngAuthenticationEntryPoint;
+import com.gdng.support.security.handler.GdngLogoutHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
