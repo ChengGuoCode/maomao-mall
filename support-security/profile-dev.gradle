@@ -1,3 +1,5 @@
 dependencies {
     implementation project(':support-common')
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.6.6'
 }

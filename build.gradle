@@ -1,5 +1,12 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
     group 'com.gdng'
     version '1.0-SNAPSHOT'
@@ -8,7 +15,7 @@ allprojects {
     repositories{
         maven {
             credentials {
-                url "http://127.0.0.1:8081/nexus/content/groups/maven-public/"
+                url "http://localhost:8081/nexus/content/groups/gdng-group/"
                 username "admin"
                 password "admin123"
                 allowInsecureProtocol = true
@@ -47,7 +54,7 @@ subprojects {
     configurations { all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging' }
 
     dependencies {
-        /*implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: "${spring_boot_version}"
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${spring_boot_version}"
@@ -67,6 +74,6 @@ subprojects {
         implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 
         testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${spring_boot_version}"
-        testImplementation group: 'junit', name: 'junit', version: '4.12'*/
+        testImplementation group: 'junit', name: 'junit', version: '4.12'
     }
 }

@@ -136,13 +136,15 @@ public class PaymentServiceImpl implements PaymentService {
             } catch (Exception e) {
                 log.error("余额支付异常", e);
                 platformTransactionManager.rollback(transaction);
-            }
-            if (!CollectionUtils.isEmpty(payLocks)) {
-                for (RedisLock payLock : payLocks) {
-                    try {
-                        payLock.unlock();
-                    } catch (Exception e) {
-                        log.error("支付账户锁释放异常", e);
+                throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "余额支付异常，请稍后重试");
+            } finally {
+                if (!CollectionUtils.isEmpty(payLocks)) {
+                    for (RedisLock payLock : payLocks) {
+                        try {
+                            payLock.unlock();
+                        } catch (Exception e) {
+                            log.error("支付账户锁释放异常", e);
+                        }
                     }
                 }
             }

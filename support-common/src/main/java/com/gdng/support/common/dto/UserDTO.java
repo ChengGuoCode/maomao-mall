@@ -1,7 +1,5 @@
 package com.gdng.support.common.dto;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import java.util.List;
 
 public class UserDTO {
@@ -10,7 +8,7 @@ public class UserDTO {
     private String username;
     private String password;
     private String token;
-    private List<GrantedAuthority> authorities;
+    private List<GdngGrantedAuthority> authorities;
 
     public String getId() {
         return id;
@@ -44,11 +42,11 @@ public class UserDTO {
         this.token = token;
     }
 
-    public List<GrantedAuthority> getAuthorities() {
+    public List<GdngGrantedAuthority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<GrantedAuthority> authorities) {
+    public void setAuthorities(List<GdngGrantedAuthority> authorities) {
         this.authorities = authorities;
     }
 }

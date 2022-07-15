@@ -9,6 +9,7 @@ import com.gdng.entity.user.po.RolePO;
 import com.gdng.entity.user.po.UserPO;
 import com.gdng.entity.user.po.UserRolePO;
 import com.gdng.support.common.cache.redis.user.UserRedisCache;
+import com.gdng.support.common.dto.GdngGrantedAuthority;
 import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.exception.GdngException;
@@ -19,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -75,7 +74,7 @@ public class UserServiceImpl implements UserService {
         }
 
         String uid = userPO.getId();
-        List<GrantedAuthority> authorities = getAuthorities(uid);
+        List<GdngGrantedAuthority> authorities = getAuthorities(uid);
         userDTO.setId(uid);
         userDTO.setPassword(null);
         userDTO.setAuthorities(authorities);
@@ -117,14 +116,14 @@ public class UserServiceImpl implements UserService {
         userDaoService.saveOrUpdate(userPO);
     }
 
-    private List<GrantedAuthority> getAuthorities(String uid) {
+    private List<GdngGrantedAuthority> getAuthorities(String uid) {
         List<UserRolePO> userRolePOList = userRoleDaoService.list(new QueryWrapper<UserRolePO>().eq("uid", uid));
-        List<GrantedAuthority> authorities = new ArrayList<>();
+        List<GdngGrantedAuthority> authorities = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(userRolePOList)) {
             List<Long> roleIdList = userRolePOList.stream().map(UserRolePO::getRid).collect(Collectors.toList());
             List<RolePO> rolePOList = roleDaoService.listByIds(roleIdList);
             if (CollectionUtils.isNotEmpty(rolePOList)) {
-                authorities.addAll(rolePOList.stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList()));
+                authorities.addAll(rolePOList.stream().map(role -> new GdngGrantedAuthority(role.getRoleName())).collect(Collectors.toList()));
             }
         }
         return authorities;

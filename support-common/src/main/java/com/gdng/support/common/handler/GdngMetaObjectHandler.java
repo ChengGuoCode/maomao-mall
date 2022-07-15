@@ -1,9 +1,13 @@
 package com.gdng.support.common.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.spring.SpringContextHolder;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -51,6 +55,19 @@ public class GdngMetaObjectHandler implements MetaObjectHandler {
         if (hasUpdator) {
             metaObject.setValue(UPDATOR, uid);
         }
+    }
+
+    @Bean
+    public OptimisticLockerInterceptor optimisticInterceptor() {
+        return new OptimisticLockerInterceptor();
+    }
+
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        paginationInterceptor.setLimit(5000);
+        paginationInterceptor.setCountSqlParser(new JsqlParserCountOptimize(true));
+        return paginationInterceptor;
     }
 
     private String getUid() {

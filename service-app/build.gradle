@@ -1,6 +1,2 @@
-plugins {
-    id 'java'
-}
-
 group 'com.gdng.service.app'
 version '1.0-SNAPSHOT'

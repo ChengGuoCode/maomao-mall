@@ -69,7 +69,7 @@ CREATE TABLE maomao_mall_order.`mao_order`
     `status`       TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '订单状态 0-待支付，1-支付完成，2-已取消，3-部分退款，4-退款',
     `order_price`  BIGINT       NOT NULL DEFAULT '0' COMMENT '订单金额',
     `payment`      BIGINT       NOT NULL DEFAULT '0' COMMENT '支付金额',
-    `pay_way`      TINYINT ( 1 ) NOT NULL COMMENT '支付方式 0-余额',
+    `pay_way`      TINYINT ( 1 ) DEFAULT NULL COMMENT '支付方式 0-余额',
     `pay_time`     datetime              DEFAULT NULL COMMENT '支付时间',
     `pay_order_no` VARCHAR(128)          DEFAULT NULL COMMENT '付款单号',
     `payer_uid`    VARCHAR(64)           DEFAULT NULL COMMENT '付款方UID',
