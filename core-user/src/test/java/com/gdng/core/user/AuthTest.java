@@ -34,7 +34,7 @@ public class AuthTest {
         Claims claims = SecurityStrategyUtil.parseToken(signMap.get(HttpConstant.Uri.TOKEN));
         String alg = claims.getAlg();
         AsyCryptAlgEnum algorithm = AsyCryptAlgEnum.getAlgByKey(alg);
-        String keyPair = UserRedisCache.getRSAKeyPair(AsyCryptAlgEnum.RSA.getAlgorithm());
+        String keyPair = UserRedisCache.getAsyCryptKeyPair(AsyCryptAlgEnum.RSA.getAlgorithm());
         String[] keyPairs = keyPair.split("#");
 
         signMap.remove(HttpConstant.Uri.SIGN);

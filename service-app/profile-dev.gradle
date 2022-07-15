@@ -1,4 +1,5 @@
 dependencies {
     implementation project(':inner-api')
     implementation project(':support-common')
+    implementation project(':support-security')
 }

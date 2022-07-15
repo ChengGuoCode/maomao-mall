@@ -9,11 +9,11 @@ public class UserRedisCache {
     private static final RedisCache USER_AUTH_CACHE = new RedisCache("user:auth:");
     private static final RedisCache USER_CACHE = new RedisCache("user:info:");
 
-    public static String getRSAKeyPair(String algorithm) {
+    public static String getAsyCryptKeyPair(String algorithm) {
         return String.valueOf(USER_AUTH_CACHE.get(algorithm));
     }
 
-    public static void setRSAKeyPair(String algorithm, String keyPair) {
+    public static void setAsyCryptKeyPair(String algorithm, String keyPair) {
         USER_AUTH_CACHE.set(algorithm, keyPair);
     }
 

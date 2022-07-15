@@ -31,7 +31,7 @@ public class RSASecurityStrategy implements ISecurityStrategy {
         if (algorithm == null) {
             return ResDTO.buildFailResult(GlobalResponseEnum.TOKEN_INVALID);
         }
-        String keyPair = UserRedisCache.getRSAKeyPair(AsyCryptAlgEnum.RSA.getAlgorithm());
+        String keyPair = UserRedisCache.getAsyCryptKeyPair(algorithm.getAlgorithm());
         if (keyPair == null || keyPair.split("#").length != 2) {
             return ResDTO.buildFailResult(GlobalResponseEnum.TOKEN_EXP);
         }

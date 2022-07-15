@@ -15,6 +15,8 @@ import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.security.SecurityStrategyUtil;
 import com.gdng.support.common.security.asyCrypt.AsyCryptAlgEnum;
 import com.gdng.support.common.security.asyCrypt.AsyCryptUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,8 +33,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Value("${auth.token.expireTime}")
     private Long expireTime;
+    @Value("${auth.token.strategy}")
+    private String strategy;
 
     private final UserDaoService userDaoService;
     private final RoleDaoService roleDaoService;
@@ -73,15 +79,19 @@ public class UserServiceImpl implements UserService {
         userDTO.setId(uid);
         userDTO.setPassword(null);
         userDTO.setAuthorities(authorities);
-        AsyCryptAlgEnum alg = AsyCryptAlgEnum.RSA;
-        String keyPair = UserRedisCache.getRSAKeyPair(alg.getAlgorithm());
+        AsyCryptAlgEnum alg = AsyCryptAlgEnum.getAlgByKey(strategy);
+        if (alg == null) {
+            log.error("登录无效的非对称加密配置：{}", strategy);
+            throw new GdngException(GlobalResponseEnum.SYSTEM_ERR);
+        }
+        String keyPair = UserRedisCache.getAsyCryptKeyPair(alg.getAlgorithm());
         String publicKeyStr;
         if (keyPair == null || keyPair.split("#").length != 2) {
             Map<String, String> keyMap = AsyCryptUtil.createKeys(AsyCryptAlgEnum.RSA);
             Map.Entry<String, String> newKey = keyMap.entrySet().iterator().next();
             publicKeyStr = newKey.getKey();
             String privateKey = newKey.getValue();
-            UserRedisCache.setRSAKeyPair(alg.getAlgorithm(), publicKeyStr + "#" + privateKey);
+            UserRedisCache.setAsyCryptKeyPair(alg.getAlgorithm(), publicKeyStr + "#" + privateKey);
         } else {
             publicKeyStr = keyPair.split("#")[0];
         }

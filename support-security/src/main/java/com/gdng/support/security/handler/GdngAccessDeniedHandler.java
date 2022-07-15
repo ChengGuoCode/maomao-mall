@@ -1,4 +1,4 @@
-package com.gdng.support.common.security.handler;
+package com.gdng.support.security.handler;
 
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.util.PrintUtil;

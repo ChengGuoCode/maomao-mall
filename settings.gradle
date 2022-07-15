@@ -11,4 +11,5 @@ include 'core-edi'
 include 'inner-api'
 include 'config'
 include 'core-payment'
+include 'support-security'
 

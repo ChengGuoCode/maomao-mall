@@ -8,6 +8,4 @@ package com.gdng.support.common.constant;
  */
 public final class StringConstant {
 
-    public static final String WELL_SIGN = "#";
-
 }

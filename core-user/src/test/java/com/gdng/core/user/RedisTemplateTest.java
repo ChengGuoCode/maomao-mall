@@ -24,7 +24,7 @@ public class RedisTemplateTest {
 
     @Test
     public void testGetRSAKeyPair() {
-        String rsaKeyPair = UserRedisCache.getRSAKeyPair(AsyCryptAlgEnum.RSA.getAlgorithm());
+        String rsaKeyPair = UserRedisCache.getAsyCryptKeyPair(AsyCryptAlgEnum.RSA.getAlgorithm());
         if (StringUtils.isNotBlank(rsaKeyPair)) {
             String[] split = rsaKeyPair.split("#");
             if (split.length == 2) {

@@ -54,9 +54,6 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: "${spring_boot_version}"
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: "${spring_boot_version}"
 
-        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${spring_boot_version}"
-
-
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-consul-discovery', version: "${spring_cloud_version}"
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-client', version: "${spring_cloud_version}"
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: "${spring_cloud_version}"
