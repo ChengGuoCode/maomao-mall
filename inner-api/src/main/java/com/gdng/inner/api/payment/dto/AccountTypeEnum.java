@@ -1,4 +1,4 @@
-package com.gdng.core.payment.constant;
+package com.gdng.inner.api.payment.dto;
 
 /**
  * @Auther: guocheng
@@ -19,6 +19,16 @@ public enum AccountTypeEnum {
     AccountTypeEnum(int type, String desc) {
         this.type = type;
         this.desc = desc;
+    }
+
+    public static AccountTypeEnum getAccByType(int type) {
+        AccountTypeEnum[] enums = AccountTypeEnum.values();
+        for (AccountTypeEnum anEnum : enums) {
+            if (type == anEnum.type) {
+                return anEnum;
+            }
+        }
+        return null;
     }
 
     public int getType() {

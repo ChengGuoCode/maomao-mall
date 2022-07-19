@@ -61,7 +61,7 @@ public class MybatisPlusGenerator {
 
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
 
-        /*dsc.setUrl("jdbc:mysql://192.168.124.128:3306/" + database.getDatabase() + "?serverTimezone=UTC&useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true");
+        /*dsc.setUrl("jdbc:mysql://127.0.0.1:3306/" + database.getDatabase() + "?serverTimezone=UTC&useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true");
         dsc.setUsername("root");
         dsc.setPassword("#Aa19932909");*/
         dsc.setUrl("jdbc:mysql://127.0.0.1:3306/" + database.getDatabase() + "?serverTimezone=UTC&useSSL=false" +

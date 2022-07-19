@@ -22,6 +22,6 @@ public interface UserRemote {
     ResDTO<UserDTO> login(@RequestBody UserDTO userDTO);
 
     @PostMapping("/addOrUpdate")
-    ResDTO<?> addOrUpdate(@RequestBody UserDTO userDTO);
+    ResDTO<UserDTO> addOrUpdate(@RequestBody UserDTO userDTO);
 
 }

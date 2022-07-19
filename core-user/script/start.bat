@@ -18,6 +18,6 @@ set parentPath=%parentPath%%split%\
 goto begin
 :end
 
-java -jar %parentPath%build\libs\config-1.0-SNAPSHOT.jar
+java -jar %parentPath%build\libs\core-user-1.0-SNAPSHOT.jar
 
 exit

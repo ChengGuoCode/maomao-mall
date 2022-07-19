@@ -21,6 +21,16 @@ public enum AccountStatusEnum {
         this.desc = desc;
     }
 
+    public static AccountStatusEnum getAccStatus(int status) {
+        AccountStatusEnum[] enums = AccountStatusEnum.values();
+        for (AccountStatusEnum anEnum : enums) {
+            if (status == anEnum.status) {
+                return anEnum;
+            }
+        }
+        return null;
+    }
+
     public int getStatus() {
         return status;
     }

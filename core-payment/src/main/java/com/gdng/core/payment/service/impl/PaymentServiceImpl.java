@@ -2,7 +2,6 @@ package com.gdng.core.payment.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gdng.core.payment.constant.AccountStatusEnum;
-import com.gdng.core.payment.constant.AccountTypeEnum;
 import com.gdng.core.payment.constant.PayWayEnum;
 import com.gdng.core.payment.dao.service.AccountDaoService;
 import com.gdng.core.payment.dao.service.OrderPayDaoService;
@@ -15,6 +14,7 @@ import com.gdng.entity.payment.po.OrderPayDetailPO;
 import com.gdng.entity.payment.po.OrderPayPO;
 import com.gdng.inner.api.merchant.dto.StoreDTO;
 import com.gdng.inner.api.merchant.invoke.StoreRemote;
+import com.gdng.inner.api.payment.dto.AccountTypeEnum;
 import com.gdng.inner.api.payment.dto.OrderPayItemDTO;
 import com.gdng.inner.api.payment.dto.OrderPayReqDTO;
 import com.gdng.inner.api.payment.dto.OrderPayResDTO;

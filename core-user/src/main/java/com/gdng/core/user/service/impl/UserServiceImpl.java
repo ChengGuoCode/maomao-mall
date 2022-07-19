@@ -16,6 +16,7 @@ import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.security.SecurityStrategyUtil;
 import com.gdng.support.common.security.asyCrypt.AsyCryptAlgEnum;
 import com.gdng.support.common.security.asyCrypt.AsyCryptUtil;
+import com.gdng.support.common.util.GdngBeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,20 +101,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addOrUpdate(UserDTO userDTO) {
+    public UserDTO addOrUpdate(UserDTO userDTO) {
+        String uid = userDTO.getId();
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             throw new GdngException(GlobalResponseEnum.PARAM_ERR, "用户名或密码不能为空");
         }
-        UserPO userPO = new UserPO();
-        userPO.setUsername(username);
-        userPO.setPassword(passwordEncoder.encode(password));
-        UserPO user = userDaoService.getOne(new QueryWrapper<UserPO>().eq("username", username));
-        if (user != null) {
-            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "用户名已存在");
+        UserPO userPO;
+        if (StringUtils.isNotBlank(uid)) {
+            userPO = userDaoService.getById(uid);
+            userPO.setPassword(passwordEncoder.encode(password));
+            userDaoService.updateById(userPO);
+        } else {
+            UserPO user = userDaoService.getOne(new QueryWrapper<UserPO>().eq("username", username));
+            if (user != null) {
+                throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "用户名已存在");
+            }
+            userPO = new UserPO();
+            userPO.setUsername(username);
+            userPO.setPassword(passwordEncoder.encode(password));
+            userDaoService.save(userPO);
         }
-        userDaoService.saveOrUpdate(userPO);
+        return GdngBeanUtil.copyToNewBean(userPO, UserDTO.class);
     }
 
     private List<GdngGrantedAuthority> getAuthorities(String uid) {

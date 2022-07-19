@@ -6,6 +6,6 @@ public interface UserService {
 
     UserDTO login(UserDTO userDTO);
 
-    void addOrUpdate(UserDTO userDTO);
+    UserDTO addOrUpdate(UserDTO userDTO);
 
 }

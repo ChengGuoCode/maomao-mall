@@ -9,8 +9,6 @@ import com.gdng.support.common.security.asyCrypt.AsyCryptUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
@@ -20,15 +18,13 @@ import java.util.Map;
 @SpringBootTest(classes = com.gdng.core.user.CoreUserApplication.class)
 public class AuthTest {
 
-    private static final PasswordEncoder passwordEncoderX = new BCryptPasswordEncoder();
-
     @Test
     public void testPasswordEncoder() {
     }
 
     @Test
     public void testMakeSign() {
-        String header = "token=eyJwdWJsaWNLZXkiOiJNRnd3RFFZSktvWklodmNOQVFFQkJRQURTd0F3U0FKQkFNTlBhQXNaSXlTYUJIbzZLeHdIcnd6eU54UF9vZ0p0MDZjMS1paU1hYVNVd00xZkFndnFacU9OandtZ3hwWnZtNU1MYmluazFIS2tvRUdVVUpQajdIRUNBd0VBQVEiLCJhbGciOiJSU0EifQ.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2NTc4NjUwNjQxOTIsImV4cCI6LTF9.eyJzaWduYXR1cmUiOiJ3cktpd1FXblVKNVlzSlRJREdVY243WFc4QmE4d0VLQ0dubGdnSTBJNm5uc1p2WUF0U1BScDgtTjdrZU85SDdkSmFoYVFKbFJKLXNZRlJ1MG1aV2M3QSJ9&ver=1.0&timestamp=-9527&sign=790DF003CA27A6818D7C870F6B3B5BF7&sessionKey=P0ogP7mQxrk_eXHMpIBsKIOiAIF0090zM7US6ZoYXoFCq50wX-2Y_v8YEA1xO6twTFRqMIyDyvzZ_vM_dVZqrQ&uid=1542773459684794370";
+        String header = "token=eyJwdWJsaWNLZXkiOiJNRnd3RFFZSktvWklodmNOQVFFQkJRQURTd0F3U0FKQkFNTlBhQXNaSXlTYUJIbzZLeHdIcnd6eU54UF9vZ0p0MDZjMS1paU1hYVNVd00xZkFndnFacU9OandtZ3hwWnZtNU1MYmluazFIS2tvRUdVVUpQajdIRUNBd0VBQVEiLCJhbGciOiJSU0EifQ.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2NTgxOTYyNTU1MTMsImV4cCI6LTF9.eyJzaWduYXR1cmUiOiJIbmQ4NWZ0R0liaDVJOGgxMnFCTzdzYloxMXo1QVFnRDdtWWtZQTlHNUxYeWYxd2ZEY0R2cG9PUDVHVnNvRTAtM1R5TlhRTjdtaUhYU3N6NHBNUEpDUSJ9&ver=1.0&timestamp=-9527&sign=2D725FE9BFAF6F5D816F4517774F34D2&sessionKey=P0ogP7mQxrk_eXHMpIBsKIOiAIF0090zM7US6ZoYXoFCq50wX-2Y_v8YEA1xO6twTFRqMIyDyvzZ_vM_dVZqrQ&uid=1542773459684794370";
 
         Map<String, String> signMap = getSignMap(header);
         Claims claims = SecurityStrategyUtil.parseToken(signMap.get(HttpConstant.Uri.TOKEN));

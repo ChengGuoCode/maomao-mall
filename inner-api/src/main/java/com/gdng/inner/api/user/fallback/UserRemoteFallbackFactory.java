@@ -24,7 +24,7 @@ public class UserRemoteFallbackFactory implements FallbackFactory<UserRemote> {
             }
 
             @Override
-            public ResDTO<?> addOrUpdate(UserDTO userDTO) {
+            public ResDTO<UserDTO> addOrUpdate(UserDTO userDTO) {
                 return ResDTO.buildBusyResult();
             }
         };

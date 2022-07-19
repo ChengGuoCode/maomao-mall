@@ -26,9 +26,8 @@ public class UserController {
     }
 
     @PostMapping("/addOrUpdate")
-    public ResDTO<?> addOrUpdate(@RequestBody UserDTO userDTO) {
-        userService.addOrUpdate(userDTO);
-        return ResDTO.buildSuccessResult();
+    public ResDTO<UserDTO> addOrUpdate(@RequestBody UserDTO userDTO) {
+        return ResDTO.buildSuccessResult(userService.addOrUpdate(userDTO));
     }
 
 }
