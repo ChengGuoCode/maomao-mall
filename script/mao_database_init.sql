@@ -162,8 +162,8 @@ CREATE TABLE maomao_mall_merchant.`mao_store`
     `beneficiary`     BIGINT       NOT NULL COMMENT '收款账户',
     `delivery`        TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '是否支持外送 0-不支持，1-支持',
     `favorite_num`    BIGINT       NOT NULL DEFAULT '0' COMMENT '收藏数量',
-    `open_start_time` VARCHAR(8)   NOT NULL COMMENT '营业开始时间',
-    `open_end_time`   VARCHAR(8)   NOT NULL COMMENT '营业结束时间',
+    `open_start_time` VARCHAR(8)   NOT NULL DEFAULT '09:00:00' COMMENT '营业开始时间',
+    `open_end_time`   VARCHAR(8)   NOT NULL DEFAULT '17:00:00' COMMENT '营业结束时间',
     `longitude`       VARCHAR(32)           DEFAULT NULL COMMENT '经度',
     `latitude`        VARCHAR(32)           DEFAULT NULL COMMENT '纬度',
     `creator`         VARCHAR(64)  NOT NULL COMMENT '创建人',
@@ -355,3 +355,69 @@ CREATE TABLE maomao_mall_payment.`mao_order_refund`
     `update_time` datetime     NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '订单退款表';
+
+/* 任务表 task */
+CREATE
+DATABASE maomao_mall_task;
+CREATE TABLE maomao_mall_task.`mao_task`
+(
+    `id`              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '任务ID',
+    `name`            VARCHAR(64) NOT NULL COMMENT '任务名称',
+    `reward_strategy` TINYINT ( 1 ) NOT NULL COMMENT '奖励策略 0-循环，1-阶梯',
+    `limit_times`     INT         NOT NULL DEFAULT '1' COMMENT '限制完成次数',
+    `start_time`      datetime    NOT NULL COMMENT '开始时间',
+    `end_time`        datetime    NOT NULL COMMENT '结束时间',
+    `status`          TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '任务状态 0-正常，1-失效',
+    `creator`         VARCHAR(64) NOT NULL COMMENT '创建人',
+    `create_time`     datetime    NOT NULL COMMENT '创建时间',
+    `updator`         VARCHAR(64) NOT NULL COMMENT '更新人',
+    `update_time`     datetime    NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务表';
+CREATE TABLE maomao_mall_task.`mao_task_strategy`
+(
+    `id`               BIGINT      NOT NULL AUTO_INCREMENT COMMENT '策略ID',
+    `task_id`          BIGINT      NOT NULL COMMENT '任务ID',
+    `condition_val`    INT         NOT NULL COMMENT '完成条件次数',
+    `condition_desc`   VARCHAR(64) NOT NULL COMMENT '完成条件描述',
+    `reward_type`      TINYINT ( 1 ) NOT NULL COMMENT '奖励类型 0-积分，1-商品',
+    `reward_point`     INT         NOT NULL COMMENT '奖励积分',
+    `intra_start_time` time DEFAULT NULL COMMENT '当天有效开始时间',
+    `intra_end_time`   time DEFAULT NULL COMMENT '当天有效结束时间',
+    `creator`          VARCHAR(64) NOT NULL COMMENT '创建人',
+    `create_time`      datetime    NOT NULL COMMENT '创建时间',
+    `updator`          VARCHAR(64) NOT NULL COMMENT '更新人',
+    `update_time`      datetime    NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务策略表';
+CREATE TABLE maomao_mall_task.`mao_task_prize`
+(
+    `id`           BIGINT       NOT NULL AUTO_INCREMENT COMMENT '任务ID',
+    `task_id`      BIGINT       NOT NULL COMMENT '任务ID',
+    `strategy_id`  BIGINT       NOT NULL COMMENT '策略ID',
+    `business_id`  BIGINT       NOT NULL COMMENT '商家ID',
+    `store_id`     BIGINT       NOT NULL COMMENT '店铺ID',
+    `product_id`   BIGINT       NOT NULL COMMENT '商品ID',
+    `product_name` VARCHAR(256) NOT NULL COMMENT '商品名称',
+    `pic`          VARCHAR(256) NOT NULL COMMENT '商品主图',
+    `sku_code`     VARCHAR(64)  NOT NULL COMMENT 'sku编码',
+    `send_num`     INT          NOT NULL DEFAULT '1' COMMENT '赠送数量',
+    `creator`      VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time`  datetime     NOT NULL COMMENT '创建时间',
+    `updator`      VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time`  datetime     NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务奖品表';
+CREATE TABLE maomao_mall_task.`mao_task_record`
+(
+    `id`              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+    `task_id`         BIGINT      NOT NULL COMMENT '任务ID',
+    `strategy_id`     BIGINT      NOT NULL COMMENT '策略ID',
+    `complete_status` TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '任务完成状态 0-未完成，1-已完成',
+    `reward_status`   TINYINT ( 1 ) DEFAULT NULL COMMENT '奖励状态 0-下发成功，1-下发失败，2-下发锁定，3-等待下发',
+    `creator`         VARCHAR(64) NOT NULL COMMENT '创建人',
+    `create_time`     datetime    NOT NULL COMMENT '创建时间',
+    `updator`         VARCHAR(64) NOT NULL COMMENT '更新人',
+    `update_time`     datetime    NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务记录表';

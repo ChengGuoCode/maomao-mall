@@ -16,7 +16,8 @@ public class MybatisPlusGenerator {
 //        generate(DatabaseEnum.MERCHANT);
 //        generate(DatabaseEnum.ORDER);
 //        generate(DatabaseEnum.USER);
-        generate(DatabaseEnum.PAYMENT);
+//        generate(DatabaseEnum.PAYMENT);
+        generate(DatabaseEnum.TASK);
     }
 
     private void generate(DatabaseEnum database) {
@@ -118,6 +119,13 @@ public class MybatisPlusGenerator {
                         "mao_order_pay_detail",
                         "mao_order_refund"
                 );
+            case TASK:
+                strategy.setInclude(
+                        "mao_task",
+                        "mao_task_prize",
+                        "mao_task_record",
+                        "mao_task_strategy"
+                );
         }
 
         /*strategy.setSuperServiceClass("");
@@ -163,6 +171,7 @@ public class MybatisPlusGenerator {
         ORDER("maomao_mall_order", "com.gdng.entity.order"),
         USER("maomao_mall_user", "com.gdng.entity.user"),
         PAYMENT("maomao_mall_payment", "com.gdng.entity.payment"),
+        TASK("maomao_mall_task", "com.gdng.entity.task"),
         ;
 
         private final String database;
