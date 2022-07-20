@@ -14,7 +14,7 @@ import com.gdng.entity.payment.po.OrderPayDetailPO;
 import com.gdng.entity.payment.po.OrderPayPO;
 import com.gdng.inner.api.merchant.dto.StoreDTO;
 import com.gdng.inner.api.merchant.invoke.StoreRemote;
-import com.gdng.inner.api.payment.dto.AccountTypeEnum;
+import com.gdng.inner.api.payment.constant.AccountTypeEnum;
 import com.gdng.inner.api.payment.dto.OrderPayItemDTO;
 import com.gdng.inner.api.payment.dto.OrderPayReqDTO;
 import com.gdng.inner.api.payment.dto.OrderPayResDTO;

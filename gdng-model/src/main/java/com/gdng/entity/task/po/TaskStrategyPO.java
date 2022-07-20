@@ -2,7 +2,6 @@ package com.gdng.entity.task.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.sql.Time;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -17,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-19
+ * @since 2022-07-20
  */
 @TableName("mao_task_strategy")
 @ApiModel(value="TaskStrategyPO对象", description="任务策略表")
@@ -57,12 +56,12 @@ public class TaskStrategyPO implements Serializable {
 
     @ApiModelProperty(value = "当天有效开始时间")
     @TableField("intra_start_time")
-    private Time intraStartTime;
+    private String intraStartTime;
 
 
     @ApiModelProperty(value = "当天有效结束时间")
     @TableField("intra_end_time")
-    private Time intraEndTime;
+    private String intraEndTime;
 
 
     @ApiModelProperty(value = "创建人")
@@ -134,19 +133,19 @@ public class TaskStrategyPO implements Serializable {
         this.rewardPoint = rewardPoint;
     }
 
-    public Time getIntraStartTime() {
+    public String getIntraStartTime() {
         return intraStartTime;
     }
 
-    public void setIntraStartTime(Time intraStartTime) {
+    public void setIntraStartTime(String intraStartTime) {
         this.intraStartTime = intraStartTime;
     }
 
-    public Time getIntraEndTime() {
+    public String getIntraEndTime() {
         return intraEndTime;
     }
 
-    public void setIntraEndTime(Time intraEndTime) {
+    public void setIntraEndTime(String intraEndTime) {
         this.intraEndTime = intraEndTime;
     }
 

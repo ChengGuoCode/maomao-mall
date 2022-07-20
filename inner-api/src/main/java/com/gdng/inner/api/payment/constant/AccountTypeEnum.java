@@ -1,4 +1,4 @@
-package com.gdng.inner.api.payment.dto;
+package com.gdng.inner.api.payment.constant;
 
 /**
  * @Auther: guocheng

@@ -5,7 +5,7 @@ import com.gdng.core.payment.dao.service.AccountDaoService;
 import com.gdng.core.payment.service.AccountService;
 import com.gdng.entity.payment.po.AccountPO;
 import com.gdng.inner.api.payment.dto.AccountDTO;
-import com.gdng.inner.api.payment.dto.AccountTypeEnum;
+import com.gdng.inner.api.payment.constant.AccountTypeEnum;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.util.GdngBeanUtil;

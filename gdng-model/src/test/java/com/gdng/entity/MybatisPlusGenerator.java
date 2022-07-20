@@ -124,6 +124,7 @@ public class MybatisPlusGenerator {
                         "mao_task",
                         "mao_task_prize",
                         "mao_task_record",
+                        "mao_task_record_detail",
                         "mao_task_strategy"
                 );
         }

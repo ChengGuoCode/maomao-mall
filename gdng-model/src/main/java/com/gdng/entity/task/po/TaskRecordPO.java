@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-19
+ * @since 2022-07-20
  */
 @TableName("mao_task_record")
 @ApiModel(value="TaskRecordPO对象", description="任务记录表")
@@ -27,6 +27,12 @@ public class TaskRecordPO implements Serializable {
     @ApiModelProperty(value = "记录ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+
+    @ApiModelProperty(value = "乐观锁")
+    @TableField(value = "optimistic", fill = FieldFill.INSERT)
+    @Version
+    private Integer optimistic;
 
 
     @ApiModelProperty(value = "任务ID")
@@ -47,6 +53,11 @@ public class TaskRecordPO implements Serializable {
     @ApiModelProperty(value = "奖励状态 0-下发成功，1-下发失败，2-下发锁定，3-等待下发")
     @TableField("reward_status")
     private Integer rewardStatus;
+
+
+    @ApiModelProperty(value = "失败原因")
+    @TableField("fail_reason")
+    private String failReason;
 
 
     @ApiModelProperty(value = "创建人")
@@ -76,6 +87,14 @@ public class TaskRecordPO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getOptimistic() {
+        return optimistic;
+    }
+
+    public void setOptimistic(Integer optimistic) {
+        this.optimistic = optimistic;
     }
 
     public Long getTaskId() {
@@ -108,6 +127,14 @@ public class TaskRecordPO implements Serializable {
 
     public void setRewardStatus(Integer rewardStatus) {
         this.rewardStatus = rewardStatus;
+    }
+
+    public String getFailReason() {
+        return failReason;
+    }
+
+    public void setFailReason(String failReason) {
+        this.failReason = failReason;
     }
 
     public String getCreator() {

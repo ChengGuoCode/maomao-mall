@@ -12,21 +12,27 @@ import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * <p>
- * 任务奖品表
+ * 任务记录明细表
  * </p>
  *
  * @author gc
  * @since 2022-07-20
  */
-@TableName("mao_task_prize")
-@ApiModel(value="TaskPrizePO对象", description="任务奖品表")
-public class TaskPrizePO implements Serializable {
+@TableName("mao_task_record_detail")
+@ApiModel(value="TaskRecordDetailPO对象", description="任务记录明细表")
+public class TaskRecordDetailPO implements Serializable {
 
     private static final long serialVersionUID=1L;
 
-    @ApiModelProperty(value = "任务ID")
+    @ApiModelProperty(value = "记录ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+
+    @ApiModelProperty(value = "乐观锁")
+    @TableField(value = "optimistic", fill = FieldFill.INSERT)
+    @Version
+    private Integer optimistic;
 
 
     @ApiModelProperty(value = "任务ID")
@@ -39,39 +45,9 @@ public class TaskPrizePO implements Serializable {
     private Long strategyId;
 
 
-    @ApiModelProperty(value = "商家ID")
-    @TableField("business_id")
-    private Long businessId;
-
-
-    @ApiModelProperty(value = "店铺ID")
-    @TableField("store_id")
-    private Long storeId;
-
-
-    @ApiModelProperty(value = "商品ID")
-    @TableField("product_id")
-    private Long productId;
-
-
-    @ApiModelProperty(value = "商品名称")
-    @TableField("product_name")
-    private String productName;
-
-
-    @ApiModelProperty(value = "商品主图")
-    @TableField("pic")
-    private String pic;
-
-
-    @ApiModelProperty(value = "sku编码")
-    @TableField("sku_code")
-    private String skuCode;
-
-
-    @ApiModelProperty(value = "赠送数量")
-    @TableField("send_num")
-    private Integer sendNum;
+    @ApiModelProperty(value = "记录ID")
+    @TableField("record_id")
+    private Long recordId;
 
 
     @ApiModelProperty(value = "创建人")
@@ -103,6 +79,14 @@ public class TaskPrizePO implements Serializable {
         this.id = id;
     }
 
+    public Integer getOptimistic() {
+        return optimistic;
+    }
+
+    public void setOptimistic(Integer optimistic) {
+        this.optimistic = optimistic;
+    }
+
     public Long getTaskId() {
         return taskId;
     }
@@ -119,60 +103,12 @@ public class TaskPrizePO implements Serializable {
         this.strategyId = strategyId;
     }
 
-    public Long getBusinessId() {
-        return businessId;
+    public Long getRecordId() {
+        return recordId;
     }
 
-    public void setBusinessId(Long businessId) {
-        this.businessId = businessId;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getPic() {
-        return pic;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
-
-    public String getSkuCode() {
-        return skuCode;
-    }
-
-    public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
-    }
-
-    public Integer getSendNum() {
-        return sendNum;
-    }
-
-    public void setSendNum(Integer sendNum) {
-        this.sendNum = sendNum;
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
     }
 
     public String getCreator() {

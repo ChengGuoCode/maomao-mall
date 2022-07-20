@@ -382,8 +382,8 @@ CREATE TABLE maomao_mall_task.`mao_task_strategy`
     `condition_desc`   VARCHAR(64) NOT NULL COMMENT '完成条件描述',
     `reward_type`      TINYINT ( 1 ) NOT NULL COMMENT '奖励类型 0-积分，1-商品',
     `reward_point`     INT         NOT NULL COMMENT '奖励积分',
-    `intra_start_time` time DEFAULT NULL COMMENT '当天有效开始时间',
-    `intra_end_time`   time DEFAULT NULL COMMENT '当天有效结束时间',
+    `intra_start_time` VARCHAR(8)  NOT NULL DEFAULT '00:00:00' COMMENT '当天有效开始时间',
+    `intra_end_time`   VARCHAR(8)  NOT NULL DEFAULT '23:59:59' COMMENT '当天有效结束时间',
     `creator`          VARCHAR(64) NOT NULL COMMENT '创建人',
     `create_time`      datetime    NOT NULL COMMENT '创建时间',
     `updator`          VARCHAR(64) NOT NULL COMMENT '更新人',
@@ -411,13 +411,28 @@ CREATE TABLE maomao_mall_task.`mao_task_prize`
 CREATE TABLE maomao_mall_task.`mao_task_record`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+    `optimistic`      INT         NOT NULL DEFAULT '0' COMMENT '乐观锁',
     `task_id`         BIGINT      NOT NULL COMMENT '任务ID',
     `strategy_id`     BIGINT      NOT NULL COMMENT '策略ID',
     `complete_status` TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '任务完成状态 0-未完成，1-已完成',
     `reward_status`   TINYINT ( 1 ) DEFAULT NULL COMMENT '奖励状态 0-下发成功，1-下发失败，2-下发锁定，3-等待下发',
+    `fail_reason`     VARCHAR(64)          DEFAULT NULL COMMENT '失败原因',
     `creator`         VARCHAR(64) NOT NULL COMMENT '创建人',
     `create_time`     datetime    NOT NULL COMMENT '创建时间',
     `updator`         VARCHAR(64) NOT NULL COMMENT '更新人',
     `update_time`     datetime    NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务记录表';
+CREATE TABLE maomao_mall_task.`mao_task_record_detail`
+(
+    `id`          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+    `optimistic`  INT         NOT NULL DEFAULT '0' COMMENT '乐观锁',
+    `task_id`     BIGINT      NOT NULL COMMENT '任务ID',
+    `strategy_id` BIGINT      NOT NULL COMMENT '策略ID',
+    `record_id`   BIGINT      NOT NULL COMMENT '记录ID',
+    `creator`     VARCHAR(64) NOT NULL COMMENT '创建人',
+    `create_time` datetime    NOT NULL COMMENT '创建时间',
+    `updator`     VARCHAR(64) NOT NULL COMMENT '更新人',
+    `update_time` datetime    NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务记录明细表';

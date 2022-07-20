@@ -1,7 +1,7 @@
 package com.gdng.service.app.controller;
 
 import com.gdng.inner.api.payment.dto.AccountDTO;
-import com.gdng.inner.api.payment.dto.AccountTypeEnum;
+import com.gdng.inner.api.payment.constant.AccountTypeEnum;
 import com.gdng.inner.api.payment.invoke.AccountRemote;
 import com.gdng.inner.api.user.invoke.UserRemote;
 import com.gdng.support.common.dto.UserDTO;
