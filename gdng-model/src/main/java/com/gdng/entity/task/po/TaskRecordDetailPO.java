@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-20
+ * @since 2022-07-21
  */
 @TableName("mao_task_record_detail")
 @ApiModel(value="TaskRecordDetailPO对象", description="任务记录明细表")
@@ -27,12 +27,6 @@ public class TaskRecordDetailPO implements Serializable {
     @ApiModelProperty(value = "记录ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-
-
-    @ApiModelProperty(value = "乐观锁")
-    @TableField(value = "optimistic", fill = FieldFill.INSERT)
-    @Version
-    private Integer optimistic;
 
 
     @ApiModelProperty(value = "任务ID")
@@ -77,14 +71,6 @@ public class TaskRecordDetailPO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getOptimistic() {
-        return optimistic;
-    }
-
-    public void setOptimistic(Integer optimistic) {
-        this.optimistic = optimistic;
     }
 
     public Long getTaskId() {

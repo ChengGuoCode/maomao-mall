@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-20
+ * @since 2022-07-21
  */
 @TableName("mao_task_strategy")
 @ApiModel(value="TaskStrategyPO对象", description="任务策略表")

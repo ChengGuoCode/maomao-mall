@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-20
+ * @since 2022-07-21
  */
 @TableName("mao_task")
 @ApiModel(value="TaskPO对象", description="任务表")
@@ -37,11 +37,6 @@ public class TaskPO implements Serializable {
     @ApiModelProperty(value = "奖励策略 0-循环，1-阶梯")
     @TableField("reward_strategy")
     private Integer rewardStrategy;
-
-
-    @ApiModelProperty(value = "限制完成次数")
-    @TableField("limit_times")
-    private Integer limitTimes;
 
 
     @ApiModelProperty(value = "开始时间")
@@ -102,14 +97,6 @@ public class TaskPO implements Serializable {
 
     public void setRewardStrategy(Integer rewardStrategy) {
         this.rewardStrategy = rewardStrategy;
-    }
-
-    public Integer getLimitTimes() {
-        return limitTimes;
-    }
-
-    public void setLimitTimes(Integer limitTimes) {
-        this.limitTimes = limitTimes;
     }
 
     public Date getStartTime() {

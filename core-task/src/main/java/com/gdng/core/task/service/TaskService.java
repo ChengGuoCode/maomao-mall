@@ -1,6 +1,9 @@
 package com.gdng.core.task.service;
 
 import com.gdng.inner.api.task.dto.TaskDTO;
+import com.gdng.inner.api.task.dto.TaskPageReqDTO;
+import com.gdng.inner.api.task.dto.TaskResDTO;
+import com.gdng.support.common.dto.res.PageResDTO;
 
 /**
  * @Auther: guocheng
@@ -12,6 +15,6 @@ public interface TaskService {
 
     void addOrUpdate(TaskDTO taskDTO);
 
-    int getTaskList(Integer taskType);
+    PageResDTO<TaskResDTO> getTaskList(TaskPageReqDTO reqDTO);
 
 }

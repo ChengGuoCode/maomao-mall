@@ -2,9 +2,15 @@ package com.gdng.core.task.controller;
 
 import com.gdng.core.task.service.TaskService;
 import com.gdng.inner.api.task.dto.TaskDTO;
+import com.gdng.inner.api.task.dto.TaskPageReqDTO;
+import com.gdng.inner.api.task.dto.TaskResDTO;
+import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Auther: guocheng
@@ -29,9 +35,9 @@ public class TaskController {
         return ResDTO.buildSuccessResult();
     }
 
-    @GetMapping("/getTaskList")
-    public ResDTO<?> getTaskList(@RequestParam Integer taskType) {
-        return ResDTO.buildSuccessResult(taskService.getTaskList(taskType));
+    @PostMapping("/getTaskList")
+    public ResDTO<PageResDTO<TaskResDTO>> getTaskList(@RequestBody TaskPageReqDTO reqDTO) {
+        return ResDTO.buildSuccessResult(taskService.getTaskList(reqDTO));
     }
 
 }

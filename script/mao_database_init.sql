@@ -364,7 +364,6 @@ CREATE TABLE maomao_mall_task.`mao_task`
     `id`              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '任务ID',
     `name`            VARCHAR(64) NOT NULL COMMENT '任务名称',
     `reward_strategy` TINYINT ( 1 ) NOT NULL COMMENT '奖励策略 0-循环，1-阶梯',
-    `limit_times`     INT         NOT NULL DEFAULT '1' COMMENT '限制完成次数',
     `start_time`      datetime    NOT NULL COMMENT '开始时间',
     `end_time`        datetime    NOT NULL COMMENT '结束时间',
     `status`          TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '任务状态 0-正常，1-失效',
@@ -414,8 +413,9 @@ CREATE TABLE maomao_mall_task.`mao_task_record`
     `optimistic`      INT         NOT NULL DEFAULT '0' COMMENT '乐观锁',
     `task_id`         BIGINT      NOT NULL COMMENT '任务ID',
     `strategy_id`     BIGINT      NOT NULL COMMENT '策略ID',
+    `times`           INT         NOT NULL DEFAULT '0' COMMENT '执行次数',
     `complete_status` TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '任务完成状态 0-未完成，1-已完成',
-    `reward_status`   TINYINT ( 1 ) DEFAULT NULL COMMENT '奖励状态 0-下发成功，1-下发失败，2-下发锁定，3-等待下发',
+    `reward_status`   TINYINT ( 1 ) DEFAULT NULL COMMENT '奖励状态 0-等待下发，1-下发成功，2-下发失败',
     `fail_reason`     VARCHAR(64)          DEFAULT NULL COMMENT '失败原因',
     `creator`         VARCHAR(64) NOT NULL COMMENT '创建人',
     `create_time`     datetime    NOT NULL COMMENT '创建时间',
@@ -426,7 +426,6 @@ CREATE TABLE maomao_mall_task.`mao_task_record`
 CREATE TABLE maomao_mall_task.`mao_task_record_detail`
 (
     `id`          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '记录ID',
-    `optimistic`  INT         NOT NULL DEFAULT '0' COMMENT '乐观锁',
     `task_id`     BIGINT      NOT NULL COMMENT '任务ID',
     `strategy_id` BIGINT      NOT NULL COMMENT '策略ID',
     `record_id`   BIGINT      NOT NULL COMMENT '记录ID',
