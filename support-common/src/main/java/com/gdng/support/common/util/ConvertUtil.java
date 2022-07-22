@@ -9,4 +9,11 @@ public class ConvertUtil {
         return Long.valueOf(obj.toString());
     }
 
+    public static Integer parseObjToInt(Object obj) {
+        if (obj == null || "".equals(obj)) {
+            return null;
+        }
+        return Integer.valueOf(obj.toString());
+    }
+
 }

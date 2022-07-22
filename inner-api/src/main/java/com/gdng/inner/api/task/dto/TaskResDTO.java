@@ -15,6 +15,8 @@ public class TaskResDTO {
     private Integer rewardType;
     private Integer rewardPoint;
     private Integer taskStatus;
+    private Integer completeStatus;
+    private Integer conditionVal;
     private String progress;
     private Date createTime;
 
@@ -56,6 +58,22 @@ public class TaskResDTO {
 
     public void setTaskStatus(Integer taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public Integer getCompleteStatus() {
+        return completeStatus;
+    }
+
+    public void setCompleteStatus(Integer completeStatus) {
+        this.completeStatus = completeStatus;
+    }
+
+    public Integer getConditionVal() {
+        return conditionVal;
+    }
+
+    public void setConditionVal(Integer conditionVal) {
+        this.conditionVal = conditionVal;
     }
 
     public String getProgress() {

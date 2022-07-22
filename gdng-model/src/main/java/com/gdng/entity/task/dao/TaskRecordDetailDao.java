@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author gc
- * @since 2022-07-21
+ * @since 2022-07-22
  */
 @Mapper
 public interface TaskRecordDetailDao extends BaseMapper<TaskRecordDetailPO> {

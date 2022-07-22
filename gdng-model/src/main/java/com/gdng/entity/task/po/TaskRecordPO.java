@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-21
+ * @since 2022-07-22
  */
 @TableName("mao_task_record")
 @ApiModel(value="TaskRecordPO对象", description="任务记录表")
@@ -55,9 +55,19 @@ public class TaskRecordPO implements Serializable {
     private Integer completeStatus;
 
 
+    @ApiModelProperty(value = "完成时间")
+    @TableField("complete_time")
+    private Date completeTime;
+
+
     @ApiModelProperty(value = "奖励状态 0-等待下发，1-下发成功，2-下发失败")
     @TableField("reward_status")
     private Integer rewardStatus;
+
+
+    @ApiModelProperty(value = "下发时间")
+    @TableField("reward_time")
+    private Date rewardTime;
 
 
     @ApiModelProperty(value = "失败原因")
@@ -134,12 +144,28 @@ public class TaskRecordPO implements Serializable {
         this.completeStatus = completeStatus;
     }
 
+    public Date getCompleteTime() {
+        return completeTime;
+    }
+
+    public void setCompleteTime(Date completeTime) {
+        this.completeTime = completeTime;
+    }
+
     public Integer getRewardStatus() {
         return rewardStatus;
     }
 
     public void setRewardStatus(Integer rewardStatus) {
         this.rewardStatus = rewardStatus;
+    }
+
+    public Date getRewardTime() {
+        return rewardTime;
+    }
+
+    public void setRewardTime(Date rewardTime) {
+        this.rewardTime = rewardTime;
     }
 
     public String getFailReason() {

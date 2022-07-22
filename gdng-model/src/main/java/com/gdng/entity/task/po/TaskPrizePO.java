@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-21
+ * @since 2022-07-22
  */
 @TableName("mao_task_prize")
 @ApiModel(value="TaskPrizePO对象", description="任务奖品表")

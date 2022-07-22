@@ -8,7 +8,8 @@ package com.gdng.inner.api.task.constant;
  */
 public enum RewardTypeEnum {
     POINT(0, "积分"),
-    GOODS(1, "商品");
+    GOODS(1, "商品"),
+    MIX_P_G(2, "积分+商品");
 
     private final int type;
     private final String desc;

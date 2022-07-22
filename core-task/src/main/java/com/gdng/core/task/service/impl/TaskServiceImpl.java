@@ -1,7 +1,6 @@
 package com.gdng.core.task.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gdng.core.task.dao.service.*;
 import com.gdng.core.task.service.TaskService;
 import com.gdng.entity.task.po.TaskPO;
@@ -17,6 +16,7 @@ import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.spring.SpringContextHolder;
+import com.gdng.support.common.util.ConvertUtil;
 import com.gdng.support.common.util.DateUtil;
 import com.gdng.support.common.util.GdngBeanUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -99,100 +99,213 @@ public class TaskServiceImpl implements TaskService {
         pageResDTO.setPageSize(pageSize);
 
         TaskTypeEnum taskTypeEnum = TaskTypeEnum.getTaskType(taskType);
-        Date curDate = new Date();
-        switch (taskTypeEnum) {
+        String uid = user.getId();
+        switch (Objects.requireNonNull(taskTypeEnum)) {
             case DAILY:
-                List<TaskPO> taskList = taskDaoService.list(new QueryWrapper<TaskPO>()
-                        .select("id, name, create_time")
-                        .eq("reward_strategy", RewardStrategyEnum.LOOP.getStrategy())
-                        .eq("status", 0)
-                        .le("start_time", curDate)
-                        .ge("end_time", curDate)
-                        .orderByDesc("create_time"));
-                if (CollectionUtils.isEmpty(taskList)) {
-                    return pageResDTO;
-                }
-                Map<Long, TaskPO> taskMap = taskList.stream().collect(Collectors.toMap(TaskPO::getId, e -> e));
-                Set<Long> taskIds = taskMap.keySet();
-                List<TaskStrategyPO> strategyList = taskStrategyDaoService.list(new QueryWrapper<TaskStrategyPO>().in("task_id", taskIds));
-                if (CollectionUtils.isEmpty(strategyList)) {
-                    return pageResDTO;
-                }
-                Map<Long, List<TaskStrategyPO>> taskStrategyMap = strategyList.stream().collect(Collectors.groupingBy(TaskStrategyPO::getTaskId));
-                List<TaskRecordPO> recordList = taskRecordDaoService.list(new QueryWrapper<TaskRecordPO>().in("task_id", taskIds)
-                        .eq("creator", user.getId())
-                        .ge("create_time", DateUtil.getCurDateStart()));
-                Map<String, TaskRecordPO> recordMap = new HashMap<>();
-                if (!CollectionUtils.isEmpty(recordList)) {
-                    recordMap.putAll(recordList.stream().collect(Collectors.toMap((e -> e.getTaskId() + POUND + e.getStrategyId()), e -> e)));
-                }
-                List<TaskResDTO> records = new ArrayList<>();
-                taskStrategyMap.forEach((x, y) -> {
-                    y.forEach(taskStrategy -> {
-                        String intraStartTime = taskStrategy.getIntraStartTime();
-                        String intraEndTime = taskStrategy.getIntraEndTime();
-                        Date startDate = DateUtil.parseDateFromTime(intraStartTime);
-                        Date endDate = DateUtil.parseDateFromTime(intraEndTime);
-                        TaskRecordPO taskRecordPO = recordMap.get(x + POUND + taskStrategy.getId());
-                        if ((startDate.before(curDate) && endDate.after(curDate)) && isNotComplete(taskRecordPO) != 2) {
-                            TaskPO taskPO = taskMap.get(x);
-                            TaskResDTO taskResDTO = new TaskResDTO();
-                            taskResDTO.setName(taskPO.getName());
-                            taskResDTO.setConditionDesc(taskStrategy.getConditionDesc());
-                            taskResDTO.setRewardType(taskStrategy.getRewardType());
-                            taskResDTO.setRewardPoint(taskStrategy.getRewardPoint());
-                            taskResDTO.setTaskStatus(isNotComplete(taskRecordPO));
-                            taskResDTO.setProgress((taskRecordPO == null ? 0 : taskRecordPO.getTimes()) + "/" + taskStrategy.getConditionVal());
-                            taskResDTO.setCreateTime(taskPO.getCreateTime());
-                            records.add(taskResDTO);
+                fillPageResult(pageResDTO, uid, RewardStrategyEnum.LOOP);
+                break;
+            case COMMON:
+                fillPageResult(pageResDTO, uid, RewardStrategyEnum.STEP);
+                break;
+            case HISTORY:
+                List<TaskRecordPO> taskRecordList = taskRecordDaoService.list(new QueryWrapper<TaskRecordPO>()
+                        .select("task_id, strategy_id, complete_time")
+                        .eq("creator", uid)
+                        .eq("complete_status", 1)
+                        .eq("reward_status", 1));
+                if (!CollectionUtils.isEmpty(taskRecordList)) {
+                    Map<Long, List<Long>> taskStrategyIdsMap = new HashMap<>();
+                    Map<Long, Date> lastCompleteTimeMap = new HashMap<>();
+                    taskRecordList.forEach(taskRecord -> {
+                        Long taskId = taskRecord.getTaskId();
+                        Long strategyId = taskRecord.getStrategyId();
+                        List<Long> strategyIdList = taskStrategyIdsMap.get(taskId);
+                        if (strategyIdList == null) {
+                            strategyIdList = new ArrayList<>();
+                            strategyIdList.add(strategyId);
+                            taskStrategyIdsMap.put(taskId, strategyIdList);
+                        } else {
+                            strategyIdList.add(strategyId);
+                        }
+                        Date completeTime = lastCompleteTimeMap.get(taskId);
+                        Date curCompleteTime = taskRecord.getCompleteTime();
+                        if (completeTime == null) {
+                            lastCompleteTimeMap.put(taskId, curCompleteTime);
+                        } else {
+                            if (completeTime.before(curCompleteTime)) {
+                                lastCompleteTimeMap.put(taskId, curCompleteTime);
+                            }
                         }
                     });
-                });
-                pageResDTO.setTotal(records.size());
-                if (records.size() > 1) {
-                    records.sort((o1, o2) -> {
-                        if (o1.getTaskStatus() > o2.getTaskStatus()) {
-                            return -1;
-                        } else if (o1.getTaskStatus() < o2.getTaskStatus()) {
-                            return 1;
-                        } else {
-                            if (o1.getCreateTime().after(o2.getCreateTime())) {
+                    Set<Long> taskIds = taskStrategyIdsMap.keySet();
+                    List<TaskPO> taskList = taskDaoService.list(new QueryWrapper<TaskPO>()
+                            .in("id", taskIds)
+                            .eq("reward_strategy", 1));
+                    Map<Long, TaskPO> taskIdMap = taskList.stream().collect(Collectors.toMap(TaskPO::getId, e -> e));
+                    Set<Long> stepTaskIdList = taskIdMap.keySet();
+                    List<Map<String, Object>> strategyCountList = taskStrategyDaoService.listMaps(new QueryWrapper<TaskStrategyPO>()
+                            .select("task_id taskId, sum(1) count")
+                            .in("task_id", stepTaskIdList)
+                            .groupBy("task_id"));
+                    strategyCountList.forEach(strategyCountMap -> {
+                        Long taskId = ConvertUtil.parseObjToLong(strategyCountMap.get("taskId"));
+                        Integer count = ConvertUtil.parseObjToInt(strategyCountMap.get("count"));
+                        List<Long> strategyIdList = taskStrategyIdsMap.get(taskId);
+                        if (count != strategyIdList.size()) {
+                            TaskPO taskPO = taskIdMap.get(taskId);
+                            if (taskPO.getStatus() == 0 && new Date().before(taskPO.getEndTime())) {
+                                taskIdMap.remove(taskId);
+                            }
+                        }
+                    });
+                    List<TaskPO> completeTaskList = new ArrayList<>(taskIdMap.values());
+                    int total = completeTaskList.size();
+                    pageResDTO.setTotal(total);
+                    if (total > 1) {
+                        completeTaskList.sort((o1, o2) -> {
+                            Date lastTime1 = lastCompleteTimeMap.get(o1.getId());
+                            Date lastTime2 = lastCompleteTimeMap.get(o2.getId());
+                            if (lastTime1.after(lastTime2)) {
                                 return -1;
-                            } else if (o1.getCreateTime().before(o2.getCreateTime())) {
+                            } else if (lastTime1.before(lastTime2)) {
                                 return 1;
                             } else {
                                 return 0;
                             }
+                        });
+                        int fromIndex = Math.toIntExact((pageNo - 1) * pageSize);
+                        int toIndex = Math.toIntExact(pageNo * pageSize);
+                        if (fromIndex >= 0 && fromIndex < total) {
+                            if (toIndex > total) {
+                                toIndex = total;
+                            }
+                            pageResDTO.setRecords(transferTaskRes(completeTaskList.subList(fromIndex, toIndex)));
+                        } else {
+                            pageResDTO.setRecords(new ArrayList<>());
                         }
-                    });
-                    int fromIndex = Math.toIntExact((pageNo - 1) * pageSize);
-                    int toIndex = Math.toIntExact(pageNo * pageSize);
-                    if (fromIndex >= 0 && fromIndex <= records.size()) {
-                        if (toIndex > records.size()) {
-                            toIndex = records.size();
-                        }
-                        pageResDTO.setRecords(records.subList(fromIndex, toIndex));
                     } else {
-                        pageResDTO.setRecords(new ArrayList<>());
+                        pageResDTO.setRecords(transferTaskRes(completeTaskList));
                     }
-                } else {
-                    pageResDTO.setRecords(records);
                 }
-                break;
-            case COMMON:
-                break;
-            case HISTORY:
                 break;
         }
         return pageResDTO;
     }
 
-    private int isNotComplete(TaskRecordPO taskRecordPO) {
-        if (taskRecordPO == null) {
-            return 0;
+    private List<TaskResDTO> transferTaskRes(List<TaskPO> taskList) {
+        if (CollectionUtils.isEmpty(taskList)) {
+            return new ArrayList<>();
         }
-        Integer completeStatus = taskRecordPO.getCompleteStatus();
-        if (completeStatus == 0) {
+        return taskList.stream().map(task -> {
+            TaskResDTO taskResDTO = new TaskResDTO();
+            taskResDTO.setName(task.getName());
+            return taskResDTO;
+        }).collect(Collectors.toList());
+    }
+
+    private void fillPageResult(PageResDTO<TaskResDTO> pageResDTO, String uid, RewardStrategyEnum strategy) {
+        Date curDate = new Date();
+        List<TaskPO> taskList = taskDaoService.list(new QueryWrapper<TaskPO>()
+                .select("id, name, create_time")
+                .eq("reward_strategy", strategy.getStrategy())
+                .eq("status", 0)
+                .le("start_time", curDate)
+                .ge("end_time", curDate)
+                .orderByDesc("create_time"));
+        if (CollectionUtils.isEmpty(taskList)) {
+            return;
+        }
+        Map<Long, TaskPO> taskMap = taskList.stream().collect(Collectors.toMap(TaskPO::getId, e -> e));
+        Set<Long> taskIds = taskMap.keySet();
+        List<TaskStrategyPO> strategyList = taskStrategyDaoService.list(new QueryWrapper<TaskStrategyPO>().in("task_id", taskIds));
+        if (CollectionUtils.isEmpty(strategyList)) {
+            return;
+        }
+        Map<Long, List<TaskStrategyPO>> taskStrategyMap = strategyList.stream().collect(Collectors.groupingBy(TaskStrategyPO::getTaskId));
+        List<TaskRecordPO> recordList = taskRecordDaoService.list(new QueryWrapper<TaskRecordPO>().in("task_id", taskIds)
+                .eq("creator", uid)
+                .ge(strategy == RewardStrategyEnum.LOOP, "create_time", DateUtil.getCurDateStart()));
+        Map<String, TaskRecordPO> recordMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(recordList)) {
+            recordMap.putAll(recordList.stream().collect(Collectors.toMap((e -> e.getTaskId() + POUND + e.getStrategyId()), e -> e)));
+        }
+        Map<Long, TaskResDTO> taskResMap = new HashMap<>();
+        taskStrategyMap.forEach((x, y) -> {
+            y.forEach(taskStrategy -> {
+                String intraStartTime = taskStrategy.getIntraStartTime();
+                String intraEndTime = taskStrategy.getIntraEndTime();
+                Date startDate = DateUtil.parseDateFromTime(intraStartTime);
+                Date endDate = DateUtil.parseDateFromTime(intraEndTime);
+                TaskRecordPO taskRecordPO = recordMap.get(x + POUND + taskStrategy.getId());
+                if (strategy == RewardStrategyEnum.LOOP && (getTaskStatus(taskRecordPO) == 1 || (startDate.before(curDate) && endDate.after(curDate) && getTaskStatus(taskRecordPO) == 0))
+                            || strategy == RewardStrategyEnum.STEP && getTaskStatus(taskRecordPO) != 2) {
+                    TaskResDTO taskResDTO = taskResMap.get(x);
+                    if (taskResDTO == null) {
+                        TaskPO taskPO = taskMap.get(x);
+                        taskResDTO = new TaskResDTO();
+                        taskResDTO.setName(taskPO.getName());
+                        fillTaskResDTO(taskResDTO, taskStrategy, taskRecordPO);
+                        taskResDTO.setCreateTime(taskPO.getCreateTime());
+                        taskResMap.put(x, taskResDTO);
+                    } else {
+                        if (taskStrategy.getConditionVal() < taskResDTO.getConditionVal()) {
+                            fillTaskResDTO(taskResDTO, taskStrategy, taskRecordPO);
+                        }
+                    }
+                }
+            });
+        });
+        List<TaskResDTO> records = new ArrayList<>(taskResMap.values());
+        int total = records.size();
+        pageResDTO.setTotal(total);
+        if (total > 1) {
+            records.sort((o1, o2) -> {
+                Integer taskStatus1 = o1.getTaskStatus();
+                Integer taskStatus2 = o2.getTaskStatus();
+                if (taskStatus1 > taskStatus2) {
+                    return -1;
+                } else if (taskStatus1 < taskStatus2) {
+                    return 1;
+                } else {
+                    Date createTime1 = o1.getCreateTime();
+                    Date createTime2 = o2.getCreateTime();
+                    if (createTime1.after(createTime2)) {
+                        return -1;
+                    } else if (createTime1.before(createTime2)) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+            long pageNo = pageResDTO.getPageNo();
+            long pageSize = pageResDTO.getPageSize();
+            int fromIndex = Math.toIntExact((pageNo - 1) * pageSize);
+            int toIndex = Math.toIntExact(pageNo * pageSize);
+            if (fromIndex >= 0 && fromIndex < total) {
+                if (toIndex > total) {
+                    toIndex = total;
+                }
+                pageResDTO.setRecords(records.subList(fromIndex, toIndex));
+            } else {
+                pageResDTO.setRecords(new ArrayList<>());
+            }
+        } else {
+            pageResDTO.setRecords(records);
+        }
+    }
+
+    private void fillTaskResDTO(TaskResDTO taskResDTO, TaskStrategyPO taskStrategy, TaskRecordPO taskRecordPO) {
+        taskResDTO.setConditionDesc(taskStrategy.getConditionDesc());
+        taskResDTO.setRewardType(taskStrategy.getRewardType());
+        taskResDTO.setRewardPoint(taskStrategy.getRewardPoint());
+        taskResDTO.setTaskStatus(getTaskStatus(taskRecordPO));
+        taskResDTO.setConditionVal(taskStrategy.getConditionVal());
+        taskResDTO.setProgress((taskRecordPO == null ? 0 : taskRecordPO.getTimes()) + "/" + taskStrategy.getConditionVal());
+    }
+
+    private int getTaskStatus(TaskRecordPO taskRecordPO) {
+        if (taskRecordPO == null || taskRecordPO.getCompleteStatus() == 0) {
             return 0;
         }
         Integer rewardStatus = taskRecordPO.getRewardStatus();
