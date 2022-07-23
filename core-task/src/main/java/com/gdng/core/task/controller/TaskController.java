@@ -2,6 +2,7 @@ package com.gdng.core.task.controller;
 
 import com.gdng.core.task.service.TaskService;
 import com.gdng.inner.api.task.dto.TaskDTO;
+import com.gdng.inner.api.task.dto.TaskExecuteReqDTO;
 import com.gdng.inner.api.task.dto.TaskPageReqDTO;
 import com.gdng.inner.api.task.dto.TaskResDTO;
 import com.gdng.support.common.dto.res.PageResDTO;
@@ -38,6 +39,12 @@ public class TaskController {
     @PostMapping("/getTaskList")
     public ResDTO<PageResDTO<TaskResDTO>> getTaskList(@RequestBody TaskPageReqDTO reqDTO) {
         return ResDTO.buildSuccessResult(taskService.getTaskList(reqDTO));
+    }
+
+    @PostMapping("/execute")
+    public ResDTO<?> execute(@RequestBody TaskExecuteReqDTO reqDTO) {
+        taskService.execute(reqDTO);
+        return ResDTO.buildSuccessResult();
     }
 
 }

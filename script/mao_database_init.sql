@@ -379,7 +379,7 @@ CREATE TABLE maomao_mall_task.`mao_task_strategy`
     `task_id`          BIGINT      NOT NULL COMMENT '任务ID',
     `condition_val`    INT         NOT NULL COMMENT '完成条件次数',
     `condition_desc`   VARCHAR(64) NOT NULL COMMENT '完成条件描述',
-    `reward_type`      TINYINT ( 1 ) NOT NULL COMMENT '奖励类型 0-积分，1-商品',
+    `reward_type`      TINYINT ( 1 ) NOT NULL COMMENT '奖励类型 0-积分，1-商品，2-积分+商品',
     `reward_point`     INT         NOT NULL COMMENT '奖励积分',
     `intra_start_time` VARCHAR(8)  NOT NULL DEFAULT '00:00:00' COMMENT '当天有效开始时间',
     `intra_end_time`   VARCHAR(8)  NOT NULL DEFAULT '23:59:59' COMMENT '当天有效结束时间',

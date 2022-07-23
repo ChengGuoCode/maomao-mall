@@ -192,6 +192,11 @@ public class TaskServiceImpl implements TaskService {
         return pageResDTO;
     }
 
+    @Override
+    public void execute(TaskExecuteReqDTO reqDTO) {
+
+    }
+
     private List<TaskResDTO> transferTaskRes(List<TaskPO> taskList) {
         if (CollectionUtils.isEmpty(taskList)) {
             return new ArrayList<>();

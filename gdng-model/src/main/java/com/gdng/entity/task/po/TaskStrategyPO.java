@@ -44,7 +44,7 @@ public class TaskStrategyPO implements Serializable {
     private String conditionDesc;
 
 
-    @ApiModelProperty(value = "奖励类型 0-积分，1-商品")
+    @ApiModelProperty(value = "奖励类型 0-积分，1-商品，2-积分+商品")
     @TableField("reward_type")
     private Integer rewardType;
 
