@@ -3,15 +3,13 @@ package com.gdng.core.payment.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gdng.core.payment.constant.AccountStatusEnum;
 import com.gdng.core.payment.constant.PayWayEnum;
-import com.gdng.core.payment.dao.service.AccountDaoService;
-import com.gdng.core.payment.dao.service.OrderPayDaoService;
-import com.gdng.core.payment.dao.service.OrderPayDetailDaoService;
-import com.gdng.core.payment.dao.service.OrderRefundDaoService;
+import com.gdng.core.payment.dao.service.*;
 import com.gdng.core.payment.mq.pay.PayCallbackProducer;
 import com.gdng.core.payment.service.PaymentService;
 import com.gdng.entity.payment.po.AccountPO;
 import com.gdng.entity.payment.po.OrderPayDetailPO;
 import com.gdng.entity.payment.po.OrderPayPO;
+import com.gdng.entity.payment.po.TaskPayPO;
 import com.gdng.inner.api.merchant.dto.StoreDTO;
 import com.gdng.inner.api.merchant.invoke.StoreRemote;
 import com.gdng.inner.api.payment.constant.AccountTypeEnum;
@@ -19,6 +17,9 @@ import com.gdng.inner.api.payment.dto.OrderPayItemDTO;
 import com.gdng.inner.api.payment.dto.OrderPayReqDTO;
 import com.gdng.inner.api.payment.dto.OrderPayResDTO;
 import com.gdng.inner.api.payment.dto.mq.PayCallbackDTO;
+import com.gdng.inner.api.task.dto.RewardFallbackReqDTO;
+import com.gdng.inner.api.task.dto.mq.PointSendDTO;
+import com.gdng.inner.api.task.invoke.TaskRemote;
 import com.gdng.support.common.IdGenerator;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.ResDTO;
@@ -54,21 +55,26 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderPayDetailDaoService payDetailDaoService;
     private final OrderRefundDaoService refundDaoService;
     private final PayCallbackProducer payCallbackProducer;
+    private final TaskPayDaoService taskPayDaoService;
     private final StoreRemote storeRemote;
+    private final TaskRemote taskRemote;
     private final PlatformTransactionManager platformTransactionManager;
     private final TransactionDefinition transactionDefinition;
 
     private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
     private static final IdGenerator payNoGenerator = new IdGenerator("P");
+    private static final IdGenerator taskPayNoGenerator = new IdGenerator("T");
 
     @Autowired
-    public PaymentServiceImpl(AccountDaoService accountDaoService, OrderPayDaoService payDaoService, OrderPayDetailDaoService payDetailDaoService, OrderRefundDaoService refundDaoService, PayCallbackProducer payCallbackProducer, StoreRemote storeRemote, PlatformTransactionManager platformTransactionManager, TransactionDefinition transactionDefinition) {
+    public PaymentServiceImpl(AccountDaoService accountDaoService, OrderPayDaoService payDaoService, OrderPayDetailDaoService payDetailDaoService, OrderRefundDaoService refundDaoService, PayCallbackProducer payCallbackProducer, TaskPayDaoService taskPayDaoService, StoreRemote storeRemote, TaskRemote taskRemote, PlatformTransactionManager platformTransactionManager, TransactionDefinition transactionDefinition) {
         this.accountDaoService = accountDaoService;
         this.payDaoService = payDaoService;
         this.payDetailDaoService = payDetailDaoService;
         this.refundDaoService = refundDaoService;
         this.payCallbackProducer = payCallbackProducer;
+        this.taskPayDaoService = taskPayDaoService;
         this.storeRemote = storeRemote;
+        this.taskRemote = taskRemote;
         this.platformTransactionManager = platformTransactionManager;
         this.transactionDefinition = transactionDefinition;
     }
@@ -164,6 +170,78 @@ public class PaymentServiceImpl implements PaymentService {
 
         resDTO.setPayNo(payNo);
         return resDTO;
+    }
+
+    @Override
+    public void sendPoint(PointSendDTO pointSendDTO) {
+        checkTaskPointParam(pointSendDTO);
+        TaskPayPO taskPayPO = new TaskPayPO();
+        taskPayPO.setPayNo(taskPayNoGenerator.nextId());
+        Long taskId = pointSendDTO.getTaskId();
+        taskPayPO.setTaskId(taskId);
+        Long strategyId = pointSendDTO.getStrategyId();
+        taskPayPO.setStrategyId(strategyId);
+
+        String beneficiaryUid = pointSendDTO.getBeneficiaryUid();
+        AccountPO accountPO = accountDaoService.getOne(new QueryWrapper<AccountPO>()
+                .eq("type", AccountTypeEnum.INDIVIDUAL.getType())
+                .eq("corelation_id", beneficiaryUid));
+
+        RewardFallbackReqDTO reqDTO = new RewardFallbackReqDTO();
+        reqDTO.setTaskId(taskId);
+        reqDTO.setStrategyId(strategyId);
+        reqDTO.setUid(beneficiaryUid);
+        reqDTO.setRewardTime(new Date());
+
+        if (accountPO == null) {
+            reqDTO.setRewardStatus(2);
+            reqDTO.setFailReason("账户不存在");
+            taskRemote.rewardFallback(reqDTO);
+            return;
+        }
+        Long accId = accountPO.getId();
+        taskPayPO.setBeneficiary(accId);
+        Integer point = pointSendDTO.getPoint();
+        taskPayPO.setPoint(point);
+        taskPayDaoService.save(taskPayPO);
+
+        RedisLock taskLock = getTaskLock(accId);
+        try {
+            accountPO = accountDaoService.getById(accId);
+            accountPO.setBalance(accountPO.getBalance() + point);
+            accountDaoService.updateById(accountPO);
+        } finally {
+            try {
+                taskLock.unlock();
+            } catch (Exception e) {
+                log.error("支付账户锁释放异常", e);
+            }
+        }
+        reqDTO.setRewardStatus(1);
+        taskRemote.rewardFallback(reqDTO);
+    }
+
+    private void checkTaskPointParam(PointSendDTO pointSendDTO) {
+        Long taskId = pointSendDTO.getTaskId();
+        Long strategyId = pointSendDTO.getStrategyId();
+        if (taskId == null || strategyId == null) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "任务ID与策略ID不能为空");
+        }
+        if (StringUtils.isBlank(pointSendDTO.getBeneficiaryUid())) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "收款账户ID不能为空");
+        }
+        if (pointSendDTO.getPoint() == null) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "赠送积分不能为空");
+        }
+    }
+
+    private RedisLock getTaskLock(Long accountId) {
+        RedisLock redisLock = new RedisLock(ACCOUNT_LOCK);
+        boolean success = redisLock.lock(String.valueOf(accountId));
+        if (!success) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "获取支付账户锁异常，请稍后重试");
+        }
+        return redisLock;
     }
 
     private List<RedisLock> getPayLocks(Set<Long> accountIdList) {

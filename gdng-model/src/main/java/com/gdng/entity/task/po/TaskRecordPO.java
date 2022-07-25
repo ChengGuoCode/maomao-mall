@@ -50,6 +50,11 @@ public class TaskRecordPO implements Serializable {
     private Integer times;
 
 
+    @ApiModelProperty(value = "执行用户ID")
+    @TableField("uid")
+    private String uid;
+
+
     @ApiModelProperty(value = "任务完成状态 0-未完成，1-已完成")
     @TableField("complete_status")
     private Integer completeStatus;
@@ -134,6 +139,14 @@ public class TaskRecordPO implements Serializable {
 
     public void setTimes(Integer times) {
         this.times = times;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public Integer getCompleteStatus() {

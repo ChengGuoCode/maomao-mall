@@ -1,9 +1,6 @@
 package com.gdng.inner.api.task.fallback;
 
-import com.gdng.inner.api.task.dto.TaskDTO;
-import com.gdng.inner.api.task.dto.TaskExecuteReqDTO;
-import com.gdng.inner.api.task.dto.TaskPageReqDTO;
-import com.gdng.inner.api.task.dto.TaskResDTO;
+import com.gdng.inner.api.task.dto.*;
 import com.gdng.inner.api.task.invoke.TaskRemote;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
@@ -33,6 +30,11 @@ public class TaskRemoteFallbackFactory implements FallbackFactory<TaskRemote> {
 
             @Override
             public ResDTO<?> execute(TaskExecuteReqDTO reqDTO) {
+                return ResDTO.buildBusyResult();
+            }
+
+            @Override
+            public ResDTO<?> rewardFallback(RewardFallbackReqDTO reqDTO) {
                 return ResDTO.buildBusyResult();
             }
         };

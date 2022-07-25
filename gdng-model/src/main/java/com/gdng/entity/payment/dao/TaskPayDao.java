@@ -1,18 +1,18 @@
 package com.gdng.entity.payment.dao;
 
-import com.gdng.entity.payment.po.AccountPO;
+import com.gdng.entity.payment.po.TaskPayPO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- * 支付账户表 Mapper 接口
+ * 任务支付表 Mapper 接口
  * </p>
  *
  * @author gc
  * @since 2022-07-25
  */
 @Mapper
-public interface AccountDao extends BaseMapper<AccountPO> {
+public interface TaskPayDao extends BaseMapper<TaskPayPO> {
 
 }

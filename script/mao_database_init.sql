@@ -355,6 +355,22 @@ CREATE TABLE maomao_mall_payment.`mao_order_refund`
     `update_time` datetime     NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '订单退款表';
+CREATE TABLE maomao_mall_payment.`mao_task_pay`
+(
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `optimistic`  INT          NOT NULL DEFAULT '0' COMMENT '乐观锁',
+    `pay_no`      VARCHAR(128) NOT NULL COMMENT '支付单号',
+    `task_id`     BIGINT       NOT NULL COMMENT '任务ID',
+    `strategy_id` BIGINT       NOT NULL COMMENT '策略ID',
+    `point`       INT          NOT NULL COMMENT '积分',
+    `pay_acc`     bigint                DEFAULT NULL COMMENT '付款账户',
+    `beneficiary` bigint       NOT NULL COMMENT '收款账户',
+    `creator`     VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time` datetime     NOT NULL COMMENT '创建时间',
+    `updator`     VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time` datetime     NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb3 COMMENT = '任务支付表';
 
 /* 任务表 task */
 CREATE
@@ -413,7 +429,8 @@ CREATE TABLE maomao_mall_task.`mao_task_record`
     `optimistic`      INT         NOT NULL DEFAULT '0' COMMENT '乐观锁',
     `task_id`         BIGINT      NOT NULL COMMENT '任务ID',
     `strategy_id`     BIGINT      NOT NULL COMMENT '策略ID',
-    `times`           INT         NOT NULL DEFAULT '0' COMMENT '执行次数',
+    `times`           INT         NOT NULL COMMENT '执行次数',
+    `uid`             VARCHAR(64) NOT NULL COMMENT '执行用户ID',
     `complete_status` TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '任务完成状态 0-未完成，1-已完成',
     `complete_time`   datetime             DEFAULT NULL COMMENT '完成时间',
     `reward_status`   TINYINT ( 1 ) DEFAULT NULL COMMENT '奖励状态 0-等待下发，1-下发成功，2-下发失败',
@@ -427,13 +444,14 @@ CREATE TABLE maomao_mall_task.`mao_task_record`
 ) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务记录表';
 CREATE TABLE maomao_mall_task.`mao_task_record_detail`
 (
-    `id`          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '记录ID',
-    `task_id`     BIGINT      NOT NULL COMMENT '任务ID',
-    `strategy_id` BIGINT      NOT NULL COMMENT '策略ID',
-    `record_id`   BIGINT      NOT NULL COMMENT '记录ID',
-    `creator`     VARCHAR(64) NOT NULL COMMENT '创建人',
-    `create_time` datetime    NOT NULL COMMENT '创建时间',
-    `updator`     VARCHAR(64) NOT NULL COMMENT '更新人',
-    `update_time` datetime    NOT NULL COMMENT '更新时间',
+    `id`           BIGINT      NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+    `task_id`      BIGINT      NOT NULL COMMENT '任务ID',
+    `strategy_id`  BIGINT      NOT NULL COMMENT '策略ID',
+    `record_id`    BIGINT      NOT NULL COMMENT '记录ID',
+    `single_times` INT         NOT NULL COMMENT '单次执行次数',
+    `creator`      VARCHAR(64) NOT NULL COMMENT '创建人',
+    `create_time`  datetime    NOT NULL COMMENT '创建时间',
+    `updator`      VARCHAR(64) NOT NULL COMMENT '更新人',
+    `update_time`  datetime    NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb3 COMMENT = '任务记录明细表';

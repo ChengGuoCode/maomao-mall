@@ -16,8 +16,8 @@ public class MybatisPlusGenerator {
 //        generate(DatabaseEnum.MERCHANT);
 //        generate(DatabaseEnum.ORDER);
 //        generate(DatabaseEnum.USER);
-//        generate(DatabaseEnum.PAYMENT);
-        generate(DatabaseEnum.TASK);
+        generate(DatabaseEnum.PAYMENT);
+//        generate(DatabaseEnum.TASK);
     }
 
     private void generate(DatabaseEnum database) {
@@ -117,7 +117,8 @@ public class MybatisPlusGenerator {
                         "mao_account",
                         "mao_order_pay",
                         "mao_order_pay_detail",
-                        "mao_order_refund"
+                        "mao_order_refund",
+                        "mao_task_pay"
                 );
             case TASK:
                 strategy.setInclude(

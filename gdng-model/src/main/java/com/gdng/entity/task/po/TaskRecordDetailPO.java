@@ -1,14 +1,11 @@
 package com.gdng.entity.task.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.baomidou.mybatisplus.annotation.*;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -42,6 +39,11 @@ public class TaskRecordDetailPO implements Serializable {
     @ApiModelProperty(value = "记录ID")
     @TableField("record_id")
     private Long recordId;
+
+
+    @ApiModelProperty(value = "单次执行次数")
+    @TableField("single_times")
+    private Integer singleTimes;
 
 
     @ApiModelProperty(value = "创建人")
@@ -95,6 +97,14 @@ public class TaskRecordDetailPO implements Serializable {
 
     public void setRecordId(Long recordId) {
         this.recordId = recordId;
+    }
+
+    public Integer getSingleTimes() {
+        return singleTimes;
+    }
+
+    public void setSingleTimes(Integer singleTimes) {
+        this.singleTimes = singleTimes;
     }
 
     public String getCreator() {

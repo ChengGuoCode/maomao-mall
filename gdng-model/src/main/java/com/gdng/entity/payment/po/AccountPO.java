@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-07-08
+ * @since 2022-07-25
  */
 @TableName("mao_account")
 @ApiModel(value="AccountPO对象", description="支付账户表")

@@ -1,9 +1,6 @@
 package com.gdng.inner.api.task.invoke;
 
-import com.gdng.inner.api.task.dto.TaskDTO;
-import com.gdng.inner.api.task.dto.TaskExecuteReqDTO;
-import com.gdng.inner.api.task.dto.TaskPageReqDTO;
-import com.gdng.inner.api.task.dto.TaskResDTO;
+import com.gdng.inner.api.task.dto.*;
 import com.gdng.inner.api.task.fallback.TaskRemoteFallbackFactory;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
@@ -32,4 +29,6 @@ public interface TaskRemote {
     @PostMapping("/execute")
     ResDTO<?> execute(@RequestBody TaskExecuteReqDTO reqDTO);
 
+    @PostMapping("/rewardFallback")
+    ResDTO<?> rewardFallback(@RequestBody RewardFallbackReqDTO reqDTO);
 }

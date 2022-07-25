@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author gc
- * @since 2022-07-08
+ * @since 2022-07-25
  */
 @Mapper
 public interface OrderPayDetailDao extends BaseMapper<OrderPayDetailPO> {

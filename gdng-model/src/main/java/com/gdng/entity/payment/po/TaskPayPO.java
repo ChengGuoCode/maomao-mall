@@ -12,15 +12,15 @@ import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * <p>
- * 订单支付明细表
+ * 任务支付表
  * </p>
  *
  * @author gc
  * @since 2022-07-25
  */
-@TableName("mao_order_pay_detail")
-@ApiModel(value="OrderPayDetailPO对象", description="订单支付明细表")
-public class OrderPayDetailPO implements Serializable {
+@TableName("mao_task_pay")
+@ApiModel(value="TaskPayPO对象", description="任务支付表")
+public class TaskPayPO implements Serializable {
 
     private static final long serialVersionUID=1L;
 
@@ -40,19 +40,19 @@ public class OrderPayDetailPO implements Serializable {
     private String payNo;
 
 
-    @ApiModelProperty(value = "订单编号")
-    @TableField("order_no")
-    private String orderNo;
+    @ApiModelProperty(value = "任务ID")
+    @TableField("task_id")
+    private Long taskId;
 
 
-    @ApiModelProperty(value = "支付金额")
-    @TableField("payment")
-    private Long payment;
+    @ApiModelProperty(value = "策略ID")
+    @TableField("strategy_id")
+    private Long strategyId;
 
 
-    @ApiModelProperty(value = "支付方式 0-余额")
-    @TableField("pay_way")
-    private Integer payWay;
+    @ApiModelProperty(value = "积分")
+    @TableField("point")
+    private Integer point;
 
 
     @ApiModelProperty(value = "付款账户")
@@ -63,36 +63,6 @@ public class OrderPayDetailPO implements Serializable {
     @ApiModelProperty(value = "收款账户")
     @TableField("beneficiary")
     private Long beneficiary;
-
-
-    @ApiModelProperty(value = "商家ID")
-    @TableField("business_id")
-    private Long businessId;
-
-
-    @ApiModelProperty(value = "店铺ID")
-    @TableField("store_id")
-    private Long storeId;
-
-
-    @ApiModelProperty(value = "商品ID")
-    @TableField("product_id")
-    private Long productId;
-
-
-    @ApiModelProperty(value = "sku编码")
-    @TableField("sku_code")
-    private String skuCode;
-
-
-    @ApiModelProperty(value = "商品sku价格")
-    @TableField("price")
-    private Long price;
-
-
-    @ApiModelProperty(value = "数量")
-    @TableField("num")
-    private Integer num;
 
 
     @ApiModelProperty(value = "创建人")
@@ -140,28 +110,28 @@ public class OrderPayDetailPO implements Serializable {
         this.payNo = payNo;
     }
 
-    public String getOrderNo() {
-        return orderNo;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
-    public Long getPayment() {
-        return payment;
+    public Long getStrategyId() {
+        return strategyId;
     }
 
-    public void setPayment(Long payment) {
-        this.payment = payment;
+    public void setStrategyId(Long strategyId) {
+        this.strategyId = strategyId;
     }
 
-    public Integer getPayWay() {
-        return payWay;
+    public Integer getPoint() {
+        return point;
     }
 
-    public void setPayWay(Integer payWay) {
-        this.payWay = payWay;
+    public void setPoint(Integer point) {
+        this.point = point;
     }
 
     public Long getPayAcc() {
@@ -178,54 +148,6 @@ public class OrderPayDetailPO implements Serializable {
 
     public void setBeneficiary(Long beneficiary) {
         this.beneficiary = beneficiary;
-    }
-
-    public Long getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(Long businessId) {
-        this.businessId = businessId;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getSkuCode() {
-        return skuCode;
-    }
-
-    public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
     }
 
     public String getCreator() {

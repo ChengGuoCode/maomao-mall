@@ -1,10 +1,7 @@
 package com.gdng.core.task.controller;
 
 import com.gdng.core.task.service.TaskService;
-import com.gdng.inner.api.task.dto.TaskDTO;
-import com.gdng.inner.api.task.dto.TaskExecuteReqDTO;
-import com.gdng.inner.api.task.dto.TaskPageReqDTO;
-import com.gdng.inner.api.task.dto.TaskResDTO;
+import com.gdng.inner.api.task.dto.*;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,12 @@ public class TaskController {
     @PostMapping("/execute")
     public ResDTO<?> execute(@RequestBody TaskExecuteReqDTO reqDTO) {
         taskService.execute(reqDTO);
+        return ResDTO.buildSuccessResult();
+    }
+
+    @PostMapping("/rewardFallback")
+    public ResDTO<?> rewardFallback(@RequestBody RewardFallbackReqDTO reqDTO) {
+        taskService.rewardFallback(reqDTO);
         return ResDTO.buildSuccessResult();
     }
 

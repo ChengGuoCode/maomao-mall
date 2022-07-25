@@ -2,15 +2,17 @@ package com.gdng.core.task.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gdng.core.task.dao.service.*;
+import com.gdng.core.task.mq.goods.GoodsSendProducer;
+import com.gdng.core.task.mq.point.PointSendProducer;
 import com.gdng.core.task.service.TaskService;
-import com.gdng.entity.task.po.TaskPO;
-import com.gdng.entity.task.po.TaskPrizePO;
-import com.gdng.entity.task.po.TaskRecordPO;
-import com.gdng.entity.task.po.TaskStrategyPO;
+import com.gdng.entity.task.po.*;
 import com.gdng.inner.api.task.constant.RewardStrategyEnum;
 import com.gdng.inner.api.task.constant.RewardTypeEnum;
 import com.gdng.inner.api.task.constant.TaskTypeEnum;
 import com.gdng.inner.api.task.dto.*;
+import com.gdng.inner.api.task.dto.mq.GoodsSendDTO;
+import com.gdng.inner.api.task.dto.mq.GoodsSendItemDTO;
+import com.gdng.inner.api.task.dto.mq.PointSendDTO;
 import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.PageResDTO;
@@ -43,14 +45,18 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRecordDaoService taskRecordDaoService;
     private final TaskRecordDetailDaoService taskRecordDetailDaoService;
     private final TaskStrategyDaoService taskStrategyDaoService;
+    private final PointSendProducer pointSendProducer;
+    private final GoodsSendProducer goodsSendProducer;
 
     @Autowired
-    public TaskServiceImpl(TaskDaoService taskDaoService, TaskPrizeDaoService taskPrizeDaoService, TaskRecordDaoService taskRecordDaoService, TaskRecordDetailDaoService taskRecordDetailDaoService, TaskStrategyDaoService taskStrategyDaoService) {
+    public TaskServiceImpl(TaskDaoService taskDaoService, TaskPrizeDaoService taskPrizeDaoService, TaskRecordDaoService taskRecordDaoService, TaskRecordDetailDaoService taskRecordDetailDaoService, TaskStrategyDaoService taskStrategyDaoService, PointSendProducer pointSendProducer, GoodsSendProducer goodsSendProducer) {
         this.taskDaoService = taskDaoService;
         this.taskPrizeDaoService = taskPrizeDaoService;
         this.taskRecordDaoService = taskRecordDaoService;
         this.taskRecordDetailDaoService = taskRecordDetailDaoService;
         this.taskStrategyDaoService = taskStrategyDaoService;
+        this.pointSendProducer = pointSendProducer;
+        this.goodsSendProducer = goodsSendProducer;
     }
 
     @Override
@@ -110,7 +116,7 @@ public class TaskServiceImpl implements TaskService {
             case HISTORY:
                 List<TaskRecordPO> taskRecordList = taskRecordDaoService.list(new QueryWrapper<TaskRecordPO>()
                         .select("task_id, strategy_id, complete_time")
-                        .eq("creator", uid)
+                        .eq("uid", uid)
                         .eq("complete_status", 1)
                         .eq("reward_status", 1));
                 if (!CollectionUtils.isEmpty(taskRecordList)) {
@@ -194,7 +200,193 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void execute(TaskExecuteReqDTO reqDTO) {
+        checkExeParam(reqDTO);
+        Long taskId = reqDTO.getTaskId();
+        TaskPO task = taskDaoService.getById(taskId);
+        if (task == null) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "无效的任务ID");
+        }
+        String curTimeStr = DateUtil.getCurTimeStr();
+        List<TaskStrategyPO> taskStrategyList = taskStrategyDaoService.list(new QueryWrapper<TaskStrategyPO>()
+                .eq("task_id", taskId)
+                .le("intra_start_time", curTimeStr)
+                .ge("intra_end_time", curTimeStr)
+                .orderByAsc("condition_val"));
+        if (CollectionUtils.isEmpty(taskStrategyList)) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "不在任务有效时段");
+        }
+        List<Long> strategyIdList = taskStrategyList.stream().map(TaskStrategyPO::getId).collect(Collectors.toList());
+        String uid = reqDTO.getUid();
+        List<TaskRecordPO> taskRecordList = taskRecordDaoService.list(new QueryWrapper<TaskRecordPO>()
+                .eq("task_id", taskId)
+                .in("strategy_id", strategyIdList)
+                .eq("uid", uid));
+        Map<Long, TaskRecordPO> recordMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(taskRecordList)) {
+            recordMap.putAll(taskRecordList.stream().collect(Collectors.toMap(TaskRecordPO::getStrategyId, e -> e)));
+        }
+        Integer times = reqDTO.getTimes();
+        Date completeTime = new Date();
+        int baseTimes = 0;
+        for (TaskStrategyPO taskStrategy : taskStrategyList) {
+            Long strategyId = taskStrategy.getId();
+            TaskRecordPO taskRecord = recordMap.get(strategyId);
+            Integer conditionVal = taskStrategy.getConditionVal();
+            if (taskRecord == null) {
+                int curTotalTimes = times + baseTimes;
+                if (curTotalTimes < conditionVal) {
+                    saveTaskRecord(taskId, strategyId, times, curTotalTimes, uid, 0, null, null);
+                    return;
+                } else if (curTotalTimes == conditionVal){
+                    saveTaskRecord(taskId, strategyId, times, curTotalTimes, uid, 1, completeTime, 0);
+                    sendTaskAward(taskId, strategyId, uid);
+                    return;
+                } else {
+                    saveTaskRecord(taskId, strategyId, conditionVal - baseTimes, conditionVal, uid, 1, completeTime, 0);
+                    sendTaskAward(taskId, strategyId, uid);
+                }
+            } else {
+                Integer completeStatus = taskRecord.getCompleteStatus();
+                if (completeStatus == 0) {
+                    int curTotalTimes = times + taskRecord.getTimes();
+                    if (curTotalTimes < conditionVal) {
+                        updateTaskRecord(taskRecord, times, 0, null, null);
+                    } else if (curTotalTimes == conditionVal) {
+                        updateTaskRecord(taskRecord, times, 1, completeTime, 0);
+                        sendTaskAward(taskId, strategyId, uid);
+                        return;
+                    } else {
+                        updateTaskRecord(taskRecord, conditionVal - taskRecord.getTimes(), 1, completeTime, 0);
+                        sendTaskAward(taskId, strategyId, uid);
+                    }
+                } else {
+                    baseTimes += taskStrategy.getConditionVal();
+                }
+            }
+        }
+    }
 
+    @Override
+    public void rewardFallback(RewardFallbackReqDTO reqDTO) {
+        checkRewardFallbackParam(reqDTO);
+        TaskRecordPO taskRecord = taskRecordDaoService.getOne(new QueryWrapper<TaskRecordPO>()
+                .eq("task_id", reqDTO.getTaskId())
+                .eq("strategy_id", reqDTO.getStrategyId())
+                .eq("uid", reqDTO.getUid()));
+        if (taskRecord == null) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "奖励下发关联的任务策略不存在");
+        }
+        taskRecord.setRewardStatus(reqDTO.getRewardStatus());
+        taskRecord.setRewardTime(reqDTO.getRewardTime());
+        taskRecord.setFailReason(reqDTO.getFailReason());
+        taskRecordDaoService.updateById(taskRecord);
+    }
+
+    private void checkRewardFallbackParam(RewardFallbackReqDTO reqDTO) {
+        Long taskId = reqDTO.getTaskId();
+        Long strategyId = reqDTO.getStrategyId();
+        if (taskId == null || strategyId == null) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "任务ID与策略ID不能为空");
+        }
+        String uid = reqDTO.getUid();
+        if (StringUtils.isBlank(uid)) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "用户ID不能为空");
+        }
+        Integer rewardStatus = reqDTO.getRewardStatus();
+        Date rewardTime = reqDTO.getRewardTime();
+        if (rewardStatus == null || rewardTime == null) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "任务奖励下发状态与时间不能为空");
+        }
+    }
+
+    private void updateTaskRecord(TaskRecordPO taskRecord, Integer times, Integer completeStatus,
+                                  Date completeTime, Integer rewardStatus) {
+        taskRecord.setTimes(taskRecord.getTimes() + times);
+        taskRecord.setCompleteStatus(completeStatus);
+        taskRecord.setCompleteTime(completeTime);
+        taskRecord.setRewardStatus(rewardStatus);
+        taskRecordDaoService.updateById(taskRecord);
+        TaskRecordDetailPO taskRecordDetailPO = new TaskRecordDetailPO();
+        taskRecordDetailPO.setTaskId(taskRecord.getTaskId());
+        taskRecordDetailPO.setStrategyId(taskRecord.getStrategyId());
+        taskRecordDetailPO.setRecordId(taskRecord.getId());
+        taskRecordDetailPO.setSingleTimes(times);
+        taskRecordDetailDaoService.save(taskRecordDetailPO);
+    }
+
+    private void sendTaskAward(Long taskId, Long strategyId, String uid) {
+        TaskStrategyPO taskStrategy = taskStrategyDaoService.getById(strategyId);
+        RewardTypeEnum rewardTypeEnum = RewardTypeEnum.getRewardType(taskStrategy.getRewardType());
+        switch (Objects.requireNonNull(rewardTypeEnum)) {
+            case POINT:
+                sendPoint(taskId, strategyId, uid, taskStrategy);
+                break;
+            case GOODS:
+                sendGoods(taskId, strategyId);
+                break;
+            case MIX_P_G:
+                sendPoint(taskId, strategyId, uid, taskStrategy);
+                sendGoods(taskId, strategyId);
+                break;
+        }
+    }
+
+    private void sendGoods(Long taskId, Long strategyId) {
+        List<TaskPrizePO> taskPrizeList = taskPrizeDaoService.list(new QueryWrapper<TaskPrizePO>()
+                .eq("task_id", taskId)
+                .eq("strategy_id", strategyId));
+        if (CollectionUtils.isEmpty(taskPrizeList)) {
+            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "任务赠送奖品策略异常，请联系客服");
+        }
+        GoodsSendDTO goodsSendDTO = new GoodsSendDTO();
+        goodsSendDTO.setTaskId(taskId);
+        goodsSendDTO.setStrategyId(strategyId);
+        goodsSendDTO.setGoodsItemList(taskPrizeList.stream().map(taskPrize -> GdngBeanUtil.copyToNewBean(taskPrize, GoodsSendItemDTO.class)).collect(Collectors.toList()));
+        goodsSendProducer.sendMsg(goodsSendDTO);
+    }
+
+    private void sendPoint(Long taskId, Long strategyId, String uid, TaskStrategyPO taskStrategy) {
+        Integer rewardPoint = taskStrategy.getRewardPoint();
+        PointSendDTO pointSendDTO = new PointSendDTO();
+        pointSendDTO.setTaskId(taskId);
+        pointSendDTO.setStrategyId(strategyId);
+        pointSendDTO.setPoint(rewardPoint);
+        pointSendDTO.setBeneficiaryUid(uid);
+        pointSendProducer.sendMsg(pointSendDTO);
+    }
+
+    private void saveTaskRecord(Long taskId, Long strategyId, Integer times, int curTotalTimes, String uid, Integer completeStatus,
+                                Date completeTime, Integer rewardStatus) {
+        TaskRecordPO taskRecordPO = new TaskRecordPO();
+        taskRecordPO.setTaskId(taskId);
+        taskRecordPO.setStrategyId(strategyId);
+        taskRecordPO.setTimes(curTotalTimes);
+        taskRecordPO.setUid(uid);
+        taskRecordPO.setCompleteStatus(completeStatus);
+        taskRecordPO.setCompleteTime(completeTime);
+        taskRecordPO.setRewardStatus(rewardStatus);
+        taskRecordDaoService.save(taskRecordPO);
+        TaskRecordDetailPO taskRecordDetailPO = new TaskRecordDetailPO();
+        taskRecordDetailPO.setTaskId(taskId);
+        taskRecordDetailPO.setStrategyId(strategyId);
+        taskRecordDetailPO.setRecordId(taskRecordPO.getId());
+        taskRecordDetailPO.setSingleTimes(times);
+        taskRecordDetailDaoService.save(taskRecordDetailPO);
+    }
+
+    private void checkExeParam(TaskExecuteReqDTO reqDTO) {
+        Long taskId = reqDTO.getTaskId();
+        if (taskId == null) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "任务ID不能为空");
+        }
+        String uid = reqDTO.getUid();
+        if (StringUtils.isBlank(uid)) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "用户ID不能为空");
+        }
+        Integer times = reqDTO.getTimes();
+        if (times == null || times < 1) {
+            throw new GdngException(GlobalResponseEnum.PARAM_ERR, "无效的执行次数");
+        }
     }
 
     private List<TaskResDTO> transferTaskRes(List<TaskPO> taskList) {
@@ -228,7 +420,7 @@ public class TaskServiceImpl implements TaskService {
         }
         Map<Long, List<TaskStrategyPO>> taskStrategyMap = strategyList.stream().collect(Collectors.groupingBy(TaskStrategyPO::getTaskId));
         List<TaskRecordPO> recordList = taskRecordDaoService.list(new QueryWrapper<TaskRecordPO>().in("task_id", taskIds)
-                .eq("creator", uid)
+                .eq("uid", uid)
                 .ge(strategy == RewardStrategyEnum.LOOP, "create_time", DateUtil.getCurDateStart()));
         Map<String, TaskRecordPO> recordMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(recordList)) {

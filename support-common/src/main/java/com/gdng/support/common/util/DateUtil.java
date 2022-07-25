@@ -45,4 +45,9 @@ public class DateUtil extends DateUtils {
         return parseDateFromTime(END_TIME);
     }
 
+    public static String getCurTimeStr() {
+        Calendar instance = Calendar.getInstance();
+        return DateFormatUtils.format(instance.getTime(), TIME_LONG_PATTERN);
+    }
+
 }

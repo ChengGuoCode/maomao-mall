@@ -1,9 +1,6 @@
 package com.gdng.core.task.service;
 
-import com.gdng.inner.api.task.dto.TaskDTO;
-import com.gdng.inner.api.task.dto.TaskExecuteReqDTO;
-import com.gdng.inner.api.task.dto.TaskPageReqDTO;
-import com.gdng.inner.api.task.dto.TaskResDTO;
+import com.gdng.inner.api.task.dto.*;
 import com.gdng.support.common.dto.res.PageResDTO;
 
 /**
@@ -19,5 +16,7 @@ public interface TaskService {
     PageResDTO<TaskResDTO> getTaskList(TaskPageReqDTO reqDTO);
 
     void execute(TaskExecuteReqDTO reqDTO);
+
+    void rewardFallback(RewardFallbackReqDTO reqDTO);
 
 }
