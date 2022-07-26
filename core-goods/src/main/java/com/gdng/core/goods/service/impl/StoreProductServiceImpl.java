@@ -10,13 +10,15 @@ import com.gdng.core.goods.service.StoreProductService;
 import com.gdng.entity.goods.po.CarouselPO;
 import com.gdng.entity.goods.po.StoreProductPO;
 import com.gdng.entity.goods.po.StoreProductSkuPO;
-import com.gdng.inner.api.goods.dto.CarouselResDTO;
-import com.gdng.inner.api.goods.dto.StoreProductReqDTO;
-import com.gdng.inner.api.goods.dto.StoreProductResDTO;
-import com.gdng.inner.api.goods.dto.StoreProductSkuResDTO;
+import com.gdng.inner.api.goods.dto.*;
+import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.PageResDTO;
+import com.gdng.support.common.exception.GdngException;
+import com.gdng.support.common.lock.RedisLock;
 import com.gdng.support.common.util.GdngBeanUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +26,14 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static com.gdng.support.common.constant.StringConstant.POUND;
+
 @Service
 public class StoreProductServiceImpl implements StoreProductService {
+
+    private static final Logger log = LoggerFactory.getLogger(StoreProductServiceImpl.class);
+
+    private static final String STOCK_LOCK = "goods_stock";
 
     private final StoreProductDaoService storeProductDaoService;
     private final StoreProductSkuDaoService storeProductSkuDaoService;
@@ -105,5 +113,125 @@ public class StoreProductServiceImpl implements StoreProductService {
             }).collect(Collectors.toList()));
         }
         return pageResDTO;
+    }
+
+    @Override
+    public void lockStock(List<StoreProductSkuStockDTO> reqDTOs) {
+        changeStock(reqDTOs, 1);
+    }
+
+    @Override
+    public void releaseStock(List<StoreProductSkuStockDTO> reqDTOs) {
+        changeStock(reqDTOs, 2);
+    }
+
+    @Override
+    public void reduceStock(List<StoreProductSkuStockDTO> reqDTOs) {
+        changeStock(reqDTOs, 3);
+    }
+
+    private void changeStock(List<StoreProductSkuStockDTO> reqDTOs, int stockType) {
+        Map<String, StoreProductSkuStockDTO> skuMap = new HashMap<>();
+        List<Long> businessIdList = new ArrayList<>();
+        List<Long> storeIdList = new ArrayList<>();
+        List<Long> productIdList = new ArrayList<>();
+        List<String> skuCodeList = new ArrayList<>();
+        reqDTOs.forEach(sku -> {
+            Long businessId = sku.getBusinessId();
+            Long storeId = sku.getStoreId();
+            Long productId = sku.getProductId();
+            String skuCode = sku.getSkuCode();
+            skuMap.put(businessId + POUND + storeId + POUND + productId + POUND + skuCode, sku);
+            businessIdList.add(businessId);
+            storeIdList.add(storeId);
+            productIdList.add(productId);
+            skuCodeList.add(skuCode);
+        });
+        Set<String> lockKeys = new TreeSet<>(skuMap.keySet());
+        List<RedisLock> stockLocks = getStockLocks(lockKeys);
+
+        try {
+            List<StoreProductSkuPO> storeProductSkuList = storeProductSkuDaoService.list(new QueryWrapper<StoreProductSkuPO>()
+                    .in("business_id", businessIdList)
+                    .in("store_id", storeIdList)
+                    .in("product_id", productIdList)
+                    .in("sku_code", skuCodeList));
+            if (CollectionUtils.isNotEmpty(storeProductSkuList)) {
+                List<StoreProductSkuPO> skuList = storeProductSkuList.stream().map(sku -> {
+                    Long businessId = sku.getBusinessId();
+                    Long storeId = sku.getStoreId();
+                    Long productId = sku.getProductId();
+                    String skuCode = sku.getSkuCode();
+                    StoreProductSkuStockDTO stockDTO = skuMap.get(businessId + POUND + storeId + POUND + productId + POUND + skuCode);
+                    if (stockDTO == null) {
+                        return null;
+                    }
+                    Integer goodsNum = stockDTO.getGoodsNum();
+                    Integer stock = sku.getStock();
+                    Integer lockStock = sku.getLockStock();
+                    Long saleVolume = sku.getSaleVolume();
+                    switch (stockType) {
+                        case 1:
+                            if (stock - lockStock - saleVolume < goodsNum) {
+                                throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "商品库存不足");
+                            }
+                            sku.setLockStock(lockStock + goodsNum);
+                            break;
+                        case 2:
+                            if (lockStock < goodsNum) {
+                                throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "商品锁定库存数量不足，请校验参数");
+                            }
+                            sku.setLockStock(lockStock - goodsNum);
+                            break;
+                        case 3:
+                            Long payment = stockDTO.getPayment();
+                            if (payment == 0L) {
+                                if (stock - lockStock - saleVolume < goodsNum) {
+                                    throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "商品库存不足");
+                                }
+                            } else {
+                                if (lockStock < goodsNum) {
+                                    throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "商品锁定库存数量不足，请校验参数");
+                                }
+                                sku.setLockStock(lockStock - goodsNum);
+                            }
+                            sku.setSaleVolume(saleVolume + goodsNum);
+                            break;
+                    }
+                    return sku;
+                }).filter(Objects::nonNull).collect(Collectors.toList());
+                storeProductSkuDaoService.updateBatchById(skuList);
+            }
+        } finally {
+            if (CollectionUtils.isNotEmpty(stockLocks)) {
+                for (RedisLock stockLock : stockLocks) {
+                    try {
+                        stockLock.unlock();
+                    } catch (Exception e) {
+                        log.error("库存锁释放异常", e);
+                    }
+                }
+            }
+        }
+    }
+
+    private List<RedisLock> getStockLocks(Set<String> lockKeys) {
+        List<RedisLock> lockList = new ArrayList<>();
+        for (String lockKey : lockKeys) {
+            RedisLock redisLock = new RedisLock(STOCK_LOCK);
+            boolean success = redisLock.lock(lockKey);
+            if (!success) {
+                for (RedisLock alreadyLock : lockList) {
+                    try {
+                        alreadyLock.unlock();
+                    } catch (Exception e) {
+                        log.error("库存锁释放异常:{}", lockKey, e);
+                    }
+                }
+                throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "获取库存锁异常，请稍后重试");
+            }
+            lockList.add(redisLock);
+        }
+        return lockList;
     }
 }

@@ -322,16 +322,16 @@ public class TaskServiceImpl implements TaskService {
                 sendPoint(taskId, strategyId, uid, taskStrategy);
                 break;
             case GOODS:
-                sendGoods(taskId, strategyId);
+                sendGoods(taskId, strategyId, uid);
                 break;
             case MIX_P_G:
                 sendPoint(taskId, strategyId, uid, taskStrategy);
-                sendGoods(taskId, strategyId);
+                sendGoods(taskId, strategyId, uid);
                 break;
         }
     }
 
-    private void sendGoods(Long taskId, Long strategyId) {
+    private void sendGoods(Long taskId, Long strategyId, String uid) {
         List<TaskPrizePO> taskPrizeList = taskPrizeDaoService.list(new QueryWrapper<TaskPrizePO>()
                 .eq("task_id", taskId)
                 .eq("strategy_id", strategyId));
@@ -341,6 +341,7 @@ public class TaskServiceImpl implements TaskService {
         GoodsSendDTO goodsSendDTO = new GoodsSendDTO();
         goodsSendDTO.setTaskId(taskId);
         goodsSendDTO.setStrategyId(strategyId);
+        goodsSendDTO.setUid(uid);
         goodsSendDTO.setGoodsItemList(taskPrizeList.stream().map(taskPrize -> GdngBeanUtil.copyToNewBean(taskPrize, GoodsSendItemDTO.class)).collect(Collectors.toList()));
         goodsSendProducer.sendMsg(goodsSendDTO);
     }

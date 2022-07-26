@@ -13,6 +13,7 @@ public class GoodsSendDTO implements Serializable {
 
     private Long taskId;
     private Long strategyId;
+    private String uid;
     private List<GoodsSendItemDTO> goodsItemList;
 
     public Long getTaskId() {
@@ -29,6 +30,14 @@ public class GoodsSendDTO implements Serializable {
 
     public void setStrategyId(Long strategyId) {
         this.strategyId = strategyId;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public List<GoodsSendItemDTO> getGoodsItemList() {

@@ -3,6 +3,7 @@ package com.gdng.inner.api.goods.fallback;
 import com.gdng.inner.api.goods.dto.CarouselResDTO;
 import com.gdng.inner.api.goods.dto.StoreProductReqDTO;
 import com.gdng.inner.api.goods.dto.StoreProductResDTO;
+import com.gdng.inner.api.goods.dto.StoreProductSkuStockDTO;
 import com.gdng.inner.api.goods.invoke.StoreProductRemote;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
@@ -31,6 +32,23 @@ public class StoreProductRemoteFallbackFactory implements FallbackFactory<StoreP
             public ResDTO<PageResDTO<StoreProductResDTO>> getGoodsList(StoreProductReqDTO reqDTO) {
                 return ResDTO.buildBusyResult();
             }
+
+            @Override
+            public ResDTO<?> lockStock(List<StoreProductSkuStockDTO> reqDTOs) {
+                return ResDTO.buildBusyResult();
+            }
+
+            @Override
+            public ResDTO<?> releaseStock(List<StoreProductSkuStockDTO> reqDTOs) {
+                return ResDTO.buildBusyResult();
+            }
+
+            @Override
+            public ResDTO<?> reduceStock(List<StoreProductSkuStockDTO> reqDTOs) {
+                return ResDTO.buildBusyResult();
+            }
+
+
         };
     }
 }

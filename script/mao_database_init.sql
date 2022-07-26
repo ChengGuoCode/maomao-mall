@@ -73,7 +73,7 @@ CREATE TABLE maomao_mall_order.`mao_order`
     `pay_time`     datetime              DEFAULT NULL COMMENT '支付时间',
     `pay_order_no` VARCHAR(128)          DEFAULT NULL COMMENT '付款单号',
     `payer_uid`    VARCHAR(64)           DEFAULT NULL COMMENT '付款方UID',
-    `order_source` INT          NOT NULL COMMENT '订单来源 0-微信小程序',
+    `order_source` INT          NOT NULL COMMENT '订单来源 0-微信小程序，1-积分任务',
     `creator`      VARCHAR(64)  NOT NULL COMMENT '创建人',
     `create_time`  datetime     NOT NULL COMMENT '创建时间',
     `updator`      VARCHAR(64)  NOT NULL COMMENT '更新人',
@@ -117,6 +117,19 @@ CREATE TABLE maomao_mall_order.`mao_order_cart`
     `update_time` datetime     NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8 COMMENT = '订单购物车表';
+CREATE TABLE maomao_mall_order.`mao_order_activity`
+(
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '订单ID',
+    `order_no`    VARCHAR(128) NOT NULL COMMENT '订单编号',
+    `type`        INT          NOT NULL COMMENT '活动类型 0-积分任务',
+    `task_id`     BIGINT DEFAULT NULL COMMENT '活动ID',
+    `strategy_id` BIGINT DEFAULT NULL COMMENT '策略ID',
+    `creator`     VARCHAR(64)  NOT NULL COMMENT '创建人',
+    `create_time` datetime     NOT NULL COMMENT '创建时间',
+    `updator`     VARCHAR(64)  NOT NULL COMMENT '更新人',
+    `update_time` datetime     NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8 COMMENT = '订单关联活动表';
 
 /* 商家表 merchant */
 CREATE

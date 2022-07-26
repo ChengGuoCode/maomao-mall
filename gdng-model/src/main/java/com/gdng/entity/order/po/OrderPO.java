@@ -75,7 +75,7 @@ public class OrderPO implements Serializable {
     private String payerUid;
 
 
-    @ApiModelProperty(value = "订单来源 0-微信小程序")
+    @ApiModelProperty(value = "订单来源 0-微信小程序，1-积分任务")
     @TableField("order_source")
     private Integer orderSource;
 

@@ -7,7 +7,8 @@ package com.gdng.core.order.constant;
  * @Version: 1.0.0
  */
 public enum OrderSourceEnum {
-    WECHAT(0, "微信小程序");
+    WECHAT(0, "微信小程序"),
+    TASK(1, "积分任务");
 
     private final int sourceCode;
     private final String desc;

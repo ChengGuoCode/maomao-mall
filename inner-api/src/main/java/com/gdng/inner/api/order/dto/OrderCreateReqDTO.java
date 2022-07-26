@@ -11,6 +11,8 @@ import java.util.List;
 public class OrderCreateReqDTO {
 
     private Integer orderSource;
+    private Long taskId;
+    private Long strategyId;
     private List<OrderItemDTO> orderItemList;
 
     public Integer getOrderSource() {
@@ -19,6 +21,22 @@ public class OrderCreateReqDTO {
 
     public void setOrderSource(Integer orderSource) {
         this.orderSource = orderSource;
+    }
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public Long getStrategyId() {
+        return strategyId;
+    }
+
+    public void setStrategyId(Long strategyId) {
+        this.strategyId = strategyId;
     }
 
     public List<OrderItemDTO> getOrderItemList() {
