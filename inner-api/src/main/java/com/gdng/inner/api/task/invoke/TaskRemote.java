@@ -31,4 +31,7 @@ public interface TaskRemote {
 
     @PostMapping("/rewardFallback")
     ResDTO<?> rewardFallback(@RequestBody RewardFallbackReqDTO reqDTO);
+
+    @PostMapping("/receivePrize")
+    ResDTO<?> receivePrize(@RequestBody RewardReceiveReqDTO reqDTO);
 }

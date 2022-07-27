@@ -50,4 +50,10 @@ public class TaskController {
         return ResDTO.buildSuccessResult();
     }
 
+    @PostMapping("/receivePrize")
+    public ResDTO<?> receivePrize(@RequestBody RewardReceiveReqDTO reqDTO) {
+        taskService.receivePrize(reqDTO);
+        return ResDTO.buildSuccessResult();
+    }
+
 }

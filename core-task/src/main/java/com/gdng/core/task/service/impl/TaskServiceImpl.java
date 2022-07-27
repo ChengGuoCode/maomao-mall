@@ -73,7 +73,7 @@ public class TaskServiceImpl implements TaskService {
             TaskStrategyPO taskStrategyPO = GdngBeanUtil.copyToNewBean(strategy, TaskStrategyPO.class);
             taskStrategyPO.setTaskId(taskId);
             taskStrategyDaoService.saveOrUpdate(taskStrategyPO);
-            if (strategy.getRewardType() == RewardTypeEnum.GOODS.getType()) {
+            if (strategy.getRewardType() == RewardTypeEnum.GOODS.getType() || strategy.getRewardType() == RewardTypeEnum.MIX_P_G.getType()) {
                 List<TaskPrizeDTO> prizeList = strategy.getPrizeList();
                 prizePOList.addAll(prizeList.stream().map(prize -> {
                     TaskPrizePO taskPrizePO = GdngBeanUtil.copyToNewBean(prize, TaskPrizePO.class);
@@ -280,6 +280,22 @@ public class TaskServiceImpl implements TaskService {
         taskRecord.setRewardTime(reqDTO.getRewardTime());
         taskRecord.setFailReason(reqDTO.getFailReason());
         taskRecordDaoService.updateById(taskRecord);
+    }
+
+    @Override
+    public void receivePrize(RewardReceiveReqDTO reqDTO) {
+        Long taskId = reqDTO.getTaskId();
+        Long strategyId = reqDTO.getStrategyId();
+        String uid = reqDTO.getUid();
+        TaskRecordPO taskRecordPO = taskRecordDaoService.getOne(new QueryWrapper<TaskRecordPO>()
+                .eq("task_id", taskId)
+                .eq("strategy_id", strategyId)
+                .eq("uid", uid));
+        if (taskRecordPO.getCompleteStatus() == 1 && taskRecordPO.getRewardStatus() == 0) {
+            taskRecordPO.setRewardStatus(1);
+            taskRecordPO.setRewardTime(new Date());
+            taskRecordDaoService.updateById(taskRecordPO);
+        }
     }
 
     private void checkRewardFallbackParam(RewardFallbackReqDTO reqDTO) {

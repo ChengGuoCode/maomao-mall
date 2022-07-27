@@ -37,6 +37,11 @@ public class TaskRemoteFallbackFactory implements FallbackFactory<TaskRemote> {
             public ResDTO<?> rewardFallback(RewardFallbackReqDTO reqDTO) {
                 return ResDTO.buildBusyResult();
             }
+
+            @Override
+            public ResDTO<?> receivePrize(RewardReceiveReqDTO reqDTO) {
+                return ResDTO.buildBusyResult();
+            }
         };
     }
 }
