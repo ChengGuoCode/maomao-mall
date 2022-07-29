@@ -3,6 +3,8 @@ package com.gdng.support.common.cache.redis;
 import com.gdng.support.common.spring.SpringContextHolder;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.Map;
+
 public class RedisCache {
 
     private final String keyPrefix;
@@ -26,6 +28,10 @@ public class RedisCache {
 
     public void hset(String key, String hashKey, String hashVal) {
         getRedisTemplate().opsForHash().put(keyPrefix + key, hashKey, hashVal);
+    }
+
+    public void multiSet(String key, Map<String, Object> map) {
+        getRedisTemplate().opsForHash().putAll(keyPrefix + key, map);
     }
 
     @SuppressWarnings("unchecked")

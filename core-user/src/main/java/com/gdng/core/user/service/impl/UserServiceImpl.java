@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.gdng.core.user.dao.service.*;
 import com.gdng.core.user.service.UserService;
-import com.gdng.entity.user.po.RolePO;
-import com.gdng.entity.user.po.UserPO;
-import com.gdng.entity.user.po.UserRolePO;
+import com.gdng.entity.user.po.*;
 import com.gdng.support.common.cache.redis.user.UserRedisCache;
 import com.gdng.support.common.dto.GdngGrantedAuthority;
 import com.gdng.support.common.dto.UserDTO;
@@ -25,9 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -124,6 +120,31 @@ public class UserServiceImpl implements UserService {
             userDaoService.save(userPO);
         }
         return GdngBeanUtil.copyToNewBean(userPO, UserDTO.class);
+    }
+
+    @Override
+    public void initRolePermissionCache() {
+        List<RolePO> roleList = roleDaoService.list(new QueryWrapper<RolePO>().eq("status", 0));
+        Map<Long, String> roleNameMap = roleList.stream().collect(Collectors.toMap(RolePO::getId, RolePO::getRoleName));
+        Set<Long> roleIds = roleNameMap.keySet();
+        List<RolePermissionPO> rolePermissionList = rolePermissionDaoService.list(new QueryWrapper<RolePermissionPO>().in("rid", roleIds));
+        List<Long> permissionIdList = rolePermissionList.stream().map(RolePermissionPO::getPid).collect(Collectors.toList());
+        Map<Long, List<RolePermissionPO>> rolePermissionMap = rolePermissionList.stream().collect(Collectors.groupingBy(RolePermissionPO::getRid));
+        List<PermissionPO> permissionList = permissionDaoService.listByIds(permissionIdList);
+        Map<Long, String> permissionUrlMap = permissionList.stream().collect(Collectors.toMap(PermissionPO::getId, PermissionPO::getUrl));
+        Map<String, List<String>> rolePermissionUrlMap = new HashMap<>();
+        roleIds.forEach(roleId -> {
+            List<RolePermissionPO> rolePermissionMapList = rolePermissionMap.get(roleId);
+            String roleName = roleNameMap.get(roleId);
+            List<String> permissionUrlList = new ArrayList<>();
+            rolePermissionMapList.forEach(rolePermission -> {
+                Long permissionId = rolePermission.getPid();
+                String permissionUrl = permissionUrlMap.get(permissionId);
+                permissionUrlList.add(permissionUrl);
+            });
+            rolePermissionUrlMap.put(roleName, permissionUrlList);
+        });
+
     }
 
     private List<GdngGrantedAuthority> getAuthorities(String uid) {

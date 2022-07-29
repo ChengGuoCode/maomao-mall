@@ -28,6 +28,7 @@ CREATE TABLE maomao_mall_user.`mao_role`
     `id`          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '主键',
     `role_name`   VARCHAR(32) NOT NULL COMMENT '角色名称',
     `role_desc`   VARCHAR(32) NOT NULL COMMENT '角色描述',
+    `status`          TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '状态 0-启用，1-禁用',
     `creator`     VARCHAR(64) NOT NULL COMMENT '创建人',
     `create_time` datetime    NOT NULL COMMENT '创建时间',
     `updator`     VARCHAR(64) NOT NULL COMMENT '更新人',

@@ -1,12 +1,14 @@
 package com.gdng.support.common.dto;
 
+import java.io.Serializable;
+
 /**
  * @Auther: guocheng
  * @CreateDate: 2022/7/15 13:45
  * @Description:
  * @Version: 1.0.0
  */
-public class GdngGrantedAuthority {
+public class GdngGrantedAuthority implements Serializable {
 
     private String roleName;
 

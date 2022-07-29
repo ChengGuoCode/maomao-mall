@@ -8,4 +8,6 @@ public interface UserService {
 
     UserDTO addOrUpdate(UserDTO userDTO);
 
+    void initRolePermissionCache();
+
 }

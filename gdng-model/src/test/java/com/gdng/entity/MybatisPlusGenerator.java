@@ -14,8 +14,8 @@ public class MybatisPlusGenerator {
     public void generateTableRelative() {
 //        generate(DatabaseEnum.GOODS);
 //        generate(DatabaseEnum.MERCHANT);
-        generate(DatabaseEnum.ORDER);
-//        generate(DatabaseEnum.USER);
+//        generate(DatabaseEnum.ORDER);
+        generate(DatabaseEnum.USER);
 //        generate(DatabaseEnum.PAYMENT);
 //        generate(DatabaseEnum.TASK);
     }
@@ -106,11 +106,11 @@ public class MybatisPlusGenerator {
                 break;
             case USER:
                 strategy.setInclude(
-                        "mao_user",
-                        "mao_user_role",
-                        "mao_role",
-                        "mao_role_permission",
-                        "mao_permission"
+//                        "mao_user",
+//                        "mao_user_role",
+                        "mao_role"
+//                        "mao_role_permission",
+//                        "mao_permission"
                 );
                 break;
             case PAYMENT:

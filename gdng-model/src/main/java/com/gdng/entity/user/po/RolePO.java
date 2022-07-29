@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.annotation.*;
  * </p>
  *
  * @author gc
- * @since 2022-06-26
+ * @since 2022-07-29
  */
 @TableName("mao_role")
 @ApiModel(value="RolePO对象", description="角色表")
@@ -39,6 +39,11 @@ public class RolePO implements Serializable {
     private String roleDesc;
 
 
+    @ApiModelProperty(value = "状态 0-启用，1-禁用")
+    @TableField("status")
+    private Integer status;
+
+
     @ApiModelProperty(value = "创建人")
     @TableField(value = "creator", fill = FieldFill.INSERT)
     private String creator;
@@ -57,6 +62,8 @@ public class RolePO implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+
+
 
     public Long getId() {
         return id;
@@ -80,6 +87,14 @@ public class RolePO implements Serializable {
 
     public void setRoleDesc(String roleDesc) {
         this.roleDesc = roleDesc;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getCreator() {
@@ -113,4 +128,6 @@ public class RolePO implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+
 }

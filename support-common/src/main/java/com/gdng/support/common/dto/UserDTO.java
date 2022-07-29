@@ -1,8 +1,9 @@
 package com.gdng.support.common.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UserDTO {
+public class UserDTO implements Serializable {
 
     private String id;
     private String username;

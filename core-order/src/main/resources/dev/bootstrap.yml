@@ -30,3 +30,5 @@ spring:
         health-check-critical-timeout: 60s
         heartbeat:
           enabled: true
+  main:
+    allow-bean-definition-overriding: true

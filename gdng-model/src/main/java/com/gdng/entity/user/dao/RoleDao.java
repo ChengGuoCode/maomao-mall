@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author gc
- * @since 2022-06-26
+ * @since 2022-07-29
  */
 @Mapper
 public interface RoleDao extends BaseMapper<RolePO> {

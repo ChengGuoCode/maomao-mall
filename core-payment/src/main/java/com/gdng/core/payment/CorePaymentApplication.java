@@ -17,7 +17,7 @@ import org.springframework.context.annotation.ComponentScans;
 @SpringBootApplication
 @ComponentScans(value = {@ComponentScan(value = {"com.gdng.support.common"})})
 @MapperScan("com.gdng.entity.payment")
-@EnableFeignClients(basePackages = "com.gdng.inner.api.merchant.**")
+@EnableFeignClients(basePackages = {"com.gdng.inner.api.merchant.**","com.gdng.inner.api.task.**"})
 @EnableDiscoveryClient
 public class CorePaymentApplication {
 
