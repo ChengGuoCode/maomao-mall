@@ -18,7 +18,7 @@ public class RedisCache {
         return getRedisTemplate().opsForValue().get(keyPrefix + key);
     }
 
-    public void set(String key, Object val) {
+    public void set(String key, String val) {
         getRedisTemplate().opsForValue().set(keyPrefix + key, val);
     }
 
@@ -30,7 +30,11 @@ public class RedisCache {
         getRedisTemplate().opsForHash().put(keyPrefix + key, hashKey, hashVal);
     }
 
-    public void multiSet(String key, Map<String, Object> map) {
+    public Map<Object, Object> multiHget(String key) {
+        return getRedisTemplate().opsForHash().entries(key);
+    }
+
+    public void multiHset(String key, Map<String, String> map) {
         getRedisTemplate().opsForHash().putAll(keyPrefix + key, map);
     }
 

@@ -1,5 +1,6 @@
 package com.gdng.support.security.handler;
 
+import com.gdng.support.common.cache.redis.user.UserRedisCache;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
@@ -7,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -15,9 +17,6 @@ import java.util.Collection;
  * @Version: 1.0.0
  */
 public class GdngAuthorityVoter implements AccessDecisionVoter<FilterInvocation> {
-
-    private static final String ROLE_PREFIX = "role_";
-    private static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
 
     @Override
     public boolean supports(ConfigAttribute attribute) {
@@ -31,14 +30,17 @@ public class GdngAuthorityVoter implements AccessDecisionVoter<FilterInvocation>
 
     @Override
     public int vote(Authentication authentication, FilterInvocation object, Collection<ConfigAttribute> attributes) {
+        String requestUrl = object.getRequestUrl();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        System.out.println(object.getFullRequestUrl());
-        System.out.println(object.getRequestUrl());
-        if (authorities.size() == 1 && ROLE_ANONYMOUS.equals(authorities.iterator().next().getAuthority())) {
-
-        } else {
-
+        for (GrantedAuthority next : authorities) {
+            String authority = next.getAuthority();
+            List<String> userRolePermission = UserRedisCache.getUserRolePermission(authority);
+            for (String permissionUrl : userRolePermission) {
+                if (requestUrl.startsWith(permissionUrl)) {
+                    return ACCESS_GRANTED;
+                }
+            }
         }
-        return ACCESS_ABSTAIN;
+        return ACCESS_DENIED;
     }
 }

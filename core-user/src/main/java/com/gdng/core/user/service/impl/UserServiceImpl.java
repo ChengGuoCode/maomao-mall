@@ -15,6 +15,7 @@ import com.gdng.support.common.security.SecurityStrategyUtil;
 import com.gdng.support.common.security.asyCrypt.AsyCryptAlgEnum;
 import com.gdng.support.common.security.asyCrypt.AsyCryptUtil;
 import com.gdng.support.common.util.GdngBeanUtil;
+import com.gdng.support.common.util.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private Long expireTime;
     @Value("${auth.token.strategy}")
     private String strategy;
+
+    private static final String ROLE_PREFIX = "role_";
 
     private final UserDaoService userDaoService;
     private final RoleDaoService roleDaoService;
@@ -123,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void initRolePermissionCache() {
+    public Map<String, String> getRolePermissionCache() {
         List<RolePO> roleList = roleDaoService.list(new QueryWrapper<RolePO>().eq("status", 0));
         Map<Long, String> roleNameMap = roleList.stream().collect(Collectors.toMap(RolePO::getId, RolePO::getRoleName));
         Set<Long> roleIds = roleNameMap.keySet();
@@ -132,7 +135,7 @@ public class UserServiceImpl implements UserService {
         Map<Long, List<RolePermissionPO>> rolePermissionMap = rolePermissionList.stream().collect(Collectors.groupingBy(RolePermissionPO::getRid));
         List<PermissionPO> permissionList = permissionDaoService.listByIds(permissionIdList);
         Map<Long, String> permissionUrlMap = permissionList.stream().collect(Collectors.toMap(PermissionPO::getId, PermissionPO::getUrl));
-        Map<String, List<String>> rolePermissionUrlMap = new HashMap<>();
+        Map<String, String> rolePermissionUrlMap = new HashMap<>();
         roleIds.forEach(roleId -> {
             List<RolePermissionPO> rolePermissionMapList = rolePermissionMap.get(roleId);
             String roleName = roleNameMap.get(roleId);
@@ -142,9 +145,9 @@ public class UserServiceImpl implements UserService {
                 String permissionUrl = permissionUrlMap.get(permissionId);
                 permissionUrlList.add(permissionUrl);
             });
-            rolePermissionUrlMap.put(roleName, permissionUrlList);
+            rolePermissionUrlMap.put((ROLE_PREFIX + roleName).toUpperCase(), JacksonUtil.anyToJson(permissionUrlList));
         });
-
+        return rolePermissionUrlMap;
     }
 
     private List<GdngGrantedAuthority> getAuthorities(String uid) {
@@ -154,7 +157,7 @@ public class UserServiceImpl implements UserService {
             List<Long> roleIdList = userRolePOList.stream().map(UserRolePO::getRid).collect(Collectors.toList());
             List<RolePO> rolePOList = roleDaoService.listByIds(roleIdList);
             if (CollectionUtils.isNotEmpty(rolePOList)) {
-                authorities.addAll(rolePOList.stream().map(role -> new GdngGrantedAuthority(role.getRoleName())).collect(Collectors.toList()));
+                authorities.addAll(rolePOList.stream().map(role -> new GdngGrantedAuthority((ROLE_PREFIX + role.getRoleName()).toUpperCase())).collect(Collectors.toList()));
             }
         }
         return authorities;

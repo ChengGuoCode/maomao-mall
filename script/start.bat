@@ -23,7 +23,4 @@ start start.bat
 cd /d D:\guocheng\maomao_mall\maomao-mall\core-task\script
 start start.bat
 
-cd /d D:\guocheng\maomao_mall\maomao-mall\service-app\script
-start start.bat
-
 exit
