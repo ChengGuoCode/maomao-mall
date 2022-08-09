@@ -23,6 +23,12 @@ public class DateUtil extends DateUtils {
     private static final String START_TIME = "00:00:00";
     private static final String END_TIME = "23:59:59";
 
+    public static boolean isSameDay(Date d1, Date d2) {
+        String d1Str = DateFormatUtils.format(d1, DATE_LONG_PATTERN);
+        String d2Str = DateFormatUtils.format(d2, DATE_LONG_PATTERN);
+        return d1Str.equals(d2Str);
+    }
+
     public static Date parseDateTimeLong(String dateStr) {
         try {
             return parseDate(dateStr, DATE_TIME_LONG_PATTERN);

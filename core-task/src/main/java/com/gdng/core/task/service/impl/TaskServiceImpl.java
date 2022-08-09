@@ -554,8 +554,13 @@ public class TaskServiceImpl implements TaskService {
             throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "任务开始时间、结束时间不能为空");
         }
         Date curDate = new Date();
-        if (taskDTO.getId() != null && startTime.after(curDate)) {
+        boolean isUpdate = taskDTO.getId() != null;
+        if (isUpdate && startTime.before(curDate)) {
             throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "活动开始后，不可编辑");
+        }
+
+        if (!isUpdate && startTime.before(curDate) && DateUtil.isSameDay(startTime, curDate)) {
+            startTime = curDate;
         }
 
         if (startTime.before(curDate) || startTime.after(endTime)) {
