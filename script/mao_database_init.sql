@@ -28,7 +28,7 @@ CREATE TABLE maomao_mall_user.`mao_role`
     `id`          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '主键',
     `role_name`   VARCHAR(32) NOT NULL COMMENT '角色名称',
     `role_desc`   VARCHAR(32) NOT NULL COMMENT '角色描述',
-    `status`          TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '状态 0-启用，1-禁用',
+    `status`      TINYINT ( 1 ) NOT NULL DEFAULT '0' COMMENT '状态 0-启用，1-禁用',
     `creator`     VARCHAR(64) NOT NULL COMMENT '创建人',
     `create_time` datetime    NOT NULL COMMENT '创建时间',
     `updator`     VARCHAR(64) NOT NULL COMMENT '更新人',
@@ -58,6 +58,17 @@ CREATE TABLE maomao_mall_user.`mao_permission`
     `update_time`    datetime    NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8 COMMENT = '权限表';
+CREATE TABLE maomao_mall_user.`mao_wx_user`
+(
+    `id`          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `uid`         VARCHAR(64) NOT NULL COMMENT '用户ID',
+    `openid`      VARCHAR(64) NOT NULL COMMENT '微信用户ID',
+    `creator`     VARCHAR(64) NOT NULL COMMENT '创建人',
+    `create_time` datetime    NOT NULL COMMENT '创建时间',
+    `updator`     VARCHAR(64) NOT NULL COMMENT '更新人',
+    `update_time` datetime    NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8 COMMENT = '微信用户绑定表';
 
 /* 订单表 order */
 CREATE

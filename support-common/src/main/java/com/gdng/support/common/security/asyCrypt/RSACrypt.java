@@ -21,7 +21,7 @@ public class RSACrypt implements AsyCryptAlgorithm {
 
     @Override
     public Map<String, String> createKeys() {
-        int DEFAULT_KEY_SIZE = 512;
+        int DEFAULT_KEY_SIZE = 1024;
         return createKeys(DEFAULT_KEY_SIZE);
     }
 

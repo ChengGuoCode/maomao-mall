@@ -108,9 +108,10 @@ public class MybatisPlusGenerator {
                 strategy.setInclude(
 //                        "mao_user",
 //                        "mao_user_role",
-                        "mao_role"
+//                        "mao_role"
 //                        "mao_role_permission",
-//                        "mao_permission"
+//                        "mao_permission",
+                        "mao_wx_user"
                 );
                 break;
             case PAYMENT:

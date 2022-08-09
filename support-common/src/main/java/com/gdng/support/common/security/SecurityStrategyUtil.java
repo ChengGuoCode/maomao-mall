@@ -40,11 +40,11 @@ public class SecurityStrategyUtil {
     /**
      * Base64
     */
-    private static String base64Encode(String data) {
+    public static String base64Encode(String data) {
         return Base64.encodeBase64URLSafeString(data.getBytes(StandardCharsets.UTF_8));
     }
 
-    private static String base64Decode(String base64Str) {
+    public static String base64Decode(String base64Str) {
         return new String(Base64.decodeBase64URLSafe(base64Str), StandardCharsets.UTF_8);
     }
 

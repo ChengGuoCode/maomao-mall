@@ -24,7 +24,7 @@ public class AuthTest {
 
     @Test
     public void testMakeSign() {
-        String header = "token=eyJwdWJsaWNLZXkiOiJNRnd3RFFZSktvWklodmNOQVFFQkJRQURTd0F3U0FKQkFNTlBhQXNaSXlTYUJIbzZLeHdIcnd6eU54UF9vZ0p0MDZjMS1paU1hYVNVd00xZkFndnFacU9OandtZ3hwWnZtNU1MYmluazFIS2tvRUdVVUpQajdIRUNBd0VBQVEiLCJhbGciOiJSU0EifQ.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2NTkzNDU0OTgyMDYsImV4cCI6LTF9.eyJzaWduYXR1cmUiOiJIRmJNMEhhRDBYQTVRRk41Qi1YTWtLVEw3ZkEtRklITElyT0hDYXNOMWJ1eld1MFlHOHppblVJQkxCSkUyNjNZRXhlOWs0VlF3cWx0OV8yYnRaMzhYdyJ9&ver=1.0&timestamp=-9527&sign=AA1F53DD1DB786E48095BCAECC9728AF&sessionKey=P0ogP7mQxrk_eXHMpIBsKIOiAIF0090zM7US6ZoYXoFCq50wX-2Y_v8YEA1xO6twTFRqMIyDyvzZ_vM_dVZqrQ&uid=1542773459684794370";
+        String header = "token=eyJwdWJsaWNLZXkiOiJNRnd3RFFZSktvWklodmNOQVFFQkJRQURTd0F3U0FKQkFNTlBhQXNaSXlTYUJIbzZLeHdIcnd6eU54UF9vZ0p0MDZjMS1paU1hYVNVd00xZkFndnFacU9OandtZ3hwWnZtNU1MYmluazFIS2tvRUdVVUpQajdIRUNBd0VBQVEiLCJhbGciOiJSU0EifQ.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2NTk0OTczMjM2MDIsImV4cCI6LTF9.eyJzaWduYXR1cmUiOiJrQzNkV1didHJWTGtGSmZUQWZoZFpVazQ0VFBoejN0QTBJOF9BNFF2VUFWMFlyWnlmaUFrd1BpdF9mSGRMNzNoaF9BemJzdEtLVkJUSjQyMnlVeTJEQSJ9&ver=1&timestamp=-9527&sign=aae1bed30e9ca37653298cce0ab8f26d&sessionKey=HZYqoxLa-d-9O2zlQXT2T5Ehny2D-WgO9G2TIkyV-CnsvOxgqJqAxHG0olZkGe-NC6JcQ9unVvtMSOu1n4s8tA&uid=1542773459684794370";
 
         Map<String, String> signMap = getSignMap(header);
         Claims claims = SecurityStrategyUtil.parseToken(signMap.get(HttpConstant.Uri.TOKEN));

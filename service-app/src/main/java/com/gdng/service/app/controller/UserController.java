@@ -1,9 +1,11 @@
 package com.gdng.service.app.controller;
 
-import com.gdng.inner.api.payment.dto.AccountDTO;
 import com.gdng.inner.api.payment.constant.AccountTypeEnum;
+import com.gdng.inner.api.payment.dto.AccountDTO;
 import com.gdng.inner.api.payment.invoke.AccountRemote;
+import com.gdng.inner.api.user.dto.WxUserDTO;
 import com.gdng.inner.api.user.invoke.UserRemote;
+import com.gdng.inner.api.user.invoke.WxUserRemote;
 import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.slf4j.Logger;
@@ -27,12 +29,19 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserRemote userRemote;
+    private final WxUserRemote wxUserRemote;
     private final AccountRemote accRemote;
 
     @Autowired
-    public UserController(UserRemote userRemote, AccountRemote accRemote) {
+    public UserController(UserRemote userRemote, WxUserRemote wxUserRemote, AccountRemote accRemote) {
         this.userRemote = userRemote;
+        this.wxUserRemote = wxUserRemote;
         this.accRemote = accRemote;
+    }
+
+    @PostMapping("/wxlogin")
+    public ResDTO<?> wxlogin(@RequestBody WxUserDTO userDTO) {
+        return wxUserRemote.login(userDTO);
     }
 
     @PostMapping("/login")

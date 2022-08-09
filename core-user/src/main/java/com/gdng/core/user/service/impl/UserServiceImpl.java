@@ -60,20 +60,32 @@ public class UserServiceImpl implements UserService {
     public UserDTO login(UserDTO userDTO) {
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
-        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-            throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "用户名密码不能为空");
+        String uid = userDTO.getId();
+        UserPO userPO;
+        if (StringUtils.isBlank(uid)) {
+            if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+                throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "用户名密码不能为空");
+            }
+            userPO = userDaoService.getOne(new QueryWrapper<UserPO>().eq("username", username));
+            if (userPO == null) {
+                throw new GdngException(GlobalResponseEnum.USER_NONEXIST);
+            }
+            if (!passwordEncoder.matches(password, userPO.getPassword())) {
+                throw new GdngException(GlobalResponseEnum.PASSWORD_ERR);
+            }
+        } else {
+            userPO = userDaoService.getById(uid);
+            if (userPO == null) {
+                throw new GdngException(GlobalResponseEnum.USER_NONEXIST);
+            }
+            if (StringUtils.isNotBlank(username) || StringUtils.isNotBlank(password)) {
+                if (!userPO.getUsername().equals(username) || !passwordEncoder.matches(password, userPO.getPassword())) {
+                    throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "用户名密码不正确");
+                }
+            }
         }
 
-        UserPO userPO = userDaoService.getOne(new QueryWrapper<UserPO>().eq("username", username));
-
-        if (userPO == null) {
-            throw new GdngException(GlobalResponseEnum.USER_NONEXIST);
-        }
-        if (!passwordEncoder.matches(password, userPO.getPassword())) {
-            throw new GdngException(GlobalResponseEnum.PASSWORD_ERR);
-        }
-
-        String uid = userPO.getId();
+        uid = userPO.getId();
         List<GdngGrantedAuthority> authorities = getAuthorities(uid);
         userDTO.setId(uid);
         userDTO.setPassword(null);

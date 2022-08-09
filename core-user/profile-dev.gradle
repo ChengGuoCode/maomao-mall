@@ -1,4 +1,5 @@
 dependencies {
     implementation project(':support-common')
+    implementation project(':inner-api')
     implementation project(':gdng-model')
 }

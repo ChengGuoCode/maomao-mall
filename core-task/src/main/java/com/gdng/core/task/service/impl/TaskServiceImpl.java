@@ -557,6 +557,7 @@ public class TaskServiceImpl implements TaskService {
         if (taskDTO.getId() != null && startTime.after(curDate)) {
             throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "活动开始后，不可编辑");
         }
+
         if (startTime.before(curDate) || startTime.after(endTime)) {
             throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "任务开始时间不能小于当前时间，大于结束时间");
         }
