@@ -510,6 +510,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void fillTaskResDTO(TaskResDTO taskResDTO, TaskStrategyPO taskStrategy, TaskRecordPO taskRecordPO) {
+        taskResDTO.setTaskId(taskStrategy.getTaskId());
         taskResDTO.setConditionDesc(taskStrategy.getConditionDesc());
         taskResDTO.setRewardType(taskStrategy.getRewardType());
         taskResDTO.setRewardPoint(taskStrategy.getRewardPoint());

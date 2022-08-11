@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, String> getRolePermissionCache() {
+    public void syncRolePermissionCache() {
         List<RolePO> roleList = roleDaoService.list(new QueryWrapper<RolePO>().eq("status", 0));
         Map<Long, String> roleNameMap = roleList.stream().collect(Collectors.toMap(RolePO::getId, RolePO::getRoleName));
         Set<Long> roleIds = roleNameMap.keySet();
@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
             });
             rolePermissionUrlMap.put((ROLE_PREFIX + roleName).toUpperCase(), JacksonUtil.anyToJson(permissionUrlList));
         });
-        return rolePermissionUrlMap;
+        UserRedisCache.multiSetUserRolePermission(rolePermissionUrlMap);
     }
 
     private List<GdngGrantedAuthority> getAuthorities(String uid) {

@@ -11,11 +11,16 @@ import com.gdng.entity.goods.po.CarouselPO;
 import com.gdng.entity.goods.po.StoreProductPO;
 import com.gdng.entity.goods.po.StoreProductSkuPO;
 import com.gdng.inner.api.goods.dto.*;
+import com.gdng.support.common.cache.redis.goods.GoodsRedisCache;
+import com.gdng.support.common.cache.redis.goods.dto.StoreProductDTO;
+import com.gdng.support.common.cache.redis.goods.dto.StoreProductSkuDTO;
+import com.gdng.support.common.cache.util.CacheUtil;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.lock.RedisLock;
 import com.gdng.support.common.util.GdngBeanUtil;
+import com.gdng.support.common.util.JacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,6 +133,82 @@ public class StoreProductServiceImpl implements StoreProductService {
     @Override
     public void reduceStock(List<StoreProductSkuStockDTO> reqDTOs) {
         changeStock(reqDTOs, 3);
+    }
+
+    @Override
+    public void syncGoodsCache(StoreProductCacheDTO storeProductCacheDTO) {
+        if (storeProductCacheDTO == null) {
+            List<StoreProductPO> storeProductList = storeProductDaoService.list(new QueryWrapper<StoreProductPO>().in("sale_status", 0, 1));
+            if (CollectionUtils.isNotEmpty(storeProductList)) {
+                Map<String, String> storeProductMap = new HashMap<>();
+                storeProductList.forEach(storeProduct -> {
+                    StoreProductDTO storeProductDTO = GdngBeanUtil.copyToNewBean(storeProduct, StoreProductDTO.class);
+                    Long businessId = storeProductDTO.getBusinessId();
+                    Long storeId = storeProductDTO.getStoreId();
+                    Long productId = storeProductDTO.getProductId();
+                    storeProductMap.put(CacheUtil.getHashKey(businessId, storeId, productId),
+                            JacksonUtil.anyToJson(storeProductDTO));
+                });
+                GoodsRedisCache.multiSetStoreProduct(storeProductMap);
+            }
+            List<StoreProductSkuPO> storeProductSkuList = storeProductSkuDaoService.list(new QueryWrapper<StoreProductSkuPO>().in("sale_status", 0, 1));
+            if (CollectionUtils.isNotEmpty(storeProductSkuList)) {
+                Map<String, String> storeProductSkuMap = new HashMap<>();
+                storeProductSkuList.forEach(storeProductSku -> {
+                    StoreProductSkuDTO storeProductSkuDTO = GdngBeanUtil.copyToNewBean(storeProductSku, StoreProductSkuDTO.class);
+                    Long businessId = storeProductSkuDTO.getBusinessId();
+                    Long storeId = storeProductSkuDTO.getStoreId();
+                    Long productId = storeProductSkuDTO.getProductId();
+                    String skuCode = storeProductSkuDTO.getSkuCode();
+                    storeProductSkuMap.put(CacheUtil.getHashKey(businessId, storeId, productId, skuCode),
+                            JacksonUtil.anyToJson(storeProductSkuDTO));
+                });
+                GoodsRedisCache.multiSetStoreProductSku(storeProductSkuMap);
+            }
+        } else {
+            Long businessId = storeProductCacheDTO.getBusinessId();
+            Long storeId = storeProductCacheDTO.getStoreId();
+            Long productId = storeProductCacheDTO.getProductId();
+            if (businessId == null || storeId == null || productId == null) {
+                throw new GdngException(GlobalResponseEnum.PARAM_ERR, "商品数据同步缓存参数不全");
+            }
+            String skuCode = storeProductCacheDTO.getSkuCode();
+            if (StringUtils.isBlank(skuCode)) {
+                StoreProductPO storeProduct = storeProductDaoService.getOne(new QueryWrapper<StoreProductPO>().in("sale_status", 0, 1)
+                        .eq("business_id", businessId)
+                        .eq("store_id", storeId)
+                        .eq("product_id", productId)
+                );
+                GoodsRedisCache.setStoreProduct(GdngBeanUtil.copyToNewBean(storeProduct, StoreProductDTO.class));
+            } else {
+                StoreProductSkuPO storeProductSku = storeProductSkuDaoService.getOne(new QueryWrapper<StoreProductSkuPO>().in("sale_status", 0, 1)
+                        .eq("business_id", businessId)
+                        .eq("store_id", storeId)
+                        .eq("product_id", productId)
+                        .eq("sku_code", skuCode)
+                );
+                GoodsRedisCache.setStoreProductSku(GdngBeanUtil.copyToNewBean(storeProductSku, StoreProductSkuDTO.class));
+            }
+        }
+    }
+
+    @Override
+    public List<StoreProductSkuStockResDTO> getStoreProductSkuStock(List<StoreProductSkuStockDTO> reqDTOs) {
+        if (CollectionUtils.isNotEmpty(reqDTOs)) {
+            List<String> storeProductSkuKey = reqDTOs.stream().map(storeProductSku -> {
+                Long businessId = storeProductSku.getBusinessId();
+                Long storeId = storeProductSku.getStoreId();
+                Long productId = storeProductSku.getProductId();
+                String skuCode = storeProductSku.getSkuCode();
+                return businessId + "-" + storeId + "-" + productId + "-" + skuCode;
+            }).collect(Collectors.toList());
+            List<StoreProductSkuPO> storeProductSkuList = storeProductSkuDaoService.list(new QueryWrapper<StoreProductSkuPO>().in("CONCAT(business_id,'-',store_id,'-'," +
+                    "product_id,'-',sku_code)", storeProductSkuKey).in("sale_status", 0, 1));
+            if (CollectionUtils.isNotEmpty(storeProductSkuList)) {
+                return storeProductSkuList.stream().map(storeProductSku -> GdngBeanUtil.copyToNewBean(storeProductSku, StoreProductSkuStockResDTO.class)).collect(Collectors.toList());
+            }
+        }
+        return null;
     }
 
     private void changeStock(List<StoreProductSkuStockDTO> reqDTOs, int stockType) {

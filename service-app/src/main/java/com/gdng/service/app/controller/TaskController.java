@@ -2,8 +2,12 @@ package com.gdng.service.app.controller;
 
 import com.gdng.inner.api.task.dto.*;
 import com.gdng.inner.api.task.invoke.TaskRemote;
+import com.gdng.support.common.dto.UserDTO;
+import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
+import com.gdng.support.common.exception.GdngException;
+import com.gdng.support.common.spring.SpringContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +43,11 @@ public class TaskController {
 
     @PostMapping("/execute")
     public ResDTO<?> execute(@RequestBody TaskExecuteReqDTO reqDTO) {
+        UserDTO user = SpringContextHolder.getUser();
+        if (user == null) {
+            throw new GdngException(GlobalResponseEnum.NO_LOGIN);
+        }
+        reqDTO.setUid(user.getId());
         return taskRemote.execute(reqDTO);
     }
 

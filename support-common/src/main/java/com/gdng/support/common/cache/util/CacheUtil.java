@@ -19,6 +19,10 @@ public class CacheUtil {
         return sb.toString();
     }
 
+    public static String getHashKey(Long businessId, Long storeId, Long productId, String skuCode) {
+        return businessId + "-" + storeId + "-" + productId + "-" + skuCode;
+    }
+
     public static String getHashKey(String... fields) {
         StringBuilder sb = new StringBuilder();
 

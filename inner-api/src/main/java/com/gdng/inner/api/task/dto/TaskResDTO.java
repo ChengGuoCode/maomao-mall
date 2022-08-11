@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class TaskResDTO {
 
+    private Long taskId;
     private String name;
     private String conditionDesc;
     private Integer rewardType;
@@ -19,6 +20,14 @@ public class TaskResDTO {
     private Integer conditionVal;
     private String progress;
     private Date createTime;
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
 
     public String getName() {
         return name;

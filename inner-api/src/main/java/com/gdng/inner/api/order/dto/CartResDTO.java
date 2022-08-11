@@ -1,5 +1,7 @@
 package com.gdng.inner.api.order.dto;
 
+import java.util.List;
+
 /**
  * @Auther: guocheng
  * @CreateDate: 2022/7/6 17:12
@@ -11,14 +13,8 @@ public class CartResDTO {
     private Long businessId;
     private Long storeId;
     private String storeName;
-    private Long productId;
-    private String productName;
-    private String productImg;
-    private String productDesc;
-    private String skuCode;
-    private String specification;
-    private Long price;
-    private Integer num;
+    private List<CartGoodsDTO> goodsList;
+
 
     public Long getBusinessId() {
         return businessId;
@@ -44,67 +40,11 @@ public class CartResDTO {
         this.storeName = storeName;
     }
 
-    public Long getProductId() {
-        return productId;
+    public List<CartGoodsDTO> getGoodsList() {
+        return goodsList;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getProductImg() {
-        return productImg;
-    }
-
-    public void setProductImg(String productImg) {
-        this.productImg = productImg;
-    }
-
-    public String getProductDesc() {
-        return productDesc;
-    }
-
-    public void setProductDesc(String productDesc) {
-        this.productDesc = productDesc;
-    }
-
-    public String getSkuCode() {
-        return skuCode;
-    }
-
-    public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
-    }
-
-    public String getSpecification() {
-        return specification;
-    }
-
-    public void setSpecification(String specification) {
-        this.specification = specification;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setGoodsList(List<CartGoodsDTO> goodsList) {
+        this.goodsList = goodsList;
     }
 }

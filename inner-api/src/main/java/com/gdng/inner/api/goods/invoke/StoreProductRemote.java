@@ -1,9 +1,6 @@
 package com.gdng.inner.api.goods.invoke;
 
-import com.gdng.inner.api.goods.dto.CarouselResDTO;
-import com.gdng.inner.api.goods.dto.StoreProductReqDTO;
-import com.gdng.inner.api.goods.dto.StoreProductResDTO;
-import com.gdng.inner.api.goods.dto.StoreProductSkuStockDTO;
+import com.gdng.inner.api.goods.dto.*;
 import com.gdng.inner.api.goods.fallback.StoreProductRemoteFallbackFactory;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
@@ -40,5 +37,8 @@ public interface StoreProductRemote {
 
     @PostMapping("/reduceStock")
     ResDTO<?> reduceStock(List<StoreProductSkuStockDTO> reqDTOs);
+
+    @PostMapping("/getStoreProductSkuStock")
+    ResDTO<List<StoreProductSkuStockResDTO>> getStoreProductSkuStock(List<StoreProductSkuStockDTO> reqDTOs);
 
 }

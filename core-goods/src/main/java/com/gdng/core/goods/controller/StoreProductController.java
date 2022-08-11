@@ -1,10 +1,7 @@
 package com.gdng.core.goods.controller;
 
 import com.gdng.core.goods.service.StoreProductService;
-import com.gdng.inner.api.goods.dto.CarouselResDTO;
-import com.gdng.inner.api.goods.dto.StoreProductReqDTO;
-import com.gdng.inner.api.goods.dto.StoreProductResDTO;
-import com.gdng.inner.api.goods.dto.StoreProductSkuStockDTO;
+import com.gdng.inner.api.goods.dto.*;
 import com.gdng.support.common.dto.res.PageResDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +46,11 @@ public class StoreProductController {
     public ResDTO<?> reduceStock(List<StoreProductSkuStockDTO> reqDTOs) {
         storeProductService.reduceStock(reqDTOs);
         return ResDTO.buildSuccessResult();
+    }
+
+    @PostMapping("/getStoreProductSkuStock")
+    public ResDTO<List<StoreProductSkuStockResDTO>> getStoreProductSkuStock(List<StoreProductSkuStockDTO> reqDTOs) {
+        return ResDTO.buildSuccessResult(storeProductService.getStoreProductSkuStock(reqDTOs));
     }
 
 }
