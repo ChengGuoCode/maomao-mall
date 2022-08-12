@@ -4,6 +4,7 @@ public class OrderItemDTO {
 
     private Long businessId;
     private Long storeId;
+    private Long cartId;
     private Long productId;
     private String productName;
     private String skuCode;
@@ -25,6 +26,14 @@ public class OrderItemDTO {
 
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
+    }
+
+    public Long getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
     }
 
     public Long getProductId() {

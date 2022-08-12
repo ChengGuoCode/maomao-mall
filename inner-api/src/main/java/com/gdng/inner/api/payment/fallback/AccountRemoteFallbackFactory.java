@@ -21,6 +21,11 @@ public class AccountRemoteFallbackFactory implements FallbackFactory<AccountRemo
             public ResDTO<?> addOrUpdate(AccountDTO accDTO) {
                 return ResDTO.buildBusyResult();
             }
+
+            @Override
+            public ResDTO<Long> getAccBalance(String uid) {
+                return ResDTO.buildBusyResult();
+            }
         };
     }
 }

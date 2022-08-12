@@ -6,8 +6,10 @@ import com.gdng.inner.api.payment.invoke.AccountRemote;
 import com.gdng.inner.api.user.dto.WxUserDTO;
 import com.gdng.inner.api.user.invoke.UserRemote;
 import com.gdng.inner.api.user.invoke.WxUserRemote;
+import com.gdng.service.app.dto.UserItemDTO;
 import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.ResDTO;
+import com.gdng.support.common.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Auther: guocheng
@@ -63,6 +68,21 @@ public class UserController {
             }
         }
         return userResDTO;
+    }
+
+    @PostMapping("/getUserItems")
+    public ResDTO<List<UserItemDTO>> getUserItems() {
+        UserDTO user = SpringContextHolder.getUser();
+        ResDTO<Long> accBalance = accRemote.getAccBalance(user.getId());
+        List<UserItemDTO> userItems = new ArrayList<>();
+        if (accBalance.isSuccess()) {
+            UserItemDTO userItemDTO = new UserItemDTO();
+            userItemDTO.setNo(0);
+            userItemDTO.setName("积分");
+            userItemDTO.setNum(accBalance.getData());
+            userItems.add(userItemDTO);
+        }
+        return ResDTO.buildSuccessResult(userItems);
     }
 
 }

@@ -3,7 +3,9 @@ package com.gdng.service.app.controller;
 import com.gdng.inner.api.payment.dto.OrderPayReqDTO;
 import com.gdng.inner.api.payment.dto.OrderPayResDTO;
 import com.gdng.inner.api.payment.invoke.PaymentRemote;
+import com.gdng.support.common.dto.UserDTO;
 import com.gdng.support.common.dto.res.ResDTO;
+import com.gdng.support.common.spring.SpringContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,8 @@ public class PaymentController {
 
     @PostMapping("/pay")
     public ResDTO<OrderPayResDTO> pay(@RequestBody OrderPayReqDTO reqDTO) {
+        UserDTO user = SpringContextHolder.getUser();
+        reqDTO.setPayerUid(user.getId());
         return paymentRemote.pay(reqDTO);
     }
 }

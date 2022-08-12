@@ -1,11 +1,12 @@
 package com.gdng.core.payment.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gdng.core.payment.constant.AccountStatusEnum;
 import com.gdng.core.payment.dao.service.AccountDaoService;
 import com.gdng.core.payment.service.AccountService;
 import com.gdng.entity.payment.po.AccountPO;
-import com.gdng.inner.api.payment.dto.AccountDTO;
 import com.gdng.inner.api.payment.constant.AccountTypeEnum;
+import com.gdng.inner.api.payment.dto.AccountDTO;
 import com.gdng.support.common.dto.res.GlobalResponseEnum;
 import com.gdng.support.common.exception.GdngException;
 import com.gdng.support.common.util.GdngBeanUtil;
@@ -53,6 +54,13 @@ public class AccountServiceImpl implements AccountService {
             AccountPO accountPO = GdngBeanUtil.copyToNewBean(accDTO, AccountPO.class);
             accDaoService.save(accountPO);
         }
+    }
+
+    @Override
+    public Long getAccBalance(String uid) {
+        AccountPO account = accDaoService.getOne(new QueryWrapper<AccountPO>().eq("type", AccountTypeEnum.INDIVIDUAL)
+                .eq("corelation_id", uid));
+        return account.getBalance();
     }
 
     private void checkAccParam(AccountDTO accDTO) {

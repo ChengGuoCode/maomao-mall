@@ -122,6 +122,7 @@ public class CartServiceImpl implements CartService {
                 String skuKey = businessId + POUND + storeId + POUND + productId + POUND + skuCode;
                 CartResDTO cartResDTO = cartResMap.get(key);
                 Integer stock = productSkuStockMap.get(skuKey);
+                stock = stock == null ? 0 : stock;
                 if (cartResDTO == null) {
                     cartResDTO = new CartResDTO();
                     cartResDTO.setBusinessId(businessId);
@@ -129,10 +130,11 @@ public class CartServiceImpl implements CartService {
                     cartResDTO.setStoreName(storeName);
                     List<CartGoodsDTO> goodsList = new ArrayList<>();
                     CartGoodsDTO cartGoodsDTO = new CartGoodsDTO();
+                    cartGoodsDTO.setCartId(cartPO.getId());
                     cartGoodsDTO.setProductId(productId);
                     cartGoodsDTO.setSkuCode(skuCode);
-                    cartGoodsDTO.setNum(num);
-                    cartGoodsDTO.setStock(stock == null ? 0 : stock);
+                    cartGoodsDTO.setStock(stock);
+                    cartGoodsDTO.setNum(num > stock ? stock : num);
                     StoreProductDTO storeProduct = GoodsRedisCache.getStoreProduct(businessId, storeId, productId);
                     if (storeProduct != null) {
                         cartGoodsDTO.setProductName(storeProduct.getAlias());
@@ -150,10 +152,11 @@ public class CartServiceImpl implements CartService {
                 } else {
                     List<CartGoodsDTO> goodsList = cartResDTO.getGoodsList();
                     CartGoodsDTO cartGoodsDTO = new CartGoodsDTO();
+                    cartGoodsDTO.setCartId(cartPO.getId());
                     cartGoodsDTO.setProductId(productId);
                     cartGoodsDTO.setSkuCode(skuCode);
-                    cartGoodsDTO.setNum(num);
-                    cartGoodsDTO.setStock(stock == null ? 0 : stock);
+                    cartGoodsDTO.setStock(stock);
+                    cartGoodsDTO.setNum(num > stock ? stock : num);
                     StoreProductDTO storeProduct = GoodsRedisCache.getStoreProduct(businessId, storeId, productId);
                     if (storeProduct != null) {
                         cartGoodsDTO.setProductName(storeProduct.getAlias());

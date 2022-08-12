@@ -30,15 +30,15 @@ public interface StoreProductRemote {
     ResDTO<PageResDTO<StoreProductResDTO>> getGoodsList(@RequestBody StoreProductReqDTO reqDTO);
 
     @PostMapping("/lockStock")
-    ResDTO<?> lockStock(List<StoreProductSkuStockDTO> reqDTOs);
+    ResDTO<?> lockStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs);
 
     @PostMapping("/releaseStock")
-    ResDTO<?> releaseStock(List<StoreProductSkuStockDTO> reqDTOs);
+    ResDTO<?> releaseStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs);
 
     @PostMapping("/reduceStock")
-    ResDTO<?> reduceStock(List<StoreProductSkuStockDTO> reqDTOs);
+    ResDTO<?> reduceStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs);
 
     @PostMapping("/getStoreProductSkuStock")
-    ResDTO<List<StoreProductSkuStockResDTO>> getStoreProductSkuStock(List<StoreProductSkuStockDTO> reqDTOs);
+    ResDTO<List<StoreProductSkuStockResDTO>> getStoreProductSkuStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs);
 
 }

@@ -206,6 +206,7 @@ public class TaskServiceImpl implements TaskService {
         if (task == null) {
             throw new GdngException(GlobalResponseEnum.BIZ_PARAM_ERR, "无效的任务ID");
         }
+        boolean isLoop = task.getRewardStrategy() == 0;
         String curTimeStr = DateUtil.getCurTimeStr();
         List<TaskStrategyPO> taskStrategyList = taskStrategyDaoService.list(new QueryWrapper<TaskStrategyPO>()
                 .eq("task_id", taskId)
@@ -220,7 +221,8 @@ public class TaskServiceImpl implements TaskService {
         List<TaskRecordPO> taskRecordList = taskRecordDaoService.list(new QueryWrapper<TaskRecordPO>()
                 .eq("task_id", taskId)
                 .in("strategy_id", strategyIdList)
-                .eq("uid", uid));
+                .eq("uid", uid)
+                .ge(isLoop, "create_time", DateUtil.getCurDateStart()));
         Map<Long, TaskRecordPO> recordMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(taskRecordList)) {
             recordMap.putAll(taskRecordList.stream().collect(Collectors.toMap(TaskRecordPO::getStrategyId, e -> e)));
@@ -476,9 +478,9 @@ public class TaskServiceImpl implements TaskService {
             records.sort((o1, o2) -> {
                 Integer taskStatus1 = o1.getTaskStatus();
                 Integer taskStatus2 = o2.getTaskStatus();
-                if (taskStatus1 > taskStatus2) {
+                if (taskStatus1 < taskStatus2) {
                     return -1;
-                } else if (taskStatus1 < taskStatus2) {
+                } else if (taskStatus1 > taskStatus2) {
                     return 1;
                 } else {
                     Date createTime1 = o1.getCreateTime();

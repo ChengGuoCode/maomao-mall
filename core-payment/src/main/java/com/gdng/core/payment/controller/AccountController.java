@@ -4,10 +4,7 @@ import com.gdng.core.payment.service.AccountService;
 import com.gdng.inner.api.payment.dto.AccountDTO;
 import com.gdng.support.common.dto.res.ResDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Auther: guocheng
@@ -30,6 +27,11 @@ public class AccountController {
     public ResDTO<?> addOrUpdate(@RequestBody AccountDTO accDTO) {
         accService.addOrUpdate(accDTO);
         return ResDTO.buildSuccessResult();
+    }
+
+    @GetMapping("/getAccBalance")
+    ResDTO<Long> getAccBalance(@RequestParam String uid) {
+        return ResDTO.buildSuccessResult(accService.getAccBalance(uid));
     }
 
 }

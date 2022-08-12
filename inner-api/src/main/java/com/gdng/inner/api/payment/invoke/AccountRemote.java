@@ -5,8 +5,10 @@ import com.gdng.inner.api.payment.fallback.AccountRemoteFallbackFactory;
 import com.gdng.support.common.dto.res.ResDTO;
 import com.gdng.support.common.spring.feign.FeignConf;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @Auther: guocheng
@@ -21,5 +23,8 @@ public interface AccountRemote {
 
     @PostMapping("/addOrUpdate")
     ResDTO<?> addOrUpdate(@RequestBody AccountDTO accDTO);
+
+    @GetMapping("/getAccBalance")
+    ResDTO<Long> getAccBalance(@RequestParam String uid);
 
 }

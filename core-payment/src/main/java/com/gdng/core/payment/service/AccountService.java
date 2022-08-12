@@ -12,4 +12,6 @@ public interface AccountService {
 
     void addOrUpdate(AccountDTO accDTO);
 
+    Long getAccBalance(String uid);
+
 }

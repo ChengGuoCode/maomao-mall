@@ -8,6 +8,7 @@ package com.gdng.inner.api.order.dto;
  */
 public class CartGoodsDTO {
 
+    private Long cartId;
     private Long productId;
     private String productName;
     private String productImg;
@@ -17,6 +18,14 @@ public class CartGoodsDTO {
     private Long price;
     private Integer num;
     private Integer stock;
+
+    public Long getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
+    }
 
     public Long getProductId() {
         return productId;

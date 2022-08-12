@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gdng.core.order.constant.OrderSourceEnum;
 import com.gdng.core.order.constant.OrderStatusEnum;
 import com.gdng.core.order.dao.service.OrderActivityDaoService;
+import com.gdng.core.order.dao.service.OrderCartDaoService;
 import com.gdng.core.order.dao.service.OrderDaoService;
 import com.gdng.core.order.dao.service.OrderDetailDaoService;
 import com.gdng.core.order.service.OrderService;
@@ -48,16 +49,18 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDetailDaoService orderDetailDaoService;
     private final OrderActivityDaoService orderActivityDaoService;
     private final StoreProductRemote storeProductRemote;
+    private final OrderCartDaoService cartDaoService;
     private final TaskRemote taskRemote;
 
     private static final IdGenerator orderNoGenerator = new IdGenerator("O");
 
     @Autowired
-    public OrderServiceImpl(OrderDaoService orderDaoService, OrderDetailDaoService orderDetailDaoService, OrderActivityDaoService orderActivityDaoService, StoreProductRemote storeProductRemote, TaskRemote taskRemote) {
+    public OrderServiceImpl(OrderDaoService orderDaoService, OrderDetailDaoService orderDetailDaoService, OrderActivityDaoService orderActivityDaoService, StoreProductRemote storeProductRemote, OrderCartDaoService cartDaoService, TaskRemote taskRemote) {
         this.orderDaoService = orderDaoService;
         this.orderDetailDaoService = orderDetailDaoService;
         this.orderActivityDaoService = orderActivityDaoService;
         this.storeProductRemote = storeProductRemote;
+        this.cartDaoService = cartDaoService;
         this.taskRemote = taskRemote;
     }
 
@@ -77,7 +80,9 @@ public class OrderServiceImpl implements OrderService {
         AtomicLong orderPrice = new AtomicLong(0);
         AtomicLong payment = new AtomicLong(0);
         List<StoreProductSkuStockDTO> reqDTOs = new ArrayList<>();
+        List<Long> cartIdList = new ArrayList<>();
         List<OrderDetailPO> orderDetailPOList = orderItemList.stream().map(orderDTO -> {
+            cartIdList.add(orderDTO.getCartId());
             OrderDetailPO orderDetailPO = GdngBeanUtil.copyToNewBean(orderDTO, OrderDetailPO.class);
             orderDetailPO.setOrderNo(orderNo);
             long originPrice = orderDTO.getPrice() * orderDTO.getGoodsNum();
@@ -127,6 +132,11 @@ public class OrderServiceImpl implements OrderService {
 
         OrderCreateResDTO orderCreateResDTO = new OrderCreateResDTO();
         orderCreateResDTO.setOrderNo(orderPO.getOrderNo());
+
+        if (!CollectionUtils.isEmpty(cartIdList)) {
+            cartDaoService.removeByIds(cartIdList);
+        }
+
         return orderCreateResDTO;
     }
 

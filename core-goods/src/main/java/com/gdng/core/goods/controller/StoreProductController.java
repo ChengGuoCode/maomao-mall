@@ -31,25 +31,25 @@ public class StoreProductController {
     }
 
     @PostMapping("/lockStock")
-    public ResDTO<?> lockStock(List<StoreProductSkuStockDTO> reqDTOs) {
+    public ResDTO<?> lockStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs) {
         storeProductService.lockStock(reqDTOs);
         return ResDTO.buildSuccessResult();
     }
 
     @PostMapping("/releaseStock")
-    public ResDTO<?> releaseStock(List<StoreProductSkuStockDTO> reqDTOs) {
+    public ResDTO<?> releaseStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs) {
         storeProductService.releaseStock(reqDTOs);
         return ResDTO.buildSuccessResult();
     }
 
     @PostMapping("/reduceStock")
-    public ResDTO<?> reduceStock(List<StoreProductSkuStockDTO> reqDTOs) {
+    public ResDTO<?> reduceStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs) {
         storeProductService.reduceStock(reqDTOs);
         return ResDTO.buildSuccessResult();
     }
 
     @PostMapping("/getStoreProductSkuStock")
-    public ResDTO<List<StoreProductSkuStockResDTO>> getStoreProductSkuStock(List<StoreProductSkuStockDTO> reqDTOs) {
+    public ResDTO<List<StoreProductSkuStockResDTO>> getStoreProductSkuStock(@RequestBody List<StoreProductSkuStockDTO> reqDTOs) {
         return ResDTO.buildSuccessResult(storeProductService.getStoreProductSkuStock(reqDTOs));
     }
 
